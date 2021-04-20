@@ -24,6 +24,7 @@ const GlobalStyle = createGlobalStyle`
     --gradient-light-yellow-cyan: linear-gradient(to right, var(--light-yellow),var(--cyan));
     --gradient-flesh-dark-pink: linear-gradient(to right, var(--flesh), var(--dark-pink));
     --gradient-dark-yellow-dark-pink: linear-gradient(to right, var(--dark-yellow), var(--dark-pink));
+    --gradient-dark-yellow-light-pink: linear-gradient(to right, var(--dark-yellow), var(--light-pink));
 
     --font-family: "Montserrat", Times, Serif;
     --h1-size: 3.6rem;
@@ -44,29 +45,36 @@ const GlobalStyle = createGlobalStyle`
 
   html {
     font-size: 62.5%;
+    margin: 0;
+    padding: 0;
   }
 
   body {
-    background-image: var(--gradient-dark-yellow-dark-pink);
+    margin: 0;
+    padding: 0;
   }
 
   * {
     font-family: var(--font-family);
     font-size: var(--body-text-size);
     line-height: var(--body-text-height);
+    color: ${(props) => props.theme.fontColorDefault};
   }
 
   h1 {
+    margin: 0;
     font-size: var(--h1-size);
     line-height: var(--h1-height);
   }
 
   h2 {
+    margin: 0;
     font-size: var(--h2-size);
     line-height: var(--h2-height);
   }
 
   h3 {
+    margin: 0;
     font-size: var(--h3-size);
     line-height: var(--h3-height);
   }
