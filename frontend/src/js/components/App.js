@@ -6,6 +6,7 @@ import GlobalStyle from '../globalStyles';
 import theme from '../Theme';
 
 import Dashboard from './dashboard/Dashboard';
+import Navigation from './navigation/Navigation';
 
 const StyledApp = styled.div`
   padding: 25px 17px;
@@ -22,6 +23,7 @@ const App = () => {
             <Route path="/" exact>
               <Dashboard user={dummyUser} />
             </Route>
+            <Navigation />
           </StyledApp>
         </Fragment>
       </ThemeProvider>
