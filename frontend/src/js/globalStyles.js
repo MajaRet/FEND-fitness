@@ -47,6 +47,7 @@ const GlobalStyle = createGlobalStyle`
     font-size: 62.5%;
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
   }
 
   body {
@@ -55,7 +56,9 @@ const GlobalStyle = createGlobalStyle`
   }
 
   * {
-    font-family: var(--font-family);
+    margin: 0;
+    
+    font-family:  var(--font-family);
     font-size: var(--body-text-size);
     line-height: var(--body-text-height);
     color: ${(props) => props.theme.fontColorDefault};
