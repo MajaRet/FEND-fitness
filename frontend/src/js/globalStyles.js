@@ -84,6 +84,12 @@ const GlobalStyle = createGlobalStyle`
   a {
     text-decoration: none;
   }
+
+  button {
+    border: none;
+    width: fit-content;
+    background: none;
+  }
 `;
 
 export default GlobalStyle;
