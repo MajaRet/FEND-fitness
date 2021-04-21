@@ -7,6 +7,7 @@ import theme from '../Theme';
 
 import Dashboard from './dashboard/Dashboard';
 import Navigation from './navigation/Navigation';
+import Browse from './browse/Browse';
 
 const StyledApp = styled.div`
   padding: 25px 17px;
@@ -22,6 +23,9 @@ const App = () => {
           <StyledApp>
             <Route path="/" exact>
               <Dashboard user={dummyUser} />
+            </Route>
+            <Route path="/browse" exact>
+              <Browse />
             </Route>
             <Navigation />
           </StyledApp>
