@@ -12,6 +12,8 @@ import Browse from './browse/Browse';
 const StyledApp = styled.div`
   padding: 25px 17px;
   min-height: 100vh;
+
+  background-color: ${(props) => props.theme.backgroundDefault};
 `;
 
 const App = () => {
