@@ -3,6 +3,7 @@ import styled from 'styled-components';
 
 import ProgramCard from './ProgramCard';
 import LabelButton from './../LabelButton';
+import Label from './../Label';
 
 // TODO Replace hardcoded programs with actual programs from the backend.
 const programs = [
@@ -10,55 +11,98 @@ const programs = [
   { id: 1, title: 'Großmutter, wieso hast du so große Muskeln?' },
   { id: 2, title: 'Frau Holles Bootcamp' },
   { id: 3, title: 'Fit in 7 Tagen mit 7 Zwergen', status: 'started' },
-  { id: 4, title: 'Großmutter, wieso hast du so große Muskeln?' },
-  { id: 5, title: 'Frau Holles Bootcamp' },
+  { id: 4, title: 'Großmutter, wieso hast du so große Muskeln?', isNew: true },
+  { id: 5, title: 'Frau Holles Bootcamp', isNew: true },
   { id: 6, title: 'Fit in 7 Tagen mit 7 Zwergen', status: 'started' },
-  { id: 7, title: 'Großmutter, wieso hast du so große Muskeln?' },
-  { id: 8, title: 'Frau Holles Bootcamp' },
-  { id: 9, title: 'Fit in 7 Tagen mit 7 Zwergen', status: 'started' },
-  { id: 10, title: 'Großmutter, wieso hast du so große Muskeln?' },
-  { id: 11, title: 'Frau Holles Bootcamp' },
+  { id: 7, title: 'Großmutter, wieso hast du so große Muskeln?', isNew: true },
+  { id: 8, title: 'Frau Holles Bootcamp', isNew: true },
+  { id: 9, title: 'Fit in 7 Tagen mit 7 Zwergen' },
+  { id: 10, title: 'Großmutter, wieso hast du so große Muskeln?', isNew: true },
+  { id: 11, title: 'Frau Holles Bootcamp', isNew: true },
+  { id: 12, title: 'Fit in 7 Tagen mit 7 Zwergen', status: 'started' },
+  { id: 13, title: 'Großmutter, wieso hast du so große Muskeln?' },
+  { id: 14, title: 'Frau Holles Bootcamp' },
+  { id: 15, title: 'Fit in 7 Tagen mit 7 Zwergen' },
+  { id: 16, title: 'Großmutter, wieso hast du so große Muskeln?' },
+  { id: 17, title: 'Frau Holles Bootcamp' },
+  { id: 18, title: 'Fit in 7 Tagen mit 7 Zwergen', status: 'started' },
+  { id: 19, title: 'Großmutter, wieso hast du so große Muskeln?' },
+  { id: 20, title: 'Frau Holles Bootcamp' },
+  { id: 21, title: 'Fit in 7 Tagen mit 7 Zwergen', status: 'started' },
+  { id: 22, title: 'Großmutter, wieso hast du so große Muskeln?' },
+  { id: 23, title: 'Frau Holles Bootcamp' },
 ];
 
 const programsToLoad = 3;
+let observer;
 
 const Browse = ({ className }) => {
   const [programList, setProgramList] = useState([]);
+  const [allLoaded, setAllLoaded] = useState(false);
+  const [filter, setFilter] = useState({ filterTerm: '' });
+  const [filtersVisible, setFiltersVisible] = useState(false);
+  const [filterTerm, setFilterTerm] = useState('');
+  const [newIsChecked, setNewChecked] = useState(false);
+  const [startedIsChecked, setStartedChecked] = useState(false);
 
+  // A bottom marker element
   const lastElemRef = useRef();
 
-  console.log('rerender');
-  console.log(programList);
-  const loadPrograms = () => {
-    console.log('Load...');
-    console.log(programList);
-    const newElems = programs.slice(
-      programList.length,
-      programList.length + programsToLoad
-    );
-    const newList = programList.concat(newElems);
-    console.log(programList.length, programList.length + programsToLoad);
-    console.log(newElems);
-    console.log(newList);
-    setProgramList(newList);
-  };
+  const loadPrograms = useCallback((entries, filter) => {
+    if (entries[0].intersectionRatio > 0) {
+      setProgramList((programList) => {
+        // Won't work like that when we have a backend.
+        // We also won't want to iterate through the whole list first.
+        return programList.concat(
+          programs
+            .filter(
+              (program) =>
+                program.title
+                  .toLowerCase()
+                  .includes(filter.filterTerm.toLowerCase()) &&
+                (!filter.startedIsChecked || program.status === 'started') &&
+                (!filter.newIsChecked || program.isNew)
+            )
+            .slice(programList.length, programList.length + programsToLoad)
+        );
+      });
+    }
+  }, []);
 
-  // do useRef trick to only do some stuff on first render
+  // TODO doesn't work with a filter term, but it has to be
+  // changed anyway when the backend arrives.
+  useEffect(() => {
+    if (programList.length === programs.length) {
+      setAllLoaded(true);
+    }
+  }, [programList]);
+
+  // The list of programs is reset if the filter options change.
+  useEffect(() => {
+    setProgramList([]);
+    setAllLoaded(false);
+  }, [filter]);
 
   useEffect(() => {
-    console.log('Initial list:');
-    console.log(programs.slice(0, programsToLoad));
-    setProgramList(programs.slice(0, programsToLoad));
-    const observer = new IntersectionObserver(loadPrograms, {
-      root: null,
-      rootMargin: '0px',
-      threshold: 1.0,
-    });
-    observer.observe(lastElemRef.current);
-    // TODO I don't want to disable this, but I don't see another way
-    // right now...
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    if (!allLoaded) {
+      // If the observer is already set, unregister it.
+      observer?.unobserve(lastElemRef.current);
+      observer = new IntersectionObserver(
+        (entries) => {
+          loadPrograms(entries, filter);
+        },
+        {
+          root: null,
+          rootMargin: '0px',
+          threshold: 1.0,
+        }
+      );
+      observer.observe(lastElemRef.current);
+    } else {
+      // Since all programs have been loaded, the observer is removed.
+      observer.unobserve(lastElemRef.current);
+    }
+  }, [loadPrograms, allLoaded, filter]);
 
   const programCards = programList.map((program, i) => {
     return <ProgramCard key={i} program={program} />;
@@ -67,9 +111,47 @@ const Browse = ({ className }) => {
   return (
     <div className={className}>
       <h2>Browse</h2>
-      <LabelButton>Filter</LabelButton>
+      <LabelButton onClick={() => setFiltersVisible(!filtersVisible)}>
+        Filter
+      </LabelButton>
+      {filtersVisible ? (
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            setFilter({ filterTerm, newIsChecked, startedIsChecked });
+          }}
+        >
+          <input
+            type="text"
+            value={filterTerm}
+            onChange={(e) => setFilterTerm(e.target.value)}
+          />
+          <label htmlFor="new">Neu</label>
+          <input
+            type="checkbox"
+            checked={newIsChecked}
+            name="new"
+            id="new"
+            onChange={() => setNewChecked(!newIsChecked)}
+          />
+          <label htmlFor="started">Gestartet</label>
+          <input
+            type="checkbox"
+            checked={startedIsChecked}
+            name="started"
+            id="started"
+            onChange={() => setStartedChecked(!startedIsChecked)}
+          />
+          <input type="submit" value="Filtern" />
+        </form>
+      ) : null}
+
       {programCards}
-      <p ref={lastElemRef}>Load</p>
+      <Label ref={lastElemRef}>
+        {programList.length === 0
+          ? 'Keine Programme verfügbar'
+          : 'Keine weiteren Programme verfügbar'}
+      </Label>
     </div>
   );
 };
