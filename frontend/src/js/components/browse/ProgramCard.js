@@ -6,7 +6,7 @@ import CardHeader from './CardHeader';
 const ProgramCard = ({ className, program }) => {
   return (
     <div className={className}>
-      <CardHeader isNew={true} />
+      <CardHeader isNew={program.isNew} />
       <h2>{program.title}</h2>
     </div>
   );
