@@ -2,12 +2,15 @@ import React from 'react';
 import styled from 'styled-components';
 import { ReactComponent as HeartIcon } from './../../../img/svg/heart.svg';
 
-const CardHeader = ({ className, isNew }) => {
-  // The heart icon button does not currently do anything.
-  // TODO: Give it functionality.
+const CardHeader = ({ className, isNew, isFavorite, setFavorite }) => {
   return (
     <div className={className}>
-      <button>
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          setFavorite(!isFavorite);
+        }}
+      >
         <HeartIcon />
       </button>
       {isNew ? <p>Neu</p> : null}
@@ -20,4 +23,9 @@ export default styled(CardHeader)`
   justify-content: space-between;
 
   width: 90%;
+
+  svg path {
+    fill: ${(props) =>
+      props.isFavorite ? props.theme.fontColorDefault : null};
+  }
 `;

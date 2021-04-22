@@ -1,14 +1,34 @@
-import React from 'react';
+import React, { Fragment, useState } from 'react';
 import styled from 'styled-components';
 
+import Overlay from './../Overlay';
 import CardHeader from './CardHeader';
+import ProgramDetails from './ProgramDetails';
 
-const ProgramCard = ({ className, program }) => {
+const ProgramCard = ({ className, program, setFavorite }) => {
+  const [detailsOpen, setDetailsOpen] = useState(false);
+
   return (
-    <div className={className}>
-      <CardHeader isNew={program.isNew} />
-      <h2>{program.title}</h2>
-    </div>
+    <Fragment>
+      {detailsOpen ? (
+        <Overlay setOpen={setDetailsOpen}>
+          <ProgramDetails program={program} />
+        </Overlay>
+      ) : null}
+      <div
+        className={className}
+        onClick={() => {
+          return setDetailsOpen(true);
+        }}
+      >
+        <CardHeader
+          isNew={program.isNew}
+          isFavorite={program.favorite}
+          setFavorite={setFavorite}
+        />
+        <h2>{program.title}</h2>
+      </div>
+    </Fragment>
   );
 };
 
