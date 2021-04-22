@@ -2,8 +2,8 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import styled from 'styled-components';
 
 import ProgramCard from './ProgramCard';
-import LabelButton from './../LabelButton';
 import Label from './../Label';
+import FilterForm from './FilterForm';
 
 // TODO Replace hardcoded programs with actual programs from the backend.
 const programs = [
@@ -40,10 +40,6 @@ const Browse = ({ className }) => {
   const [programList, setProgramList] = useState([]);
   const [allLoaded, setAllLoaded] = useState(false);
   const [filter, setFilter] = useState({ filterTerm: '' });
-  const [filtersVisible, setFiltersVisible] = useState(false);
-  const [filterTerm, setFilterTerm] = useState('');
-  const [newIsChecked, setNewChecked] = useState(false);
-  const [startedIsChecked, setStartedChecked] = useState(false);
 
   // A bottom marker element
   const lastElemRef = useRef();
@@ -111,41 +107,7 @@ const Browse = ({ className }) => {
   return (
     <div className={className}>
       <h2>Browse</h2>
-      <LabelButton onClick={() => setFiltersVisible(!filtersVisible)}>
-        Filter
-      </LabelButton>
-      {filtersVisible ? (
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            setFilter({ filterTerm, newIsChecked, startedIsChecked });
-          }}
-        >
-          <input
-            type="text"
-            value={filterTerm}
-            onChange={(e) => setFilterTerm(e.target.value)}
-          />
-          <label htmlFor="new">Neu</label>
-          <input
-            type="checkbox"
-            checked={newIsChecked}
-            name="new"
-            id="new"
-            onChange={() => setNewChecked(!newIsChecked)}
-          />
-          <label htmlFor="started">Gestartet</label>
-          <input
-            type="checkbox"
-            checked={startedIsChecked}
-            name="started"
-            id="started"
-            onChange={() => setStartedChecked(!startedIsChecked)}
-          />
-          <input type="submit" value="Filtern" />
-        </form>
-      ) : null}
-
+      <FilterForm setFilter={setFilter} />
       {programCards}
       <Label ref={lastElemRef}>
         {programList.length === 0
