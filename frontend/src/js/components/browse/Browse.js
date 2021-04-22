@@ -36,6 +36,12 @@ const programs = [
 const programsToLoad = 3;
 let observer;
 
+// Right now, this just changes the constant array, but eventually
+// it should write information back to the backend.
+const persistFavorite = (id, b) => {
+  programs.find((program) => id === program.id).favorite = b;
+};
+
 const Browse = ({ className }) => {
   const [programList, setProgramList] = useState([]);
   const [allLoaded, setAllLoaded] = useState(false);
@@ -57,7 +63,8 @@ const Browse = ({ className }) => {
                   .toLowerCase()
                   .includes(filter.filterTerm.toLowerCase()) &&
                 (!filter.startedIsChecked || program.status === 'started') &&
-                (!filter.newIsChecked || program.isNew)
+                (!filter.newIsChecked || program.isNew) &&
+                (!filter.favoriteIsChecked || program.favorite)
             )
             .slice(programList.length, programList.length + programsToLoad)
         );
@@ -98,10 +105,26 @@ const Browse = ({ className }) => {
       // Since all programs have been loaded, the observer is removed.
       observer.unobserve(lastElemRef.current);
     }
+    // TODO Do I need to return a cleanup function for the observer?
   }, [loadPrograms, allLoaded, filter]);
 
   const programCards = programList.map((program, i) => {
-    return <ProgramCard key={i} program={program} />;
+    return (
+      <ProgramCard
+        key={i}
+        program={program}
+        setFavorite={(b) => {
+          const newProg = { ...program, favorite: b };
+          // Persist the favorite status by writing it back to the backend.
+          persistFavorite(program.id, b);
+          setProgramList((programList) => [
+            ...programList.slice(0, i),
+            newProg,
+            ...programList.slice(i + 1),
+          ]);
+        }}
+      />
+    );
   });
 
   return (

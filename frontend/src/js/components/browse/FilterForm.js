@@ -3,10 +3,16 @@ import styled from 'styled-components';
 import LabelButton from './../LabelButton';
 
 const FilterForm = ({ className, setFilter }) => {
+  // TODO Also add a 'Favorite' filter. But to do that,
+  // a program must have a "favorite" property.
+  // Guess I can simulate that and also persisting it at
+  // least until a full reload.
   const [filtersVisible, setFiltersVisible] = useState(false);
   const [filterTerm, setFilterTerm] = useState('');
   const [newIsChecked, setNewChecked] = useState(false);
   const [startedIsChecked, setStartedChecked] = useState(false);
+  const [favoriteIsChecked, setFavoriteChecked] = useState(false);
+
   return (
     <div className={className}>
       <LabelButton onClick={() => setFiltersVisible(!filtersVisible)}>
@@ -16,7 +22,12 @@ const FilterForm = ({ className, setFilter }) => {
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            setFilter({ filterTerm, newIsChecked, startedIsChecked });
+            setFilter({
+              filterTerm,
+              newIsChecked,
+              startedIsChecked,
+              favoriteIsChecked,
+            });
           }}
         >
           <div className="inputs">
@@ -44,6 +55,16 @@ const FilterForm = ({ className, setFilter }) => {
                   name="started"
                   id="started"
                   onChange={() => setStartedChecked(!startedIsChecked)}
+                />
+              </div>
+              <div className="checkbox">
+                <label htmlFor="favorite">Favorit</label>
+                <input
+                  type="checkbox"
+                  checked={favoriteIsChecked}
+                  name="favorite"
+                  id="favorite"
+                  onChange={() => setFavoriteChecked(!favoriteIsChecked)}
                 />
               </div>
             </div>
