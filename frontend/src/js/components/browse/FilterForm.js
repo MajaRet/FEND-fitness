@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import LabelButton from './../LabelButton';
+import LabelButton from './../labels/LabelButton';
 
 const FilterForm = ({ className, setFilter }) => {
   // TODO Also add a 'Favorite' filter. But to do that,

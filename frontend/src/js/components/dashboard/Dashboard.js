@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import WorkoutInfo from './WorkoutInfo';
 import { ReactComponent as WorkoutImage } from './../../../img/svg/Programme large.svg';
-import LabelLink from './../LabelLink';
+import LabelLink from './../labels/LabelLink';
 
 const StyledWorkoutImage = styled(WorkoutImage)`
   margin: 10px 0;
@@ -12,6 +12,7 @@ const StyledWorkoutImage = styled(WorkoutImage)`
 
 const StyledDashboard = styled.div`
   padding-top: 45px;
+  padding-bottom: var(--nav-height);
 
   h1 {
     margin-bottom: 50px;

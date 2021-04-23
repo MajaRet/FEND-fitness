@@ -10,7 +10,7 @@ import Navigation from './navigation/Navigation';
 import Browse from './browse/Browse';
 
 const StyledApp = styled.div`
-  padding: 25px 17px;
+  padding: var(--standard-padding-vertical) var(--standard-padding-horizontal);
   min-height: 100vh;
 
   background-color: ${(props) => props.theme.backgroundDefault};

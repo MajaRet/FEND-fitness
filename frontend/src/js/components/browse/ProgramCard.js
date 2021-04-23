@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import Overlay from './../Overlay';
 import CardHeader from './CardHeader';
-import ProgramDetails from './ProgramDetails';
+import Program from '../program/Program';
 
 const ProgramCard = ({ className, program, setFavorite }) => {
   const [detailsOpen, setDetailsOpen] = useState(false);
@@ -12,7 +12,10 @@ const ProgramCard = ({ className, program, setFavorite }) => {
     <Fragment>
       {detailsOpen ? (
         <Overlay setOpen={setDetailsOpen}>
-          <ProgramDetails program={program} />
+          <Program
+            program={program}
+            closeOverlay={() => setDetailsOpen(false)}
+          />
         </Overlay>
       ) : null}
       <div
@@ -47,6 +50,8 @@ export default styled(ProgramCard)`
   background-color: ${(props) =>
     props.program.status === 'started'
       ? 'var(--blue2)'
+      : props.program.status === 'completed'
+      ? props.theme.backgroundSecondary
       : props.theme.backgroundPrimary};
 
   ${CardHeader} {

@@ -2,35 +2,237 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import styled from 'styled-components';
 
 import ProgramCard from './ProgramCard';
-import Label from './../Label';
+import Label from './../labels/Label';
 import FilterForm from './FilterForm';
 
 // TODO Replace hardcoded programs with actual programs from the backend.
 const programs = [
-  { id: 0, title: 'Fit in 7 Tagen mit 7 Zwergen', status: 'started' },
-  { id: 1, title: 'Großmutter, wieso hast du so große Muskeln?' },
-  { id: 2, title: 'Frau Holles Bootcamp' },
-  { id: 3, title: 'Fit in 7 Tagen mit 7 Zwergen', status: 'started' },
-  { id: 4, title: 'Großmutter, wieso hast du so große Muskeln?', isNew: true },
-  { id: 5, title: 'Frau Holles Bootcamp', isNew: true },
-  { id: 6, title: 'Fit in 7 Tagen mit 7 Zwergen', status: 'started' },
-  { id: 7, title: 'Großmutter, wieso hast du so große Muskeln?', isNew: true },
-  { id: 8, title: 'Frau Holles Bootcamp', isNew: true },
-  { id: 9, title: 'Fit in 7 Tagen mit 7 Zwergen' },
-  { id: 10, title: 'Großmutter, wieso hast du so große Muskeln?', isNew: true },
-  { id: 11, title: 'Frau Holles Bootcamp', isNew: true },
-  { id: 12, title: 'Fit in 7 Tagen mit 7 Zwergen', status: 'started' },
-  { id: 13, title: 'Großmutter, wieso hast du so große Muskeln?' },
-  { id: 14, title: 'Frau Holles Bootcamp' },
-  { id: 15, title: 'Fit in 7 Tagen mit 7 Zwergen' },
-  { id: 16, title: 'Großmutter, wieso hast du so große Muskeln?' },
-  { id: 17, title: 'Frau Holles Bootcamp' },
-  { id: 18, title: 'Fit in 7 Tagen mit 7 Zwergen', status: 'started' },
-  { id: 19, title: 'Großmutter, wieso hast du so große Muskeln?' },
-  { id: 20, title: 'Frau Holles Bootcamp' },
-  { id: 21, title: 'Fit in 7 Tagen mit 7 Zwergen', status: 'started' },
-  { id: 22, title: 'Großmutter, wieso hast du so große Muskeln?' },
-  { id: 23, title: 'Frau Holles Bootcamp' },
+  {
+    id: 0,
+    title: 'Fit in 7 Wochen mit 7 Zwergen',
+    status: 'started',
+    type: 'Fitness',
+    difficulty: 'Leicht',
+    duration: 50,
+    workouts: [
+      {
+        id: 0,
+        exercises: [],
+        category: 'Krafttraining',
+        day: 1,
+        duration: 26,
+        calories: 100,
+      },
+      {
+        id: 1,
+        exercises: [],
+        category: 'Koordination',
+        day: 2,
+        duration: 20,
+        calories: 60,
+      },
+    ],
+  },
+  {
+    id: 1,
+    title: 'Großmutter, wieso hast du so große Muskeln?',
+    type: 'Kraft',
+    difficulty: 'Normal',
+    duration: 50,
+    workouts: [],
+  },
+  {
+    id: 2,
+    title: 'Frau Holles Bootcamp',
+    isNew: true,
+    type: 'Beweglichkeit',
+    difficulty: 'Schwer',
+    duration: 28,
+    workouts: [],
+  },
+  {
+    id: 3,
+    title: '50 Übungen mit 50kg Haar',
+    status: 'completed',
+    type: 'Kraft',
+    difficulty: 'Leicht',
+    duration: 40,
+    workouts: [],
+  },
+  {
+    id: 4,
+    title: 'Flinke Verbrennung von Pfefferkuchen-Pfunden',
+    isNew: true,
+    type: 'Abnehmen',
+    difficulty: 'Normal',
+    duration: 40,
+    workouts: [],
+  },
+  {
+    id: 5,
+    title: 'Fit in 7 Wochen mit 7 Zwergen',
+    status: 'started',
+    type: 'Fitness',
+    difficulty: 'Leicht',
+    duration: 50,
+  },
+  {
+    id: 6,
+    title: 'Großmutter, wieso hast du so große Muskeln?',
+    type: 'Kraft',
+    difficulty: 'Normal',
+    duration: 50,
+    workouts: [],
+  },
+  {
+    id: 7,
+    title: 'Frau Holles Bootcamp',
+    isNew: true,
+    type: 'Beweglichkeit',
+    difficulty: 'Schwer',
+    duration: 28,
+    workouts: [],
+  },
+  {
+    id: 8,
+    title: '50 Übungen mit 50kg Haar',
+    status: 'completed',
+    type: 'Kraft',
+    difficulty: 'Leicht',
+    duration: 40,
+    workouts: [],
+  },
+  {
+    id: 9,
+    title: 'Flinke Verbrennung von Pfefferkuchen-Pfunden',
+    isNew: true,
+    type: 'Abnehmen',
+    difficulty: 'Normal',
+    duration: 40,
+    workouts: [],
+  },
+  {
+    id: 10,
+    title: 'Fit in 7 Wochen mit 7 Zwergen',
+    status: 'started',
+    type: 'Fitness',
+    difficulty: 'Leicht',
+    duration: 50,
+    workouts: [
+      {
+        id: 0,
+        exercises: [],
+        category: 'Krafttraining',
+        day: 1,
+        duration: 26,
+        calories: 100,
+      },
+      {
+        id: 1,
+        exercises: [],
+        category: 'Koordination',
+        day: 2,
+        duration: 20,
+        calories: 60,
+      },
+    ],
+  },
+  {
+    id: 11,
+    title: 'Großmutter, wieso hast du so große Muskeln?',
+    type: 'Kraft',
+    difficulty: 'Normal',
+    duration: 50,
+    workouts: [],
+  },
+  {
+    id: 12,
+    title: 'Frau Holles Bootcamp',
+    isNew: true,
+    type: 'Beweglichkeit',
+    difficulty: 'Schwer',
+    duration: 28,
+    workouts: [],
+  },
+  {
+    id: 13,
+    title: '50 Übungen mit 50kg Haar',
+    status: 'completed',
+    type: 'Kraft',
+    difficulty: 'Leicht',
+    duration: 40,
+    workouts: [],
+  },
+  {
+    id: 14,
+    title: 'Flinke Verbrennung von Pfefferkuchen-Pfunden',
+    isNew: true,
+    type: 'Abnehmen',
+    difficulty: 'Normal',
+    duration: 40,
+    workouts: [],
+  },
+  {
+    id: 15,
+    title: 'Fit in 7 Wochen mit 7 Zwergen',
+    status: 'started',
+    type: 'Fitness',
+    difficulty: 'Leicht',
+    duration: 50,
+    workouts: [
+      {
+        id: 0,
+        exercises: [],
+        category: 'Krafttraining',
+        day: 1,
+        duration: 26,
+        calories: 100,
+      },
+      {
+        id: 1,
+        exercises: [],
+        category: 'Koordination',
+        day: 2,
+        duration: 20,
+        calories: 60,
+      },
+    ],
+  },
+  {
+    id: 16,
+    title: 'Großmutter, wieso hast du so große Muskeln?',
+    type: 'Kraft',
+    difficulty: 'Normal',
+    duration: 50,
+    workouts: [],
+  },
+  {
+    id: 17,
+    title: 'Frau Holles Bootcamp',
+    isNew: true,
+    type: 'Beweglichkeit',
+    difficulty: 'Schwer',
+    duration: 28,
+    workouts: [],
+  },
+  {
+    id: 18,
+    title: '50 Übungen mit 50kg Haar',
+    status: 'completed',
+    type: 'Kraft',
+    difficulty: 'Leicht',
+    duration: 40,
+    workouts: [],
+  },
+  {
+    id: 19,
+    title: 'Flinke Verbrennung von Pfefferkuchen-Pfunden',
+    isNew: true,
+    type: 'Abnehmen',
+    difficulty: 'Normal',
+    duration: 40,
+    workouts: [],
+  },
 ];
 
 const programsToLoad = 3;
@@ -72,7 +274,7 @@ const Browse = ({ className }) => {
     }
   }, []);
 
-  // TODO doesn't work with a filter term, but it has to be
+  // TODO doesn't work with a filter, but it has to be
   // changed anyway when the backend arrives.
   useEffect(() => {
     if (programList.length === programs.length) {
@@ -115,7 +317,7 @@ const Browse = ({ className }) => {
         program={program}
         setFavorite={(b) => {
           const newProg = { ...program, favorite: b };
-          // Persist the favorite status by writing it back to the backend.
+          // Persist the favorite status by writing it back to the "backend".
           persistFavorite(program.id, b);
           setProgramList((programList) => [
             ...programList.slice(0, i),

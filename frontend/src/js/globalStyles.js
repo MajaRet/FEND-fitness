@@ -44,6 +44,11 @@ const GlobalStyle = createGlobalStyle`
 
     --tiny-text-size: 1rem;
     --tiny-text-height: 1.25rem;
+
+    --standard-padding-horizontal: 17px;
+    --standard-padding-vertical: 25px;
+
+    --nav-height: 50px;
   }
 
   html {

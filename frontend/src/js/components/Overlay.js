@@ -1,24 +1,24 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import FocusTrap from 'focus-trap-react';
-import CloseButton from './buttons/CloseButton';
 
-const Overlay = ({ setOpen, closeButton, children, className }) => {
+const Overlay = ({ children, className }) => {
+  // Prevent scrolling behind the overlay.
+  useEffect(() => {
+    const htmlStyle = document.querySelector('html').style;
+    const overflowSetting = htmlStyle.overflowY;
+    htmlStyle.overflowY = 'hidden';
+    return () => {
+      // Reset scroll settings
+      htmlStyle.overflowY = overflowSetting;
+    };
+  }, []);
+
   return (
     <FocusTrap>
-      <div className={className}>
-        {React.cloneElement(closeButton, {
-          onClick: () => setOpen(false),
-        })}
-        {children}
-      </div>
+      <div className={className}>{children}</div>
     </FocusTrap>
   );
-};
-
-Overlay.defaultProps = {
-  open: true,
-  closeButton: <CloseButton />,
 };
 
 const StyledOverlay = styled(Overlay)`
@@ -29,12 +29,13 @@ const StyledOverlay = styled(Overlay)`
 
   width: 100vw;
   max-width: 100%;
-  height: 100vh;
+  min-height: 100vh;
+  height: 100%;
 
   overflow: scroll;
 
   // Default background color, usually overwritten by component styles
-  background-color: white;
+  background-color: ${(props) => props.theme.backgroundDefault};
 `;
 
 export default StyledOverlay;
