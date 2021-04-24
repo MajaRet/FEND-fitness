@@ -32,7 +32,8 @@ const StyledOverlay = styled(Overlay)`
   min-height: 100vh;
   height: 100%;
 
-  overflow: scroll;
+  overflow-x: hidden;
+  overflow-y: scroll;
 
   // Default background color, usually overwritten by component styles
   background-color: ${(props) => props.theme.backgroundDefault};

@@ -1,6 +1,63 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { PieChart, Pie, LabelList } from 'recharts';
+import { PieChart, Pie, Cell, Legend, ResponsiveContainer } from 'recharts';
+import Label from './../labels/Label';
+
+// Generates an array of @number colors between two fixed colors.
+function generateColors(number) {
+  const startColor = { r: 122, g: 135, b: 120 };
+
+  if (number <= 1)
+    return [`rgb(${startColor.r},${startColor.g},${startColor.b})`];
+
+  const endColor = { r: 210, g: 221, b: 208 };
+  const colors = [];
+  const rStep = (endColor.r - startColor.r) / (number - 1);
+  const gStep = (endColor.g - startColor.g) / (number - 1);
+  const bStep = (endColor.b - startColor.b) / (number - 1);
+
+  let r;
+  let g;
+  let b;
+  for (let i = 0; i < number; i++) {
+    r = startColor.r + i * rStep;
+    g = startColor.g + i * gStep;
+    b = startColor.b + i * bStep;
+    colors.push(`rgb(${r},${g},${b})`);
+  }
+  return colors;
+}
+
+const Circle = styled.div`
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background-color: ${(props) => props.color};
+`;
+
+const CustomLegend = ({ className, payload }) => {
+  const renderedLegend = payload.map(({ value, color }) => {
+    return (
+      <div>
+        <Circle color={color} />
+        <Label>{value}</Label>
+      </div>
+    );
+  });
+
+  return <div className={className}>{renderedLegend}</div>;
+};
+
+const StyledCustomLegend = styled(CustomLegend)`
+  display: flex;
+  flex-direction: column;
+  row-gap: 15px;
+
+  div {
+    display: flex;
+    column-gap: 12px;
+  }
+`;
 
 // TODO remove
 const testWorkouts = [
@@ -21,59 +78,53 @@ const testWorkouts = [
   },
 ];
 
-function count(list, elem) {
-  return list.reduce((acc, e) => (e === elem ? acc + 1 : acc), 0);
-}
-
-function removeAll(list, elem) {
-  return list.filter((e) => e !== elem);
-}
-
 const ProgramChart = ({ className, id }) => {
   const [categories, setCategories] = useState(null);
+  const [colors, setColors] = useState([]);
 
+  // Construct a pie chart for the relative category occurrences.
   useEffect(() => {
     const workoutCategories = testWorkouts.map((workout) => workout.category);
-    let tempCategories = workoutCategories;
-    const histogram = [];
-    let currCategory;
-    while (tempCategories.length !== 0) {
-      currCategory = tempCategories[0];
-      histogram.push({
-        name: currCategory,
-        value: count(tempCategories, currCategory),
-      });
-      tempCategories = removeAll(tempCategories, currCategory);
-    }
-    setCategories(histogram);
+    const histogram = {};
+    workoutCategories.forEach((cat) => {
+      histogram[cat] = {
+        name: cat,
+        value: histogram[cat] ? histogram[cat].value + 1 : 1,
+      };
+    });
+    const vals = Object.values(histogram);
+    setCategories(vals);
+    setColors(generateColors(vals.length));
   }, []);
-
-  console.log(categories);
 
   return (
     <div className={className}>
-      <PieChart width={730} height={250}>
-        <Pie
-          data={categories}
-          dataKey="value"
-          nameKey="value"
-          cx="50%"
-          cy="50%"
-          outerRadius={50}
-          fill="#8884d8"
-          label={(entry) => entry.name}
-        />
-      </PieChart>
+      <ResponsiveContainer width="100%" height={250}>
+        <PieChart>
+          <Pie
+            data={categories}
+            cx="30%"
+            dataKey="value"
+            outerRadius={80}
+            fill="#8884d8"
+          >
+            {categories?.map((entry, index) => (
+              <Cell key={`cell-${index}`} fill={colors[index]} />
+            ))}
+          </Pie>
+          <Legend
+            layout="vertical"
+            align="center"
+            wrapperStyle={{ marginLeft: '100px' }}
+            verticalAlign="middle"
+            content={<StyledCustomLegend />}
+          />
+        </PieChart>
+      </ResponsiveContainer>
     </div>
   );
 };
 
 export default styled(ProgramChart)`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  height: 50vh;
-
   background-color: white;
 `;
