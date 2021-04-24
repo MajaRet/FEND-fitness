@@ -38,7 +38,7 @@ const Circle = styled.div`
 const CustomLegend = ({ className, payload }) => {
   const renderedLegend = payload.map(({ value, color }) => {
     return (
-      <div>
+      <div key={value}>
         <Circle color={color} />
         <Label>{value}</Label>
       </div>
