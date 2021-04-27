@@ -25,21 +25,26 @@ const StyledDashboard = styled.div`
 `;
 
 const Dashboard = (props) => {
+  const currHours = new Date().getHours();
+  const timeOfDay =
+    currHours < 11 ? 'Morgen' : currHours < 17 ? 'Tag' : 'Abend';
   return (
     <StyledDashboard>
       <h1>
         Guten
         <br />
-        Morgen,
+        {timeOfDay},
         <br />
         {props.user.name}
       </h1>
-      <div className="subheader">
-        <h2>Dein Workout heute</h2>
-        <LabelLink to="/">Trainingsplan</LabelLink>
-      </div>
-      <StyledWorkoutImage />
-      <WorkoutInfo />
+      <main>
+        <div className="subheader">
+          <h2>Dein Workout heute</h2>
+          <LabelLink to="/">Trainingsplan</LabelLink>
+        </div>
+        <StyledWorkoutImage />
+        <WorkoutInfo />
+      </main>
     </StyledDashboard>
   );
 };
