@@ -76,6 +76,12 @@ const testWorkouts = [
   {
     category: 'Krafttraining',
   },
+  {
+    category: 'Geschicklichkeit',
+  },
+  {
+    category: 'Hand-Auge-Koordination',
+  },
 ];
 
 const ProgramChart = ({ className, id }) => {
@@ -98,33 +104,39 @@ const ProgramChart = ({ className, id }) => {
   }, []);
 
   return (
-    <div className={className}>
-      <ResponsiveContainer width="100%" height={250}>
-        <PieChart>
-          <Pie
-            data={categories}
-            cx="30%"
-            dataKey="value"
-            outerRadius={80}
-            fill="#8884d8"
-          >
-            {categories?.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={colors[index]} />
-            ))}
-          </Pie>
-          <Legend
-            layout="vertical"
-            align="center"
-            wrapperStyle={{ marginLeft: '100px' }}
-            verticalAlign="middle"
-            content={<StyledCustomLegend />}
-          />
-        </PieChart>
-      </ResponsiveContainer>
-    </div>
+    <section className={className}>
+      <h3>So ist das Programm aufgeteilt:</h3>
+      {categories ? (
+        <ResponsiveContainer width="100%" height={250}>
+          <PieChart>
+            <Pie
+              data={categories}
+              cx="30%"
+              dataKey="value"
+              outerRadius={80}
+              fill="#8884d8"
+            >
+              {categories?.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={colors[index]} />
+              ))}
+            </Pie>
+            <Legend
+              layout="vertical"
+              align="center"
+              wrapperStyle={{ marginLeft: '100px' }}
+              verticalAlign="middle"
+              content={<StyledCustomLegend />}
+            />
+          </PieChart>
+        </ResponsiveContainer>
+      ) : (
+        'Keine Daten verfügbar'
+      )}
+    </section>
   );
 };
 
 export default styled(ProgramChart)`
+  overflow-x: scroll;
   background-color: white;
 `;
