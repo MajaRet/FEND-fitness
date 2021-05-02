@@ -9,6 +9,8 @@ import Dashboard from './dashboard/Dashboard';
 import Navigation from './navigation/Navigation';
 import Browse from './browse/Browse';
 
+import TimedExercise from './exercise/TimedExercise'; // TODO remove
+
 const StyledApp = styled.div`
   padding: var(--standard-padding-vertical) var(--standard-padding-horizontal);
   min-height: 100vh;
@@ -25,6 +27,7 @@ const App = () => {
           <StyledApp>
             <Switch>
               <Route path="/" exact>
+                <TimedExercise />
                 <Dashboard user={dummyUser} />
               </Route>
               <Route path="/browse" exact>

@@ -5,4 +5,4 @@ const Workout = ({ className }) => {
   return <div className={className}>Workout</div>;
 };
 
-export default styled(Workout);
+export default styled(Workout)``;

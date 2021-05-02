@@ -5,4 +5,4 @@ const RepeatedExercise = ({ className }) => {
   return <div className={className}>RepeatedExercise</div>;
 };
 
-export default styled(RepeatedExercise);
+export default styled(RepeatedExercise)``;

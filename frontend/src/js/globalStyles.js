@@ -45,6 +45,9 @@ const GlobalStyle = createGlobalStyle`
     --tiny-text-size: 1rem;
     --tiny-text-height: 1.25rem;
 
+    --normal-weight: 400;
+    --heading-weight: 700;
+
     --standard-padding-horizontal: 17px;
     --standard-padding-vertical: 25px;
 
@@ -74,16 +77,19 @@ const GlobalStyle = createGlobalStyle`
   h1 {
     font-size: var(--h1-size);
     line-height: var(--h1-height);
+    font-weight: var(--heading-weight);
   }
 
   h2 {
     font-size: var(--h2-size);
     line-height: var(--h2-height);
+    font-weight: var(--heading-weight);
   }
 
   h3 {
     font-size: var(--h3-size);
     line-height: var(--h3-height);
+    font-weight: var(--heading-weight);
   }
 
   a {
