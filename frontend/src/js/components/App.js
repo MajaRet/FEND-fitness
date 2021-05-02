@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { BrowserRouter, Route } from 'react-router-dom';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import styled, { ThemeProvider } from 'styled-components';
 
 import GlobalStyle from '../globalStyles';
@@ -23,12 +23,14 @@ const App = () => {
         <Fragment>
           <GlobalStyle />
           <StyledApp>
-            <Route path="/" exact>
-              <Dashboard user={dummyUser} />
-            </Route>
-            <Route path="/browse" exact>
-              <Browse />
-            </Route>
+            <Switch>
+              <Route path="/browse" exact>
+                <Browse />
+              </Route>
+              <Route path="/" exact>
+                <Dashboard user={dummyUser} />
+              </Route>
+            </Switch>
             <Navigation />
           </StyledApp>
         </Fragment>
