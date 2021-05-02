@@ -5,14 +5,14 @@ import InfoBar from './InfoBar';
 
 const ProgramHeader = ({ className, program }) => {
   return (
-    <div className={className}>
+    <header className={className}>
       <h1>{program.title}</h1>
       <InfoBar
         type={program.type}
         duration={program.duration}
         difficulty={program.difficulty}
       />
-    </div>
+    </header>
   );
 };
 

@@ -79,9 +79,6 @@ const testWorkouts = [
   {
     category: 'Geschicklichkeit',
   },
-  {
-    category: 'Hand-Auge-Koordination',
-  },
 ];
 
 const ProgramChart = ({ className, id }) => {

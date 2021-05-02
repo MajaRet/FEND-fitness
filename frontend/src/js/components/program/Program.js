@@ -24,8 +24,7 @@ const Program = ({ closeOverlay, className, program }) => {
 export default styled(Program)`
   background-color: ${(props) => props.theme.backgroundPrimary};
 
-  > div,
-  > p {
+  > :not(${Button}) {
     padding: var(--standard-padding-vertical) var(--standard-padding-horizontal);
   }
 
