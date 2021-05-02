@@ -5,6 +5,7 @@ import WorkoutList from './WorkoutList';
 import ProgramHeader from './ProgramHeader';
 import ProgramChart from './ProgramChart';
 import ProgramDescription from './ProgramDescription';
+import Button from './../buttons/Button';
 import CloseButton from './../buttons/CloseButton';
 
 const Program = ({ closeOverlay, className, program }) => {
@@ -15,12 +16,16 @@ const Program = ({ closeOverlay, className, program }) => {
       <ProgramDescription program={program} />
       <ProgramChart id={program.id} />
       <WorkoutList id={program.id} duration={program.duration} />
+      <Button>jetzt starten</Button>
     </div>
   );
 };
 
 export default styled(Program)`
-  > * {
+  background-color: ${(props) => props.theme.backgroundPrimary};
+
+  > div,
+  > p {
     padding: var(--standard-padding-vertical) var(--standard-padding-horizontal);
   }
 
@@ -34,5 +39,10 @@ export default styled(Program)`
     padding: 0;
   }
 
-  background-color: ${(props) => props.theme.backgroundPrimary};
+  ${Button} {
+    position: fixed;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
 `;
