@@ -24,11 +24,11 @@ const App = () => {
           <GlobalStyle />
           <StyledApp>
             <Switch>
-              <Route path="/" exact>
-                <Dashboard user={dummyUser} />
-              </Route>
               <Route path="/browse" exact>
                 <Browse />
+              </Route>
+              <Route path="/" exact>
+                <Dashboard user={dummyUser} />
               </Route>
             </Switch>
             <Navigation />
