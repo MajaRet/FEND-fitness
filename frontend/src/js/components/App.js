@@ -15,7 +15,7 @@ const StyledApp = styled.div`
   padding: var(--standard-padding-vertical) var(--standard-padding-horizontal);
   min-height: 100vh;
 
-  background-color: ${(props) => props.theme.backgroundDefault};
+  background-color: ${(props) => `rgb(${props.theme.backgroundDefault})`};
 `;
 
 const App = () => {

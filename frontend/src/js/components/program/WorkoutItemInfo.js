@@ -25,7 +25,7 @@ export default styled(WorkoutItemInfo)`
 
   padding: 15px;
 
-  background-color: ${(props) => props.theme.backgroundDefault};
+  background-color: ${(props) => `rgb(${props.theme.backgroundDefault})`};
 
   .favorite {
     margin-top: 30px;

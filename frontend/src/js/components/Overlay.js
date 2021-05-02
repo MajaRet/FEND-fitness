@@ -36,7 +36,7 @@ const StyledOverlay = styled(Overlay)`
   overflow-y: scroll;
 
   // Default background color, usually overwritten by component styles
-  background-color: ${(props) => props.theme.backgroundDefault};
+  background-color: ${(props) => `rgb(${props.theme.backgroundDefault})`};
 `;
 
 export default StyledOverlay;

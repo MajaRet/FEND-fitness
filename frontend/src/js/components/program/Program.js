@@ -34,5 +34,5 @@ export default styled(Program)`
     padding: 0;
   }
 
-  background-color: ${(props) => props.theme.backgroundPrimary};
+  background-color: ${(props) => `rgb(${props.theme.backgroundPrimary})`};
 `;

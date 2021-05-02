@@ -2,29 +2,29 @@ import { createGlobalStyle } from 'styled-components';
 
 const GlobalStyle = createGlobalStyle`
   :root {
-    --blue1: #4856DF;
-    --blue2: #3EC1F3;
-    --light-pink: #FFB7D5;
-    --terracotta: #CA7358;
-    --dark-yellow: #FFBE21;
-    --beige: #F5EBDD;
-    --dark-blue: #1D2A73;
-    --cyan: #3EF3E8;
-    --light-yellow: #F5FFA0;
-    --dark-pink: #EB42C6;
-    --light-grey: #F3F3F3;
-    --brown1: #522F29;
-    --brown2: #95645D;
-    --brown3: #DBAFA8;
-    --brown4: #EDD4D0;
-    --pistachio: #D2DDD0;
-    --flesh: #FFB1A0;
+    --blue1: 72, 86, 223; // #4856DF;
+    --blue2: 62, 193, 243; // #3EC1F3;
+    --light-pink: 255, 183, 213; // #FFB7D5;
+    --terracotta: 202, 115, 88; // #CA7358;
+    --dark-yellow: 255, 190, 33; // #FFBE21;
+    --beige: 245, 235, 221; // #F5EBDD;
+    --dark-blue: 29, 42, 115; // #1D2A73;
+    --cyan: 62, 243, 232; // #3EF3E8;
+    --light-yellow: 245, 255, 160; // #F5FFA0;
+    --dark-pink: 235, 66, 198; // #EB42C6;
+    --light-grey: 243, 243, 243; // #F3F3F3;
+    --brown1: 82, 47, 41; // #522F29;
+    --brown2: 149, 100, 93; // #95645D;
+    --brown3: 219, 175, 168; // #DBAFA8;
+    --brown4: 237, 212, 208; // #EDD4D0;
+    --pistachio: 210, 221, 208; // #D2DDD0;
+    --flesh: 255, 177, 160; // #FFB1A0;
 
-    --gradient-dark-blue-cyan: linear-gradient(to right, var(--dark-blue),var(--cyan));
-    --gradient-light-yellow-cyan: linear-gradient(to right, var(--light-yellow),var(--cyan));
-    --gradient-flesh-dark-pink: linear-gradient(to right, var(--flesh), var(--dark-pink));
-    --gradient-dark-yellow-dark-pink: linear-gradient(to right, var(--dark-yellow), var(--dark-pink));
-    --gradient-dark-yellow-light-pink: linear-gradient(to right, var(--dark-yellow), var(--light-pink));
+    --gradient-dark-blue-cyan: linear-gradient(to right, rgb(var(--dark-blue)),rgb(var(--cyan)));
+    --gradient-light-yellow-cyan: linear-gradient(to right, rgb(var(--light-yellow)),rgb(var(--cyan)));
+    --gradient-flesh-dark-pink: linear-gradient(to right, rgb(var(--flesh)), rgb(var(--dark-pink)));
+    --gradient-dark-yellow-dark-pink: linear-gradient(to right, rgb(var(--dark-yellow)), rgb(var(--dark-pink)));
+    --gradient-dark-yellow-light-pink: linear-gradient(to right, rgb(var(--dark-yellow)), rgb(var(--light-pink)));
 
     --font-family: "Montserrat", Times, Serif;
     --h1-size: 3.6rem;
@@ -71,7 +71,7 @@ const GlobalStyle = createGlobalStyle`
     font-family:  var(--font-family);
     font-size: var(--body-text-size);
     line-height: var(--body-text-height);
-    color: ${(props) => props.theme.fontColorDefault};
+    color: ${(props) => `rgb(${props.theme.fontColorDefault})`};
   }
 
   h1 {

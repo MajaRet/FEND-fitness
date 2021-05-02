@@ -49,10 +49,10 @@ export default styled(ProgramCard)`
   // TODO Also add the 'started' color to the theme.
   background-color: ${(props) =>
     props.program.status === 'started'
-      ? 'var(--blue2)'
+      ? 'rgb(var(--blue2))'
       : props.program.status === 'completed'
-      ? props.theme.backgroundSecondary
-      : props.theme.backgroundPrimary};
+      ? `rgb(${props.theme.backgroundSecondary})`
+      : `rgb(${props.theme.backgroundPrimary})`};
 
   ${CardHeader} {
     position: absolute;

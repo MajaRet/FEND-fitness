@@ -86,7 +86,7 @@ export default styled(FilterForm)`
       height: fit-content;
       padding: 10px 20px;
 
-      background-color: ${(props) => props.theme.backgroundSecondary};
+      background-color: ${(props) => `rgb(${props.theme.backgroundSecondary})`};
     }
 
     .checkboxes {

@@ -26,6 +26,6 @@ export default styled(CardHeader)`
 
   svg path {
     fill: ${(props) =>
-      props.isFavorite ? props.theme.fontColorDefault : null};
+      props.isFavorite ? `rgb(${props.theme.fontColorDefault})` : null};
   }
 `;
