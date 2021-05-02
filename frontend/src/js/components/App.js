@@ -21,7 +21,7 @@ const App = () => {
           <GlobalStyle />
           <StyledApp>
             <Switch>
-              <Route path="/">
+              <Route path="/" exact>
                 <Dashboard user={dummyUser} />
               </Route>
             </Switch>
