@@ -7,10 +7,13 @@ import theme from '../Theme';
 
 import Dashboard from './dashboard/Dashboard';
 import Navigation from './navigation/Navigation';
+import Browse from './browse/Browse';
 
 const StyledApp = styled.div`
   padding: 25px 17px;
   min-height: 100vh;
+
+  background-color: ${(props) => props.theme.backgroundDefault};
 `;
 
 const App = () => {
@@ -21,6 +24,9 @@ const App = () => {
           <GlobalStyle />
           <StyledApp>
             <Switch>
+              <Route path="/browse" exact>
+                <Browse />
+              </Route>
               <Route path="/" exact>
                 <Dashboard user={dummyUser} />
               </Route>
