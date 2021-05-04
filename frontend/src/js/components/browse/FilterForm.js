@@ -2,12 +2,40 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import LabelButton from './../labels/LabelButton';
 
+function handleFilterSubmit(
+  setFilter,
+  filterTerm,
+  minDurationFilter,
+  maxDurationFilter,
+  difficultyFilter
+) {
+  const filter = {};
+  if (filterTerm) {
+    filter.title = { matches: `*${filterTerm}*` };
+  }
+  if (minDurationFilter || maxDurationFilter) {
+    filter.duration = {};
+    if (minDurationFilter) {
+      filter.duration.gte = parseInt(minDurationFilter, 10) || 0;
+    }
+    if (maxDurationFilter) {
+      filter.duration.lte =
+        parseInt(maxDurationFilter, 10) || Number.MAX_SAFE_INTEGER;
+    }
+  }
+  if (difficultyFilter !== 'none') {
+    filter.difficulty = { eq: difficultyFilter };
+  }
+
+  setFilter(filter);
+}
+
 const FilterForm = ({ className, setFilter }) => {
   const [filtersVisible, setFiltersVisible] = useState(false);
   const [filterTerm, setFilterTerm] = useState('');
-  const [newIsChecked, setNewChecked] = useState(false);
-  const [startedIsChecked, setStartedChecked] = useState(false);
-  const [favoriteIsChecked, setFavoriteChecked] = useState(false);
+  const [difficultyFilter, setDifficultyFilter] = useState('none');
+  const [maxDurationFilter, setMaxDurationFilter] = useState('');
+  const [minDurationFilter, setMinDurationFilter] = useState('');
 
   return (
     <div className={className}>
@@ -18,54 +46,59 @@ const FilterForm = ({ className, setFilter }) => {
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            setFilter({
+            handleFilterSubmit(
+              setFilter,
               filterTerm,
-              newIsChecked,
-              startedIsChecked,
-              favoriteIsChecked,
-            });
+              minDurationFilter,
+              maxDurationFilter,
+              difficultyFilter
+            );
           }}
         >
           <div className="inputs">
             <input
               type="text"
               value={filterTerm}
-              onChange={(e) => setFilterTerm(e.target.value)}
+              onChange={(e) => {
+                setFilterTerm(e.target.value);
+              }}
             />
-            <div className="checkboxes">
-              <div className="checkbox">
-                <label htmlFor="new">Neu</label>
-                <input
-                  type="checkbox"
-                  checked={newIsChecked}
-                  name="new"
-                  id="new"
-                  onChange={() => setNewChecked(!newIsChecked)}
-                />
-              </div>
-              <div className="checkbox">
-                <label htmlFor="started">Gestartet</label>
-                <input
-                  type="checkbox"
-                  checked={startedIsChecked}
-                  name="started"
-                  id="started"
-                  onChange={() => setStartedChecked(!startedIsChecked)}
-                />
-              </div>
-              <div className="checkbox">
-                <label htmlFor="favorite">Favorit</label>
-                <input
-                  type="checkbox"
-                  checked={favoriteIsChecked}
-                  name="favorite"
-                  id="favorite"
-                  onChange={() => setFavoriteChecked(!favoriteIsChecked)}
-                />
-              </div>
-            </div>
+            <label htmlFor="minDuration">Minimale Dauer</label>
+
+            <input
+              type="number"
+              id="minDuration"
+              name="minDuration"
+              min="0"
+              value={minDurationFilter}
+              onChange={(e) => setMinDurationFilter(e.target.value)}
+            ></input>
+            <label htmlFor="maxDuration">Maximale Dauer</label>
+
+            <input
+              type="number"
+              id="maxDuration"
+              name="maxDuration"
+              min="0"
+              value={maxDurationFilter}
+              onChange={(e) => setMaxDurationFilter(e.target.value)}
+            ></input>
+            <label htmlFor="difficultySelection">Schwierigkeitsgrad</label>
+            <select
+              value={difficultyFilter}
+              onChange={(e) => {
+                setDifficultyFilter(e.target.value);
+              }}
+              id="difficultySelection"
+              name="difficultySelection"
+            >
+              <option value="none">Alle</option>
+              <option value="beginner">Anfänger</option>
+              <option value="intermediate">Fortgeschrittener</option>
+              <option value="hard">Schwierig</option>
+            </select>
+            <input type="submit" value="Filtern" />
           </div>
-          <input type="submit" value="Filtern" />
         </form>
       ) : null}
     </div>
