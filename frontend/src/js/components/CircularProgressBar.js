@@ -8,7 +8,9 @@ const CircularProgressBar = React.forwardRef((props, ref) => {
 
   return (
     <div className={className}>
-      <svg width={(radius + thickness) * 2} height={(radius + thickness) * 2}>
+      <svg
+        viewBox={`0 0 ${(radius + thickness) * 2} ${(radius + thickness) * 2}`}
+      >
         <circle
           className="circle background"
           r={radius}
@@ -36,8 +38,8 @@ const CircularProgressBar = React.forwardRef((props, ref) => {
 
 export default styled(CircularProgressBar)`
   position: relative;
-  width: fit-content;
-  height: fit-content;
+  width: 100%;
+  height: 500px;
 
   .circle {
     fill: none;
