@@ -13,7 +13,7 @@ const ProgramCard = ({ className, program, setFavorite }) => {
       {detailsOpen ? (
         <Overlay setOpen={setDetailsOpen}>
           <Program
-            program={program}
+            programId={program._id}
             closeOverlay={() => setDetailsOpen(false)}
           />
         </Overlay>

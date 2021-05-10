@@ -2,13 +2,14 @@ import React from 'react';
 import styled from 'styled-components';
 
 import InfoBarElem from './InfoBarElem';
+import display from './../../naming';
 
 const InfoBar = ({ className, type, difficulty, duration }) => {
   return (
     <div className={className}>
-      <InfoBarElem text={type} />
-      <InfoBarElem text={difficulty} />
-      <InfoBarElem text={`${Math.round(duration / 7)} Wochen`} />
+      <InfoBarElem text={display(type)} />
+      <InfoBarElem text={display(difficulty)} />
+      <InfoBarElem text={`${duration} Wochen`} />
     </div>
   );
 };

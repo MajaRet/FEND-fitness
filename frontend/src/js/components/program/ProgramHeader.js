@@ -8,7 +8,7 @@ const ProgramHeader = ({ className, program }) => {
     <div className={className}>
       <h1>{program.title}</h1>
       <InfoBar
-        type={program.type}
+        type={program.focus}
         duration={program.duration}
         difficulty={program.difficulty}
       />
