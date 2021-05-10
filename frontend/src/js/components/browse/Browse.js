@@ -18,6 +18,7 @@ const loadProgramsQuery = gql`
   query LoadPrograms($offset: Int!, $where: ProgramFilter) {
     allProgram(limit: 5, offset: $offset, where: $where) {
       title
+      _id
     }
   }
 `;
@@ -57,9 +58,10 @@ const Browse = ({ className }) => {
   }, [filter]);
 
   useEffect(() => {
+    const lastElem = lastElemRef.current;
     if (!allLoaded) {
       // If the observer is already set, unregister it.
-      observer?.unobserve(lastElemRef.current);
+      observer?.unobserve(lastElem);
       observer = new IntersectionObserver(
         (entries) => {
           if (entries[0].intersectionRatio > 0) {
@@ -78,12 +80,12 @@ const Browse = ({ className }) => {
           threshold: 1.0,
         }
       );
-      observer.observe(lastElemRef.current);
+      observer.observe(lastElem);
     } else {
       // Since all programs have been loaded, the observer is removed.
-      observer.unobserve(lastElemRef.current);
+      observer.unobserve(lastElem);
     }
-    // TODO Do I need to return a cleanup function for the observer?
+    return () => observer?.unobserve(lastElem);
   }, [loadPrograms, allLoaded, filter, programList]);
 
   const programCards = programList.map((program, i) => {

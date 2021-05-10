@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import display from '../../naming';
 import LabelButton from './../labels/LabelButton';
 
 function handleFilterSubmit(
@@ -93,9 +94,9 @@ const FilterForm = ({ className, setFilter }) => {
               name="difficultySelection"
             >
               <option value="none">Alle</option>
-              <option value="beginner">Anfänger</option>
-              <option value="intermediate">Fortgeschrittener</option>
-              <option value="hard">Schwierig</option>
+              <option value="beginner">${display('beginner')}</option>
+              <option value="intermediate">${display('intermediate')}</option>
+              <option value="hard">${display('hard')}</option>
             </select>
             <input type="submit" value="Filtern" />
           </div>

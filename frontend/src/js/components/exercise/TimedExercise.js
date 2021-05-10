@@ -11,7 +11,6 @@ const TimedExercise = ({ className, seconds = 4 }) => {
   useEffect(() => {
     if (secondsLeft > 0) {
       const timer = setInterval(() => {
-        console.log('Fire!');
         setSecondsLeft((secondsLeft) => secondsLeft - 1);
         progressRef.current.style =
           'transition: stroke-dashoffset 1s ease-in-out;';
