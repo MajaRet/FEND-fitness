@@ -7,6 +7,7 @@ const displayGermanName = {
   cardio: 'Kardio',
   strength: 'Kraft',
   weightloss: 'Abnehmen',
+  coordination: 'Koordination',
 };
 
 function display(str) {

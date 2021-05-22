@@ -17,7 +17,6 @@ const getFirstExercise = (completedExercises) =>
 // TODO: Pass program ID and workout ID (or day) instead and use a useQuery
 // hook to get the workout data.
 const Workout = ({ className, workoutId }) => {
-  console.log(workoutId);
   const query = gql`
   query {
     Workout(id: "${workoutId}") {
@@ -50,7 +49,6 @@ const Workout = ({ className, workoutId }) => {
 
   useEffect(() => {
     if (data) {
-      console.log(data);
       setCompletedExercises((complEx) =>
         complEx.length === 0
           ? Array(data.Workout.exercises.length).fill(false)
@@ -71,7 +69,6 @@ const Workout = ({ className, workoutId }) => {
     setCompletedExercises(newCompleted);
   };
 
-  console.log(completedExercises);
   if (data) {
     return (
       <div className={className}>
@@ -114,7 +111,7 @@ const Workout = ({ className, workoutId }) => {
       </div>
     );
   }
-  return <div>Loading!!!</div>;
+  return <div>Loading...</div>;
 };
 
 export default styled(Workout)``;

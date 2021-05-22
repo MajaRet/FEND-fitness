@@ -21,12 +21,13 @@ const Program = ({ closeOverlay, className, programId }) => {
         difficulty
         focus
         workouts {
-          week
+          day
           Workout { 
             _id
             title
             categories
             calories
+            duration
           }
         }
       }

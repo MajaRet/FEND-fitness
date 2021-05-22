@@ -36,7 +36,8 @@ const Browse = ({ className }) => {
   const [programList, setProgramList] = useState([]);
   const [allLoaded, setAllLoaded] = useState(false);
   const [filter, setFilter] = useState({});
-  const [loadPrograms, { error, data }] = useLazyQuery(loadProgramsQuery);
+  const [loadPrograms, { error, loading, data }] =
+    useLazyQuery(loadProgramsQuery);
 
   // A bottom marker element
   const lastElemRef = useRef();
@@ -72,7 +73,6 @@ const Browse = ({ className }) => {
               },
             });
           }
-          //loadPrograms(entries, filter);
         },
         {
           root: null,
@@ -95,7 +95,7 @@ const Browse = ({ className }) => {
         program={program}
         setFavorite={(b) => {
           const newProg = { ...program, favorite: b };
-          // Persist the favorite status by writing it back to the "backend".
+          // Persist the favorite status by writing it back to the backend.
           persistFavorite(program.id, b);
           setProgramList((programList) => [
             ...programList.slice(0, i),
@@ -119,7 +119,9 @@ const Browse = ({ className }) => {
       {programCards}
       <Label ref={lastElemRef}>
         {programList.length === 0
-          ? 'Keine Programme verfügbar'
+          ? loading
+            ? 'Wird geladen...'
+            : 'Keine Programme verfügbar'
           : 'Keine weiteren Programme verfügbar'}
       </Label>
     </div>
