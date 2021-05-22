@@ -1,8 +1,22 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const WorkoutDetails = ({ className, workout }) => {
-  return <div className={className}>WorkoutDetail</div>;
+import WorkoutDetailsLabel from './WorkoutDetailsLabel';
+
+const WorkoutDetails = ({ className, workout, day }) => {
+  console.log(workout);
+  return (
+    <div className={className}>
+      <h1>Tag {day}</h1>
+      <WorkoutDetailsLabel workout={workout} className="details" />
+    </div>
+  );
 };
 
-export default styled(WorkoutDetails)``;
+export default styled(WorkoutDetails)`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  row-gap: 30px;
+`;

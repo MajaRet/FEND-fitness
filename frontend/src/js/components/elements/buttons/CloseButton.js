@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { ReactComponent as CloseIcon } from './../../../img/svg/close.svg';
+import { ReactComponent as CloseIcon } from './../../../../img/svg/close.svg';
 
 const CloseButton = ({ className, onClick }) => {
   return (

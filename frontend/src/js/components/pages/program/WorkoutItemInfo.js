@@ -1,24 +1,17 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import Label from '../../elements/labels/Label';
-
+import WorkoutDetailsLabel from './../workout/WorkoutDetailsLabel';
 import { ReactComponent as HeartIcon } from './../../../../img/svg/heart.svg';
-import display from '../../util/naming';
 
 const WorkoutItemInfo = ({ className, workout }) => {
   // NOTE: The heart icon is not currently a button and doesn't do anything
   // when clicked.
-  const workoutCategories = workout.Workout.categories
-    .map((cat) => display(cat))
-    .join('/');
+
   return (
     <div className={className}>
       <p>Tag {workout.day}</p>
-      <Label>
-        {workout.Workout.calories} kcal &bull; {workout.Workout.duration} Min.
-        &bull; {workoutCategories}
-      </Label>
+      <WorkoutDetailsLabel workout={workout.Workout} />
       <HeartIcon className="favorite" />
     </div>
   );

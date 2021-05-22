@@ -2,7 +2,19 @@ import React from 'react';
 import styled from 'styled-components';
 
 import Exercise from '../exercise/Exercise';
+import LabelButton from './../../elements/labels/LabelButton';
 
+/* 
+            <LabelButton
+              onClick={() => {
+                setWorkoutStarted(false);
+                // Set the exercise to pick up from to the first incomplete one.
+                setCurrentExercise(getFirstExercise(completedExercises));
+              }}
+            >
+              beenden
+            </LabelButton>
+*/
 const StartedWorkout = ({
   className,
   exercise,
