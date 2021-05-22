@@ -1,7 +1,7 @@
 import React, { Fragment, useState } from 'react';
 import styled from 'styled-components';
 
-import Overlay from './../Overlay';
+import Overlay from '../../util/Overlay';
 import CardHeader from './CardHeader';
 import Program from '../program/Program';
 

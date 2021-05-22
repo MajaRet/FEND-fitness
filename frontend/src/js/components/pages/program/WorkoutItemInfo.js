@@ -1,10 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import Label from './../labels/Label';
+import Label from '../../elements/labels/Label';
 
-import { ReactComponent as HeartIcon } from './../../../img/svg/heart.svg';
-import display from '../../naming';
+import { ReactComponent as HeartIcon } from './../../../../img/svg/heart.svg';
+import display from '../../util/naming';
 
 const WorkoutItemInfo = ({ className, workout }) => {
   // NOTE: The heart icon is not currently a button and doesn't do anything

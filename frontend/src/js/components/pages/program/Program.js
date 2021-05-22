@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useState } from 'react';
 import styled from 'styled-components';
 import { useQuery, gql } from '@apollo/client';
 
@@ -6,9 +6,13 @@ import WorkoutList from './WorkoutList';
 import ProgramHeader from './ProgramHeader';
 import ProgramChart from './ProgramChart';
 import ProgramDescription from './ProgramDescription';
-import CloseButton from './../buttons/CloseButton';
+import CloseButton from '../../buttons/CloseButton';
+import Button from '../../buttons/Button';
+import Workout from '../workout/Workout';
 
 const Program = ({ closeOverlay, className, programId }) => {
+  const [workoutOpen, setWorkoutOpen] = useState(false);
+
   const query = gql`
     query GetProgram {
       Program(id: "${programId}") {
@@ -19,6 +23,7 @@ const Program = ({ closeOverlay, className, programId }) => {
         workouts {
           week
           Workout { 
+            _id
             title
             categories
             calories
@@ -39,6 +44,14 @@ query GetPrograms($id: ID!) {
 
   if (data) {
     const program = data.Program;
+    // TODO Don't just take the first workout, take the current one.
+    if (workoutOpen)
+      return (
+        <Workout
+          workoutId={program.workouts[0].Workout._id}
+          closeWorkout={() => setWorkoutOpen(false)}
+        />
+      );
 
     return (
       <div className={className}>
@@ -56,6 +69,14 @@ query GetPrograms($id: ID!) {
             workouts={program.workouts}
             duration={program.duration}
           />
+          <Button
+            className="start-button"
+            onClick={() => {
+              setWorkoutOpen(true);
+            }}
+          >
+            jetzt starten
+          </Button>
         </Fragment>
       </div>
     );
@@ -75,7 +96,7 @@ query GetPrograms($id: ID!) {
 };
 
 export default styled(Program)`
-  > * {
+  > :not(.start-button) {
     padding: var(--standard-padding-vertical) var(--standard-padding-horizontal);
   }
 
@@ -87,6 +108,13 @@ export default styled(Program)`
     z-index: 2;
 
     padding: 0;
+  }
+
+  .start-button {
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 25px;
   }
 
   background-color: ${(props) => `rgb(${props.theme.backgroundPrimary})`};

@@ -1,9 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 import { PieChart, Pie, Cell, Legend, ResponsiveContainer } from 'recharts';
-import Label from './../labels/Label';
-import { histogram } from './../../util';
-import display from '../../naming';
+import Label from '../../elements/labels/Label';
+import { histogram } from '../../util/util';
+import display from '../../util/naming';
 
 // Generates an array of @number colors between two fixed colors.
 function generateColors(number) {

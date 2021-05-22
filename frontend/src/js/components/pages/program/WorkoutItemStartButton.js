@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { ReactComponent as PlayButton } from './../../../img/svg/large play.svg';
+import { ReactComponent as PlayButton } from './../../../../img/svg/large play.svg';
 
 const WorkoutItemVideo = ({ className, src }) => {
   return (

@@ -2,8 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 
 import WorkoutInfo from './WorkoutInfo';
-import { ReactComponent as WorkoutImage } from './../../../img/svg/Programme large.svg';
-import LabelLink from './../labels/LabelLink';
+import { ReactComponent as WorkoutImage } from './../../../../img/svg/Programme large.svg';
+import LabelLink from './../../elements/labels/LabelLink';
 
 const StyledWorkoutImage = styled(WorkoutImage)`
   margin: 10px 0;

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 
 import WorkoutListItem from './WorkoutListItem';
-import LabelButton from './../labels/LabelButton';
+import LabelButton from '../../elements/labels/LabelButton';
 
 const WorkoutList = ({ className, workouts }) => {
   const [displayedWorkouts, setDisplayedWorkouts] = useState(

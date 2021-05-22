@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { useLazyQuery, gql } from '@apollo/client';
 
 import ProgramCard from './ProgramCard';
-import Label from './../labels/Label';
+import Label from './../../elements/labels/Label';
 import FilterForm from './FilterForm';
 /*
 const loadProgramsQuery = gql`

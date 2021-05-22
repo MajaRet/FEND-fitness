@@ -4,14 +4,14 @@ import styled, { ThemeProvider } from 'styled-components';
 import { ApolloClient, InMemoryCache } from '@apollo/client';
 import { ApolloProvider } from '@apollo/client/react';
 
-import GlobalStyle from '../globalStyles';
-import theme from '../Theme';
+import GlobalStyle from '../style/globalStyles';
+import theme from '../style/Theme';
 
-import Dashboard from './dashboard/Dashboard';
+import Dashboard from './pages/dashboard/Dashboard';
 import Navigation from './navigation/Navigation';
-import Browse from './browse/Browse';
+import Browse from './pages/browse/Browse';
 
-import TimedExercise from './exercise/TimedExercise'; // TODO remove
+// import TimedExercise from './pages/exercise/TimedExercise'; // TODO remove
 
 const client = new ApolloClient({
   uri: 'https://eae3hj1s.api.sanity.io/v1/graphql/production/default',
@@ -35,7 +35,6 @@ const App = () => {
             <StyledApp>
               <Switch>
                 <Route path="/" exact>
-                  <TimedExercise />
                   <Dashboard user={dummyUser} />
                 </Route>
                 <Route path="/browse" exact>

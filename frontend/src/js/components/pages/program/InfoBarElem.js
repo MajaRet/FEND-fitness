@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import CapitalLabel from './../labels/CapitalLabel';
+import CapitalLabel from '../../elements/labels/CapitalLabel';
 
 const InfoBarElem = ({ className, text }) => {
   return (

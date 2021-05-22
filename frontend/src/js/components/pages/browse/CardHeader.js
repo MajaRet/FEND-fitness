@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { ReactComponent as HeartIcon } from './../../../img/svg/heart.svg';
+import { ReactComponent as HeartIcon } from './../../../../img/svg/heart.svg';
 
 const CardHeader = ({ className, isNew, isFavorite, setFavorite }) => {
   return (
