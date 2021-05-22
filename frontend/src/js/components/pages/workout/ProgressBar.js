@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { ReactComponent as Circle } from './../../../../img/svg/circle.svg';
-import { ReactComponent as CheckedCircle } from './../../../../img/svg/circleChecked.svg';
+// import { ReactComponent as CheckedCircle } from './../../../../img/svg/circleChecked.svg';
 
 const ProgressBar = ({ className, completedExercises, currentExercise }) => {
   const progressBar = completedExercises
