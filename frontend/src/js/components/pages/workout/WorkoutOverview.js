@@ -34,7 +34,6 @@ export default styled(WorkoutOverview)`
 
   height: 100%;
   padding: var(--standard-padding-vertical) var(--standard-padding-horizontal);
-  background-color: red;
 
   background-image: ${(props) => props.theme.backgroundGradient};
 

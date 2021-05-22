@@ -3,11 +3,19 @@ import styled from 'styled-components';
 
 import ProgressBar from './ProgressBar';
 
-const WorkoutHeader = ({ className, completedExercises, children }) => {
+const WorkoutHeader = ({
+  className,
+  completedExercises,
+  currentExercise,
+  children,
+}) => {
   return (
     <div className={className}>
       {children}
-      <ProgressBar completedExercises={completedExercises} />
+      <ProgressBar
+        completedExercises={completedExercises}
+        currentExercise={currentExercise}
+      />
     </div>
   );
 };

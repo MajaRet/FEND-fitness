@@ -4,14 +4,19 @@ import styled from 'styled-components';
 import { ReactComponent as Circle } from './../../../../img/svg/circle.svg';
 import { ReactComponent as CheckedCircle } from './../../../../img/svg/circleChecked.svg';
 
-const ProgressBar = ({ className, completedExercises }) => {
+const ProgressBar = ({ className, completedExercises, currentExercise }) => {
   const progressBar = completedExercises
     .flatMap((completed, i) => [
       <hr key={`divider-${i}`} />,
       completed ? (
-        <CheckedCircle key={`circle-${i}`} className="circle completed" />
+        <Circle key={`circle-${i}`} className="circle completed" />
       ) : (
-        <Circle key={`circle-${i}`} className="circle incomplete" />
+        <Circle
+          key={`circle-${i}`}
+          className={`circle incomplete${
+            i === currentExercise ? ' active' : ''
+          }`}
+        />
       ),
     ])
     .slice(1);
@@ -23,9 +28,22 @@ export default styled(ProgressBar)`
   align-items: center;
   justify-content: center;
   column-gap: 5px;
+
   .circle {
     width: 8%;
     height: auto;
+
+    circle {
+      stroke: ${(props) => `rgb(${props.theme.fontColorDefault})`};
+    }
+
+    &.completed {
+      fill: ${(props) => `rgb(${props.theme.fontColorDefault})`};
+    }
+  }
+
+  .active circle {
+    stroke: ${(props) => `rgba(${props.theme.fontColorDefault},0.4)`};
   }
 
   hr {
