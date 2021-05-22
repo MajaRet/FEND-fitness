@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { useLazyQuery, gql } from '@apollo/client';
+import { Link } from 'react-router-dom';
 
 import ProgramCard from './ProgramCard';
 import Label from './../../elements/labels/Label';
@@ -59,6 +60,7 @@ const Browse = ({ className }) => {
   }, [filter]);
 
   useEffect(() => {
+    console.log('Load programs');
     const lastElem = lastElemRef.current;
     if (!allLoaded) {
       // If the observer is already set, unregister it.
@@ -90,20 +92,21 @@ const Browse = ({ className }) => {
 
   const programCards = programList.map((program, i) => {
     return (
-      <ProgramCard
-        key={i}
-        program={program}
-        setFavorite={(b) => {
-          const newProg = { ...program, favorite: b };
-          // Persist the favorite status by writing it back to the backend.
-          persistFavorite(program.id, b);
-          setProgramList((programList) => [
-            ...programList.slice(0, i),
-            newProg,
-            ...programList.slice(i + 1),
-          ]);
-        }}
-      />
+      <Link key={i} to={`/program/${program._id}`}>
+        <ProgramCard
+          program={program}
+          setFavorite={(b) => {
+            const newProg = { ...program, favorite: b };
+            // Persist the favorite status by writing it back to the backend.
+            persistFavorite(program.id, b);
+            setProgramList((programList) => [
+              ...programList.slice(0, i),
+              newProg,
+              ...programList.slice(i + 1),
+            ]);
+          }}
+        />
+      </Link>
     );
   });
 

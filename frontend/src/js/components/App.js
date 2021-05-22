@@ -10,6 +10,8 @@ import theme from '../style/Theme';
 import Dashboard from './pages/dashboard/Dashboard';
 import Navigation from './navigation/Navigation';
 import Browse from './pages/browse/Browse';
+import Program from './pages/program/Program';
+import Overlay from './util/Overlay';
 
 // import TimedExercise from './pages/exercise/TimedExercise'; // TODO remove
 
@@ -39,6 +41,12 @@ const App = () => {
                 </Route>
                 <Route path="/browse" exact>
                   <Browse />
+                </Route>
+                <Route path="/program/:id">
+                  <Browse />
+                  <Overlay>
+                    <Program />
+                  </Overlay>
                 </Route>
               </Switch>
               <Navigation />

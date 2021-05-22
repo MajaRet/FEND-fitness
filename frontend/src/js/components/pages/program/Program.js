@@ -1,21 +1,22 @@
 import React, { Fragment, useState } from 'react';
 import styled from 'styled-components';
 import { useQuery, gql } from '@apollo/client';
+import { useParams } from 'react-router-dom';
 
 import WorkoutList from './WorkoutList';
 import ProgramHeader from './ProgramHeader';
 import ProgramChart from './ProgramChart';
 import ProgramDescription from './ProgramDescription';
-import CloseButton from '../../buttons/CloseButton';
-import Button from '../../buttons/Button';
+import CloseLink from '../../elements/links/CloseLink';
+import Button from '../../elements/buttons/Button';
 import Workout from '../workout/Workout';
 
-const Program = ({ closeOverlay, className, programId }) => {
+const Program = ({ className }) => {
   const [workoutOpen, setWorkoutOpen] = useState(false);
-
+  const { id } = useParams();
   const query = gql`
     query GetProgram {
-      Program(id: "${programId}") {
+      Program(id: "${id}") {
         title
         duration
         difficulty
@@ -46,17 +47,19 @@ query GetPrograms($id: ID!) {
   if (data) {
     const program = data.Program;
     // TODO Don't just take the first workout, take the current one.
+    const currentWorkout = program.workouts[0];
     if (workoutOpen)
       return (
         <Workout
-          workoutId={program.workouts[0].Workout._id}
+          workoutId={currentWorkout.Workout._id}
+          day={currentWorkout.day}
           closeWorkout={() => setWorkoutOpen(false)}
         />
       );
 
     return (
       <div className={className}>
-        <CloseButton onClick={closeOverlay} />
+        <CloseLink to="/browse" />
 
         <Fragment>
           <ProgramHeader program={program} />
@@ -90,7 +93,7 @@ query GetPrograms($id: ID!) {
 
   return (
     <div className={className}>
-      <CloseButton onClick={closeOverlay} />
+      <CloseLink to="/browse" />
       <p>Wird geladen...</p>
     </div>
   );
@@ -101,7 +104,7 @@ export default styled(Program)`
     padding: var(--standard-padding-vertical) var(--standard-padding-horizontal);
   }
 
-  ${CloseButton} {
+  ${CloseLink} {
     position: absolute;
     top: var(--standard-padding-vertical);
     right: var(--standard-padding-horizontal);

@@ -11,19 +11,14 @@ const ProgramCard = ({ className, program, setFavorite }) => {
   return (
     <Fragment>
       {detailsOpen ? (
-        <Overlay setOpen={setDetailsOpen}>
+        <Overlay>
           <Program
             programId={program._id}
             closeOverlay={() => setDetailsOpen(false)}
           />
         </Overlay>
       ) : null}
-      <div
-        className={className}
-        onClick={() => {
-          return setDetailsOpen(true);
-        }}
-      >
+      <div className={className}>
         <CardHeader
           isNew={program.isNew}
           isFavorite={program.favorite}
