@@ -4,7 +4,7 @@ import { useQuery, gql } from '@apollo/client';
 import StartedWorkout from './StartedWorkout';
 import WorkoutOverview from './WorkoutOverview';
 
-const Workout = ({ day, workoutId }) => {
+const Workout = ({ day, workoutId, closeWorkout }) => {
   const query = gql`
   query {
     Workout(id: "${workoutId}") {
@@ -35,14 +35,19 @@ const Workout = ({ day, workoutId }) => {
   const [workoutStarted, setWorkoutStarted] = useState(false);
   // TODO take completion status from the workout
   const [completedExercises, setCompletedExercises] = useState([]);
+  const [allDone, setAllDone] = useState(false);
 
-  const completeCurrentExercise = (completed = true) => {
+  const completeCurrentExercise = (completed) => {
     const newCompleted = [...completedExercises];
     newCompleted[currentExercise] = completed;
     setCompletedExercises(newCompleted);
-    setCurrentExercise((currEx) =>
-      Math.min(currEx + 1, workout.exercises.length - 1)
-    );
+
+    // If we complete an exercise, move on to the next.
+    if (completed) {
+      setCurrentExercise((currEx) =>
+        Math.min(currEx + 1, workout.exercises.length - 1)
+      );
+    }
   };
   const getFirstIncompleteExercise = () => {
     return Math.max(
@@ -56,6 +61,13 @@ const Workout = ({ day, workoutId }) => {
   const [currentExercise, setCurrentExercise] = useState(
     getFirstIncompleteExercise()
   );
+
+  // Whenever an exercise is completed, check if the workout is completely done.
+  useEffect(() => {
+    if (completedExercises.length > 0 && completedExercises.every((b) => b)) {
+      setAllDone(true);
+    }
+  }, [completedExercises]);
 
   useEffect(() => {
     if (data) {
@@ -71,28 +83,30 @@ const Workout = ({ day, workoutId }) => {
     return (
       <Fragment>
         {workoutStarted ? (
-          <StartedWorkout
-            exercise={workout.exercises[currentExercise]}
-            exerciseIndex={currentExercise}
-            isFirst={currentExercise === 0}
-            isLast={currentExercise === workout.exercises.length - 1}
-            completeExercise={() => {
-              completeCurrentExercise();
-            }}
-            stopWorkout={() => {
-              setWorkoutStarted(false);
-              setCurrentExercise(getFirstIncompleteExercise());
-            }}
-            progress={(delta) => {
-              console.log('Trying to progress');
-              const i = currentExercise + delta;
-              if (i >= 0 && i < workout.exercises.length) {
-                console.log('Setting current exercise to ' + i);
-                setCurrentExercise(i);
-              }
-            }}
-            completedExercises={completedExercises}
-          />
+          allDone ? (
+            'Herzlichen Glückwunsch, das Workout ist vollständig absolviert!'
+          ) : (
+            <StartedWorkout
+              exercise={workout.exercises[currentExercise]}
+              exerciseIndex={currentExercise}
+              isFirst={currentExercise === 0}
+              isLast={currentExercise === workout.exercises.length - 1}
+              setExerciseCompleted={(completed) => {
+                completeCurrentExercise(completed);
+              }}
+              stopWorkout={() => {
+                setWorkoutStarted(false);
+                setCurrentExercise(getFirstIncompleteExercise());
+              }}
+              progress={(delta) => {
+                const i = currentExercise + delta;
+                if (i >= 0 && i < workout.exercises.length) {
+                  setCurrentExercise(i);
+                }
+              }}
+              completedExercises={completedExercises}
+            />
+          )
         ) : (
           <WorkoutOverview
             workout={workout}
@@ -101,6 +115,7 @@ const Workout = ({ day, workoutId }) => {
             startWorkout={() => {
               setWorkoutStarted(true);
             }}
+            closeWorkout={closeWorkout}
           />
         )}
       </Fragment>

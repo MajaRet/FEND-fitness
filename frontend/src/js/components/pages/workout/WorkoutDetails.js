@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import WorkoutDetailsLabel from './WorkoutDetailsLabel';
 
 const WorkoutDetails = ({ className, workout, day }) => {
-  console.log(workout);
   return (
     <div className={className}>
       <h1>Tag {day}</h1>

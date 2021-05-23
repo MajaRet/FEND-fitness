@@ -5,6 +5,7 @@ import WorkoutDetails from './WorkoutDetails';
 import WorkoutHeader from './WorkoutHeader';
 import Label from './../../elements/labels/Label';
 import Button from './../../elements/buttons/Button';
+import BackButton from './../../elements/buttons/BackButton';
 
 const WorkoutOverview = ({
   className,
@@ -12,9 +13,11 @@ const WorkoutOverview = ({
   day,
   completedExercises,
   startWorkout,
+  closeWorkout,
 }) => {
   return (
     <div className={className}>
+      <BackButton onClick={closeWorkout} />
       <WorkoutHeader completedExercises={completedExercises}>
         <Label>{workout.title}</Label>
       </WorkoutHeader>
@@ -43,5 +46,15 @@ export default styled(WorkoutOverview)`
 
   .start-button {
     margin-bottom: 75px;
+  }
+
+  ${BackButton} {
+    position: absolute;
+    top: var(--standard-padding-vertical);
+    right: var(--standard-padding-horizontal);
+
+    z-index: 2;
+
+    padding: 0;
   }
 `;

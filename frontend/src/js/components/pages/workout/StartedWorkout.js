@@ -3,15 +3,17 @@ import styled from 'styled-components';
 
 import WorkoutHeader from './WorkoutHeader';
 import RepeatedExercise from '../exercise/RepeatedExercise';
-// import TimedExercise from '../exercise/TimedExercise';
+import TimedExercise from '../exercise/TimedExercise';
 import LabelButton from './../../elements/labels/LabelButton';
+import TextButton from './../../elements/buttons/TextButton';
+import CompletedExercise from '../exercise/CompletedExercise';
 
 const StartedWorkout = ({
   className,
   exercise,
   isFirst,
   isLast,
-  completeExercise,
+  setExerciseCompleted,
   progress,
   completedExercises,
   stopWorkout,
@@ -22,37 +24,48 @@ const StartedWorkout = ({
       <WorkoutHeader
         completedExercises={completedExercises}
         currentExercise={exerciseIndex}
+        className="header"
       >
         <LabelButton onClick={stopWorkout}>beenden</LabelButton>
       </WorkoutHeader>
-      <button
+      <TextButton
+        className="skip-button left"
         disabled={isFirst}
         onClick={() => {
-          console.log('go left');
           progress(-1);
         }}
       >
-        Left
-      </button>
-      <button
+        &lsaquo;
+      </TextButton>
+      <TextButton
+        className="skip-button right"
         disabled={isLast}
         onClick={() => {
-          console.log('go right');
           progress(1);
         }}
       >
-        Right
-      </button>
-      <p>Übung: {exercise.exercise.title}</p>
-      {exercise.__typename === 'ExerciseWithReps' ? (
+        &rsaquo;
+      </TextButton>
+      {completedExercises[exerciseIndex] ? (
+        <CompletedExercise
+          exercise={exercise.exercise}
+          repeatExercise={() => setExerciseCompleted(false)}
+        />
+      ) : exercise.__typename === 'ExerciseWithReps' ? (
         <RepeatedExercise
-          className="exercise"
           reps={exercise.reps}
           exercise={exercise.exercise}
-          completeExercise={completeExercise}
+          completeExercise={() => setExerciseCompleted(true)}
         />
       ) : exercise.__typename === 'ExerciseWithDuration' ? (
-        exercise.duration
+        <TimedExercise
+          className="exercise timed"
+          duration={exercise.duration}
+          exercise={exercise.exercise}
+          completeExercise={() => setExerciseCompleted(true)}
+          // Key used to force rerendering of the exercise
+          key={exerciseIndex}
+        />
       ) : (
         'Error'
       )}
@@ -61,10 +74,12 @@ const StartedWorkout = ({
 };
 
 export default styled(StartedWorkout)`
+  position: relative;
+
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-evenly;
+  justify-content: space-between;
 
   height: 100%;
   padding: var(--standard-padding-vertical) var(--standard-padding-horizontal);
@@ -73,7 +88,42 @@ export default styled(StartedWorkout)`
       ? `rgb(${props.theme.backgroundPrimary})`
       : `rgb(${props.theme.backgroundSecondary})`};
 
-  .exercise {
+  .title,
+  .header {
+    height: 23%;
+  }
+
+  .task {
     flex-grow: 1;
+
+    width: 75%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    text-align: center;
+
+    &.repeated {
+      font-size: 6.4rem;
+    }
+  }
+
+  .skip-button {
+    position: absolute;
+    top: 48%;
+
+    &.left {
+      left: 5%;
+    }
+
+    &.right {
+      right: 5%;
+    }
+  }
+
+  .done {
+    position: absolute;
+    bottom: 5%;
   }
 `;
