@@ -5,6 +5,7 @@ import Label from '../../elements/labels/Label';
 import { histogram } from '../../util/util';
 import display from '../../util/naming';
 
+// TODO Put into util module
 // Generates an array of @number colors between two fixed colors.
 function generateColors(number) {
   const startColor = { r: 122, g: 135, b: 120 };

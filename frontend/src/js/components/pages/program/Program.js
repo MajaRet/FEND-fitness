@@ -35,18 +35,12 @@ const Program = ({ className }) => {
     }
   `;
 
-  /*
-query GetPrograms($id: ID!) {
-  Program(id: $id) {
-    title
-  }
-}
-*/
   const { error, data } = useQuery(query);
 
   if (data) {
     const program = data.Program;
     // TODO Don't just take the first workout, take the current one.
+    // Need support in the backend for that.
     const currentWorkout = program.workouts[0];
     if (workoutOpen)
       return (
