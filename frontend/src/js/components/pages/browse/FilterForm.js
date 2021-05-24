@@ -95,9 +95,9 @@ const FilterForm = ({ className, setFilter }) => {
               name="difficultySelection"
             >
               <option value="none">Alle</option>
-              <option value="beginner">${display('beginner')}</option>
-              <option value="intermediate">${display('intermediate')}</option>
-              <option value="hard">${display('hard')}</option>
+              <option value="beginner">{display('beginner')}</option>
+              <option value="intermediate">{display('intermediate')}</option>
+              <option value="hard">{display('hard')}</option>
             </select>
             <input type="submit" value="Filtern" />
           </div>

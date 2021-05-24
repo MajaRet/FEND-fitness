@@ -60,7 +60,6 @@ const Browse = ({ className }) => {
   }, [filter]);
 
   useEffect(() => {
-    console.log('Load programs');
     const lastElem = lastElemRef.current;
     if (!allLoaded) {
       // If the observer is already set, unregister it.
