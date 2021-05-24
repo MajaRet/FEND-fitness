@@ -28,7 +28,7 @@ const CircularProgressBar = React.forwardRef((props, ref) => {
           strokeDasharray={circumference}
           strokeDashoffset={progress}
         ></circle>
-        <text className="text" x="50%" y="50%" textAnchor="middle" dy="10px">
+        <text className="text" x="50%" y="50%" textAnchor="middle" dy="20px">
           {centerText}
         </text>
       </svg>
@@ -54,7 +54,7 @@ export default styled(CircularProgressBar)`
   }
 
   .text {
-    font-size: var(--h1-size);
+    font-size: calc(var(--h1-size) * 2);
     fill: ${(props) => `rgb(${props.theme.fontColorDefault})`};
     font-weight: var(--heading-weight);
   }
