@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
-import CircularProgressBar from './../CircularProgressBar';
+import CircularProgressBar from './../../elements/CircularProgressBar';
 
 const CountdownCircle = React.forwardRef(
   ({ className, seconds, secondsLeft }, ref) => {
@@ -13,7 +13,6 @@ const CountdownCircle = React.forwardRef(
       ref.current.style = 'transition: stroke-dashoffset 1s ease-in-out;';
     }, [ref]);
 
-    // TODO set it relative to window width or put media queries.
     const radius = 175;
 
     const progressOffset = started
@@ -35,4 +34,6 @@ const CountdownCircle = React.forwardRef(
   }
 );
 
-export default styled(CountdownCircle)``;
+export default styled(CountdownCircle)`
+  height: fit-content;
+`;

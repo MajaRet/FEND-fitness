@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { ReactComponent as BackIcon } from './../../../img/svg/back.svg';
+import { ReactComponent as BackIcon } from './../../../../img/svg/back.svg';
 
 const BackButton = ({ className, onClick }) => {
   return (
