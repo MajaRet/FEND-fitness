@@ -1,10 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
-import styled from 'styled-components';
+import React, { Fragment, useState, useEffect, useRef } from 'react';
 
 import CountdownCircle from './CountdownCircle';
 
-const TimedExercise = ({ className, seconds = 4 }) => {
-  const [secondsLeft, setSecondsLeft] = useState(seconds || 0);
+const TimedExercise = ({ className, duration, exercise, completeExercise }) => {
+  const [secondsLeft, setSecondsLeft] = useState(duration || 0);
   const [timeUp, setTimeUp] = useState(false);
   const progressRef = useRef(null);
 
@@ -23,16 +22,38 @@ const TimedExercise = ({ className, seconds = 4 }) => {
     setTimeUp(true);
   }, [secondsLeft]);
 
+  useEffect(() => {
+    console.log('Check if time up');
+    if (timeUp) {
+      completeExercise();
+    }
+  }, [timeUp, completeExercise]);
+
   return (
-    <div className={className}>
+    <Fragment>
       <CountdownCircle
         ref={progressRef}
-        seconds={seconds}
+        seconds={duration}
         secondsLeft={secondsLeft}
+        className="task"
       />
-      {timeUp ? <p>Zeit abgelaufen!</p> : `${secondsLeft}s`}
-    </div>
+      <h1 className="title">{exercise.title}</h1>
+    </Fragment>
   );
 };
 
-export default styled(TimedExercise)``;
+export default TimedExercise;
+/*
+  height: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+
+  .title {
+  }
+
+  .countdown {
+    transform: translateY(-50%);
+  }
+  */
