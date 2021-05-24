@@ -7,7 +7,7 @@ const CardHeader = ({ className, isNew, isFavorite, setFavorite }) => {
     <div className={className}>
       <button
         onClick={(e) => {
-          e.stopPropagation();
+          e.preventDefault();
           setFavorite(!isFavorite);
         }}
       >
