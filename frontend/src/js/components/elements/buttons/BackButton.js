@@ -12,5 +12,11 @@ const BackButton = ({ className, onClick }) => {
 };
 
 export default styled(BackButton)`
-  padding: 0;
+  position: absolute;
+  top: var(--standard-padding-vertical);
+  right: var(--standard-padding-horizontal);
+
+  z-index: 2;
+
+  padding: 0 !important;
 `;

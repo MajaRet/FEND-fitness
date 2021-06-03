@@ -12,4 +12,12 @@ const CloseLink = ({ className, to }) => {
   );
 };
 
-export default styled(CloseLink)``;
+export default styled(CloseLink)`
+  position: absolute;
+  top: var(--standard-padding-vertical);
+  right: var(--standard-padding-horizontal);
+
+  z-index: 2;
+
+  padding: 0 !important;
+`;

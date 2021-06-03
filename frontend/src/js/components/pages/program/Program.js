@@ -98,16 +98,6 @@ export default styled(Program)`
     padding: var(--standard-padding-vertical) var(--standard-padding-horizontal);
   }
 
-  ${CloseLink} {
-    position: absolute;
-    top: var(--standard-padding-vertical);
-    right: var(--standard-padding-horizontal);
-
-    z-index: 2;
-
-    padding: 0;
-  }
-
   .start-button {
     position: fixed;
     left: 50%;

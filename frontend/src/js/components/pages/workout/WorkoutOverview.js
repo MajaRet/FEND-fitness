@@ -47,14 +47,4 @@ export default styled(WorkoutOverview)`
   .start-button {
     margin-bottom: 75px;
   }
-
-  ${BackButton} {
-    position: absolute;
-    top: var(--standard-padding-vertical);
-    right: var(--standard-padding-horizontal);
-
-    z-index: 2;
-
-    padding: 0;
-  }
 `;
