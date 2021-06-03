@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 import Label from '../../elements/labels/Label';
-import display from '../../util/naming';
+import display from '../../../util/naming';
 
 const WorkoutDetailsLabel = ({ className, workout }) => {
   const workoutCategories = workout.categories

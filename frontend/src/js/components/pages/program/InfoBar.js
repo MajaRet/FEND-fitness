@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 import InfoBarElem from './InfoBarElem';
-import display from '../../util/naming';
+import display from '../../../util/naming';
 
 const InfoBar = ({ className, type, difficulty, duration }) => {
   return (

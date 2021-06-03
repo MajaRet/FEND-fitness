@@ -2,8 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 import { PieChart, Pie, Cell, Legend, ResponsiveContainer } from 'recharts';
 import Label from '../../elements/labels/Label';
-import { histogram } from '../../util/util';
-import display from '../../util/naming';
+import { histogram } from '../../../util/histogram';
+import display from '../../../util/naming';
 
 // TODO Put into util module
 // Generates an array of @number colors between two fixed colors.

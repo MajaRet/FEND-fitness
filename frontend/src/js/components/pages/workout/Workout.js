@@ -82,31 +82,27 @@ const Workout = ({ day, workoutId, closeWorkout }) => {
   if (data) {
     return (
       <Fragment>
-        {workoutStarted ? (
-          allDone ? (
-            'Herzlichen Glückwunsch, das Workout ist vollständig absolviert!'
-          ) : (
-            <StartedWorkout
-              exercise={workout.exercises[currentExercise]}
-              exerciseIndex={currentExercise}
-              isFirst={currentExercise === 0}
-              isLast={currentExercise === workout.exercises.length - 1}
-              setExerciseCompleted={(completed) => {
-                completeCurrentExercise(completed);
-              }}
-              stopWorkout={() => {
-                setWorkoutStarted(false);
-                setCurrentExercise(getFirstIncompleteExercise());
-              }}
-              progress={(delta) => {
-                const i = currentExercise + delta;
-                if (i >= 0 && i < workout.exercises.length) {
-                  setCurrentExercise(i);
-                }
-              }}
-              completedExercises={completedExercises}
-            />
-          )
+        {workoutStarted && !allDone ? (
+          <StartedWorkout
+            exercise={workout.exercises[currentExercise]}
+            exerciseIndex={currentExercise}
+            isFirst={currentExercise === 0}
+            isLast={currentExercise === workout.exercises.length - 1}
+            setExerciseCompleted={(completed) => {
+              completeCurrentExercise(completed);
+            }}
+            stopWorkout={() => {
+              setWorkoutStarted(false);
+              setCurrentExercise(getFirstIncompleteExercise());
+            }}
+            progress={(delta) => {
+              const i = currentExercise + delta;
+              if (i >= 0 && i < workout.exercises.length) {
+                setCurrentExercise(i);
+              }
+            }}
+            completedExercises={completedExercises}
+          />
         ) : (
           <WorkoutOverview
             workout={workout}
@@ -116,6 +112,7 @@ const Workout = ({ day, workoutId, closeWorkout }) => {
               setWorkoutStarted(true);
             }}
             closeWorkout={closeWorkout}
+            allDone={allDone}
           />
         )}
       </Fragment>

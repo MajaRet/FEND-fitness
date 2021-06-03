@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 
-import display from '../../util/naming';
+import display from '../../../util/naming';
 import LabelButton from './../../elements/labels/LabelButton';
 
 function handleFilterSubmit(

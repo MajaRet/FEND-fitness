@@ -14,6 +14,7 @@ const WorkoutOverview = ({
   completedExercises,
   startWorkout,
   closeWorkout,
+  allDone,
 }) => {
   return (
     <div className={className}>
@@ -22,9 +23,15 @@ const WorkoutOverview = ({
         <Label>{workout.title}</Label>
       </WorkoutHeader>
       <WorkoutDetails workout={workout} day={day} />
-      <Button onClick={startWorkout} className="start-button">
-        los
-      </Button>
+      {allDone ? (
+        <h2 className="text-done">
+          Herzlichen Glückwunsch, das Workout ist abgeschlossen!
+        </h2>
+      ) : (
+        <Button onClick={startWorkout} className="start-button">
+          los
+        </Button>
+      )}
     </div>
   );
 };
@@ -45,6 +52,11 @@ export default styled(WorkoutOverview)`
   }
 
   .start-button {
+    margin-bottom: 75px;
+  }
+
+  .text-done {
+    text-align: center;
     margin-bottom: 75px;
   }
 `;

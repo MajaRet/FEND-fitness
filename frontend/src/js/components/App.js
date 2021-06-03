@@ -13,8 +13,6 @@ import Browse from './pages/browse/Browse';
 import Program from './pages/program/Program';
 import Overlay from './util/Overlay';
 
-// import TimedExercise from './pages/exercise/TimedExercise'; // TODO remove
-
 const client = new ApolloClient({
   uri: 'https://eae3hj1s.api.sanity.io/v1/graphql/production/default',
   cache: new InMemoryCache(),
