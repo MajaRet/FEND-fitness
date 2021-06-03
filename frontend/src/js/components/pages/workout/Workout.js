@@ -3,6 +3,8 @@ import { useQuery, gql } from '@apollo/client';
 
 import StartedWorkout from './StartedWorkout';
 import WorkoutOverview from './WorkoutOverview';
+import LoadingScreen from './../../elements/LoadingScreen';
+import BackButton from './../../elements/buttons/BackButton';
 
 const Workout = ({ day, workoutId, closeWorkout }) => {
   const query = gql`
@@ -29,7 +31,7 @@ const Workout = ({ day, workoutId, closeWorkout }) => {
        }
     }
 }`;
-  const { error, data } = useQuery(query);
+  const { error, loading, data } = useQuery(query);
   if (error) console.log(error);
   const workout = data?.Workout;
   const [workoutStarted, setWorkoutStarted] = useState(false);
@@ -79,7 +81,14 @@ const Workout = ({ day, workoutId, closeWorkout }) => {
     }
   }, [data]);
 
-  if (data) {
+  if (loading) {
+    return (
+      <Fragment>
+        <BackButton onClick={closeWorkout} />
+        <LoadingScreen />
+      </Fragment>
+    );
+  } else if (data) {
     return (
       <Fragment>
         {workoutStarted && !allDone ? (
@@ -118,7 +127,7 @@ const Workout = ({ day, workoutId, closeWorkout }) => {
       </Fragment>
     );
   }
-  return <div>Loading...</div>;
+  return <div>Fehler!</div>;
 };
 
 export default Workout;

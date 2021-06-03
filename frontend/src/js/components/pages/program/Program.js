@@ -10,6 +10,7 @@ import ProgramDescription from './ProgramDescription';
 import CloseLink from '../../elements/links/CloseLink';
 import Button from '../../elements/buttons/Button';
 import Workout from '../workout/Workout';
+import LoadingScreen from './../../elements/LoadingScreen';
 
 const Program = ({ className }) => {
   const [workoutOpen, setWorkoutOpen] = useState(false);
@@ -35,10 +36,16 @@ const Program = ({ className }) => {
     }
   `;
 
-  const { error, data } = useQuery(query);
+  const { error, data, loading } = useQuery(query);
 
+  // TODO remove
+  if (error) {
+    console.log(error);
+  }
+
+  let program;
   if (data) {
-    const program = data.Program;
+    program = data.Program;
     // TODO Don't just take the first workout, take the current one.
     // Need support in the backend for that.
     const currentWorkout = program.workouts[0];
@@ -50,11 +57,13 @@ const Program = ({ className }) => {
           closeWorkout={() => setWorkoutOpen(false)}
         />
       );
-
-    return (
-      <div className={className}>
-        <CloseLink to="/browse" />
-
+  }
+  return (
+    <div className={className}>
+      <CloseLink to="/browse" />
+      {loading ? (
+        <LoadingScreen />
+      ) : program ? (
         <Fragment>
           <ProgramHeader program={program} />
           <ProgramDescription program={program} />
@@ -76,24 +85,16 @@ const Program = ({ className }) => {
             jetzt starten
           </Button>
         </Fragment>
-      </div>
-    );
-  }
-
-  // TODO remove
-  if (error) {
-    console.log(error);
-  }
-
-  return (
-    <div className={className}>
-      <CloseLink to="/browse" />
-      <p>Wird geladen...</p>
+      ) : (
+        'Fehler!'
+      )}
     </div>
   );
 };
 
 export default styled(Program)`
+  min-height: 100vh;
+
   > :not(.start-button) {
     padding: var(--standard-padding-vertical) var(--standard-padding-horizontal);
   }

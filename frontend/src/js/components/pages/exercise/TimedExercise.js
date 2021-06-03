@@ -2,7 +2,7 @@ import React, { Fragment, useState, useEffect, useRef } from 'react';
 
 import CountdownCircle from './CountdownCircle';
 
-const TimedExercise = ({ className, duration, exercise, completeExercise }) => {
+const TimedExercise = ({ duration, exercise, completeExercise }) => {
   const [secondsLeft, setSecondsLeft] = useState(duration || 0);
   const [timeUp, setTimeUp] = useState(false);
   const progressRef = useRef(null);
@@ -23,7 +23,6 @@ const TimedExercise = ({ className, duration, exercise, completeExercise }) => {
   }, [secondsLeft]);
 
   useEffect(() => {
-    console.log('Check if time up');
     if (timeUp) {
       completeExercise();
     }
@@ -43,17 +42,3 @@ const TimedExercise = ({ className, duration, exercise, completeExercise }) => {
 };
 
 export default TimedExercise;
-/*
-  height: 50%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-
-  .title {
-  }
-
-  .countdown {
-    transform: translateY(-50%);
-  }
-  */

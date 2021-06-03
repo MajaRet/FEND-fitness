@@ -6,15 +6,8 @@ import { Link } from 'react-router-dom';
 import ProgramCard from './ProgramCard';
 import Label from './../../elements/labels/Label';
 import FilterForm from './FilterForm';
-/*
-const loadProgramsQuery = gql`
-  query LoadPrograms($offset: Int) {
-    allProgram(limit: 3, offset: $offset) {
-      title
-    }
-  }
-`;
-*/
+import LoadingSpinner from './../../elements/LoadingSpinner';
+
 const loadProgramsQuery = gql`
   query LoadPrograms($offset: Int!, $where: ProgramFilter) {
     allProgram(limit: 5, offset: $offset, where: $where) {
@@ -120,11 +113,13 @@ const Browse = ({ className }) => {
       <FilterForm setFilter={setFilter} />
       {programCards}
       <Label ref={lastElemRef}>
-        {programList.length === 0
-          ? loading
-            ? 'Wird geladen...'
-            : 'Keine Programme verfügbar'
-          : 'Keine weiteren Programme verfügbar'}
+        {loading ? (
+          <LoadingSpinner />
+        ) : programList.length === 0 ? (
+          'Keine Programme verfügbar'
+        ) : (
+          'Keine weiteren Programme verfügbar'
+        )}
       </Label>
     </div>
   );
