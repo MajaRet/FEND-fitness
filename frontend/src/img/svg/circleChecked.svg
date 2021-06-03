@@ -1,3 +1,32 @@
-<svg width="26" height="25" viewBox="0 0 26 25" fill="none" xmlns="http://www.w3.org/2000/svg">
-<circle cx="13.4233" cy="12.5" r="12.5" fill="#1D2A73"/>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlnsDc="http://purl.org/dc/elements/1.1/"
+   xmlnsCc="http://creativecommons.org/ns#"
+   xmlnsRdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlnsSvg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   width="26"
+   height="25"
+   viewBox="0 0 26 25"
+   fill="none"
+   version="1.1">
+  <g>
+    <circle
+       cx="13.4233"
+       cy="12.5"
+       r="12.5"
+       fill="#1D2A73"
+       id="circle54" />
+  </g>
+  <g
+     style="fill:none"
+     transform="translate(6.7283148,7.5120789)">
+    <path
+       d="M 1.06445,5.94144 4.73152,9.60862 12.9488,1.39136"
+       stroke="#ffffff"
+       stroke-width="2"
+       stroke-linecap="round"
+       stroke-linejoin="round"
+       id="path74" />
+  </g>
 </svg>

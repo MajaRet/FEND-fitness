@@ -2,14 +2,14 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { ReactComponent as Circle } from './../../../../img/svg/circle.svg';
-// import { ReactComponent as CheckedCircle } from './../../../../img/svg/circleChecked.svg';
+import { ReactComponent as CircleWithCheckmark } from './../../../../img/svg/circleChecked.svg';
 
 const ProgressBar = ({ className, completedExercises, currentExercise }) => {
   const progressBar = completedExercises
     .flatMap((completed, i) => [
       <hr key={`divider-${i}`} />,
       completed ? (
-        <Circle key={`circle-${i}`} className="circle completed" />
+        <CircleWithCheckmark key={`circle-${i}`} className="circle completed" />
       ) : (
         <Circle
           key={`circle-${i}`}
