@@ -3,10 +3,14 @@ import styled from 'styled-components';
 
 import CardHeader from './CardHeader';
 
-const ProgramCard = ({ className, program }) => {
+const ProgramCard = ({ className, program, setFavorite }) => {
   return (
     <div className={className}>
-      <CardHeader isNew={program.isNew} />
+      <CardHeader
+        isNew={program.isNew}
+        isFavorite={program.favorite}
+        setFavorite={setFavorite}
+      />
       <h2>{program.title}</h2>
     </div>
   );
