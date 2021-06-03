@@ -23,6 +23,7 @@ const Program = ({ className }) => {
         duration
         difficulty
         focus
+        description
         workouts {
           day
           Workout { 
@@ -67,7 +68,7 @@ const Program = ({ className }) => {
       ) : program ? (
         <Fragment>
           <ProgramHeader program={program} />
-          <ProgramDescription program={program} />
+          <ProgramDescription description={program.description} />
           <ProgramChart
             categories={program.workouts.flatMap(
               ({ Workout }) => Workout.categories
