@@ -12,7 +12,9 @@ const loadProgramsQuery = gql`
   query LoadPrograms($offset: Int!, $where: ProgramFilter) {
     allProgram(limit: 5, offset: $offset, where: $where) {
       title
-      _id
+      slug {
+        current
+      }
     }
   }
 `;
@@ -84,7 +86,7 @@ const Browse = ({ className }) => {
 
   const programCards = programList.map((program, i) => {
     return (
-      <Link key={i} to={`/program/${program._id}`}>
+      <Link key={i} to={`/program/${program.slug.current}`}>
         <ProgramCard
           program={program}
           setFavorite={(b) => {

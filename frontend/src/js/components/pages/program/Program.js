@@ -15,9 +15,10 @@ import LoadingScreen from './../../elements/LoadingScreen';
 const Program = ({ className }) => {
   const [workoutOpen, setWorkoutOpen] = useState(false);
   const { id } = useParams();
+
   const query = gql`
     query GetProgram {
-      Program(id: "${id}") {
+      allProgram(where: {slug: {current: {eq: "${id}"} }}) {
         title
         duration
         difficulty
@@ -45,7 +46,7 @@ const Program = ({ className }) => {
 
   let program;
   if (data) {
-    program = data.Program;
+    [program] = data.allProgram;
     // TODO Don't just take the first workout, take the current one.
     // Need support in the backend for that.
     const currentWorkout = program.workouts[0];
