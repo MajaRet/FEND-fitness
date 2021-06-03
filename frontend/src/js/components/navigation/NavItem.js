@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { NavLink } from 'react-router-dom';
 
-import CapitalLabel from './../CapitalLabel';
+import CapitalLabel from '../labels/CapitalLabel';
 
 const NavItem = ({ className, linkText = '', icon, to = '/' }) => {
   const Icon = icon;

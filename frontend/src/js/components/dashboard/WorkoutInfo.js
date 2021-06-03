@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import Label from './../Label';
+import Label from './../labels/Label';
 
 const WorkoutInfo = ({ className, workout }) => {
   return (
