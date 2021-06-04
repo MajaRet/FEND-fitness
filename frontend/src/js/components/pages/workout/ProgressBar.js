@@ -29,6 +29,8 @@ export default styled(ProgressBar)`
   justify-content: center;
   column-gap: 5px;
 
+  width: 100%;
+
   .circle {
     width: 8%;
     height: auto;

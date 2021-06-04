@@ -25,4 +25,6 @@ export default styled(WorkoutHeader)`
   flex-direction: column;
   align-items: center;
   row-gap: 35px;
+
+  width: 100%;
 `;
