@@ -10,7 +10,7 @@ import ProgramDescription from './ProgramDescription';
 import CloseLink from '../../elements/links/CloseLink';
 import Button from '../../elements/buttons/Button';
 import Workout from '../workout/Workout';
-import LoadingScreen from './../../elements/LoadingScreen';
+import LoadingScreen from './../../elements/loading/LoadingScreen';
 
 const Program = ({ className }) => {
   const [workoutOpen, setWorkoutOpen] = useState(false);

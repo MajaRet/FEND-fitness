@@ -2,7 +2,6 @@ import React, { Fragment } from 'react';
 import Button from '../../elements/buttons/Button';
 
 const CompletedExercise = ({ exercise, repeatExercise }) => {
-  console.log(exercise);
   return (
     <Fragment>
       <h1 className="task">

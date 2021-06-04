@@ -3,7 +3,7 @@ import { useQuery, gql } from '@apollo/client';
 
 import StartedWorkout from './StartedWorkout';
 import WorkoutOverview from './WorkoutOverview';
-import LoadingScreen from './../../elements/LoadingScreen';
+import LoadingScreen from '../../elements/loading/LoadingScreen';
 import BackButton from './../../elements/buttons/BackButton';
 
 const Workout = ({ day, workoutId, closeWorkout }) => {

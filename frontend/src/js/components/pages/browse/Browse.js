@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import ProgramCard from './ProgramCard';
 import Label from './../../elements/labels/Label';
 import FilterForm from './FilterForm';
-import LoadingSpinner from './../../elements/LoadingSpinner';
+import LoadingSpinner from './../../elements/loading/LoadingSpinner';
 
 const loadProgramsQuery = gql`
   query LoadPrograms($offset: Int!, $where: ProgramFilter) {

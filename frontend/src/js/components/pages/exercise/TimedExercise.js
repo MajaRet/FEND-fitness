@@ -1,6 +1,6 @@
 import React, { Fragment, useState, useEffect, useRef } from 'react';
 
-import CountdownCircle from '../../elements/CountdownCircle';
+import CountdownCircle from '../../elements/countdown/CountdownCircle';
 
 import tickSound from './../../../../audio/tick.wav';
 import doneSound from './../../../../audio/bell.wav';
