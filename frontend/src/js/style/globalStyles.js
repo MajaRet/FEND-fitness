@@ -100,6 +100,7 @@ const GlobalStyle = createGlobalStyle`
     border: none;
     width: fit-content;
     background: none;
+    cursor: pointer;
   }
 `;
 

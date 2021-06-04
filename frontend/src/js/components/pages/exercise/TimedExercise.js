@@ -13,10 +13,10 @@ const doneAudio = new Audio(doneSound);
 const countdownAudio = new Audio(countdownSound);
 const countdownEndAudio = new Audio(countdownEndSound);
 
-function countdown(tick, sound) {
+function tick(advance, sound) {
   const timer = setInterval(() => {
     sound.play();
-    tick((secondsLeft) => secondsLeft - 1);
+    advance((secondsLeft) => secondsLeft - 1);
   }, 1000);
 
   return () => {
@@ -24,42 +24,45 @@ function countdown(tick, sound) {
   };
 }
 
-const countdownDuration = 3;
-
-const TimedExercise = ({ duration, exercise, completeExercise }) => {
-  const [countdownDone, setCountdownDone] = useState(false);
-  const [countdownSeconds, setCountdownSeconds] = useState(countdownDuration);
+const TimedExercise = ({
+  duration,
+  exercise,
+  completeExercise,
+  countdown = 0,
+}) => {
+  const [countdownDone, setCountdownDone] = useState(countdown <= 0);
+  const [countdownSeconds, setCountdownSeconds] = useState(countdown);
   const [secondsLeft, setSecondsLeft] = useState(duration || 0);
   const [timeUp, setTimeUp] = useState(false);
   const progressRef = useRef(null);
-  const countdownRef = useRef(null);
 
   useEffect(() => {
+    if (countdownDone) return;
     if (countdownSeconds > 0) {
+      let sound = countdownAudio;
       if (countdownSeconds === 1) {
-        return countdown(setCountdownSeconds, countdownEndAudio);
+        sound = countdownEndAudio;
       }
-      return countdown(setCountdownSeconds, countdownAudio);
+      return tick(setCountdownSeconds, sound);
     } else {
       setCountdownDone(true);
     }
-  }, [countdownSeconds]);
+  }, [countdownSeconds, countdownDone]);
 
   useEffect(() => {
-    if (countdownDone) {
-      if (secondsLeft > 0) {
-        let sound;
-        if (secondsLeft === 1) {
-          sound = doneAudio;
-        } else if (secondsLeft < 6) {
-          sound = nearlyDoneAudio;
-        } else {
-          sound = tickAudio;
-        }
-        return countdown(setSecondsLeft, sound);
+    if (!countdownDone) return;
+    if (secondsLeft > 0) {
+      let sound;
+      if (secondsLeft === 1) {
+        sound = doneAudio;
+      } else if (secondsLeft < 6) {
+        sound = nearlyDoneAudio;
       } else {
-        setTimeUp(true);
+        sound = tickAudio;
       }
+      return tick(setSecondsLeft, sound);
+    } else {
+      setTimeUp(true);
     }
   }, [secondsLeft, countdownDone]);
 
@@ -71,27 +74,21 @@ const TimedExercise = ({ duration, exercise, completeExercise }) => {
 
   return (
     <Fragment>
-      {countdownDone ? (
-        <CountdownCircle
-          key="timer"
-          ref={progressRef}
-          seconds={duration}
-          secondsLeft={secondsLeft}
-          className="task"
-        />
-      ) : (
-        <Fragment>
-          <CountdownCircle
-            key="countdown"
-            ref={countdownRef}
-            showUnit={false}
-            fillColor={countdownSeconds < 2 ? 'red' : 'blue'}
-            seconds={countdownDuration}
-            secondsLeft={countdownSeconds}
-            className="task"
-          />
-        </Fragment>
-      )}
+      <CountdownCircle
+        ref={progressRef}
+        seconds={countdownDone ? duration : countdown}
+        secondsLeft={countdownDone ? secondsLeft : countdownSeconds}
+        unit={countdownDone ? 's' : ''}
+        fillColor={(props) =>
+          `rgba(${props.theme.fontColorDefault},${countdownDone ? '1' : '0.5'})`
+        }
+        emptyColor={(props) =>
+          `rgba(${props.theme.fontColorDefault},${
+            countdownDone ? '0.3' : '0.1'
+          })`
+        }
+        className="task"
+      />
       <h1 className="title">{exercise.title}</h1>
     </Fragment>
   );

@@ -19,4 +19,6 @@ export default styled(CloseButton)`
   z-index: 2;
 
   padding: 0 !important;
+
+  cursor: pointer;
 `;

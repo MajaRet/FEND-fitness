@@ -16,6 +16,7 @@ const CircularProgressBar = React.forwardRef((props, ref) => {
           strokeWidth={thickness}
           cx="50%"
           cy="50%"
+          style={{ transition: 'stroke 1s ease-in-out' }}
         ></circle>
         <circle
           className="circle progress"

@@ -8,6 +8,8 @@ import LabelButton from './../../elements/labels/LabelButton';
 import TextButton from './../../elements/buttons/TextButton';
 import CompletedExercise from '../exercise/CompletedExercise';
 
+const isPause = (exercise) => exercise.title === 'Pause';
+
 const StartedWorkout = ({
   className,
   exercise,
@@ -62,6 +64,7 @@ const StartedWorkout = ({
           className="exercise timed"
           duration={exercise.duration}
           exercise={exercise.exercise}
+          countdown={isPause(exercise.exercise) ? 0 : 3}
           completeExercise={() => setExerciseCompleted(true)}
           // Key used to force rerendering of the exercise
           key={exerciseIndex}
@@ -84,7 +87,7 @@ export default styled(StartedWorkout)`
   height: 100%;
   padding: var(--standard-padding-vertical) var(--standard-padding-horizontal);
   background-color: ${(props) =>
-    props.exercise.exercise.title === 'Pause'
+    isPause(props.exercise.exercise)
       ? `rgb(${props.theme.backgroundPrimary})`
       : `rgb(${props.theme.backgroundSecondary})`};
 
