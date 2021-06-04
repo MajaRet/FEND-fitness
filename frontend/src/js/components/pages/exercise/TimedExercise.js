@@ -84,6 +84,8 @@ const TimedExercise = ({ duration, exercise, completeExercise }) => {
           <CountdownCircle
             key="countdown"
             ref={countdownRef}
+            showUnit={false}
+            fillColor={countdownSeconds < 2 ? 'red' : 'blue'}
             seconds={countdownDuration}
             secondsLeft={countdownSeconds}
             className="task"
