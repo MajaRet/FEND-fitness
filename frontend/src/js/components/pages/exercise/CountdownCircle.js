@@ -9,8 +9,19 @@ const CountdownCircle = React.forwardRef(
 
     // Used to immediately start the first transition.
     useEffect(() => {
-      setStarted(true);
-      ref.current.style = 'transition: stroke-dashoffset 1s ease-in-out;';
+      const sync = ref.current;
+      console.log('Synchronous, hopefully:');
+      console.log(sync);
+      console.log('Maybe asynchronous?:');
+      console.log(ref.current);
+      console.log(ref.current.getAttribute('stroke-dasharray'));
+      // TODO: There appears to be a race condition between setting the state and the
+      // initial render... (or DOM insertion)? At least it seems to work properly when I
+      // delay the state update, but that's obviously not a good solution...
+      if (sync.getAttribute('stroke-dashoffset') == 0) {
+        console.log('Set started to true');
+        setInterval(() => setStarted(true), 100);
+      }
     }, [ref]);
 
     const radius = 175;
@@ -18,6 +29,7 @@ const CountdownCircle = React.forwardRef(
     const progressOffset = started
       ? (1 - Math.max(secondsLeft - 1, 0) / seconds) * 2 * Math.PI * radius
       : 0;
+    console.log(`progressOffset is ${progressOffset}`);
 
     return (
       <CircularProgressBar

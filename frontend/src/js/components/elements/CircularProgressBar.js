@@ -5,7 +5,7 @@ const CircularProgressBar = React.forwardRef((props, ref) => {
   const { className, progress, radius, thickness, centerText } = props;
 
   const circumference = 2 * Math.PI * radius;
-
+  console.log(`Progress: ${progress}`);
   return (
     <div className={className}>
       <svg
@@ -27,6 +27,7 @@ const CircularProgressBar = React.forwardRef((props, ref) => {
           cy="50%"
           strokeDasharray={circumference}
           strokeDashoffset={progress}
+          style={{ transition: 'stroke-dashoffset 1s ease-in-out' }}
         ></circle>
         <text className="text" x="50%" y="50%" textAnchor="middle" dy="20px">
           {centerText}
@@ -57,5 +58,14 @@ export default styled(CircularProgressBar)`
     font-size: calc(var(--h1-size) * 2);
     fill: ${(props) => `rgb(${props.theme.fontColorDefault})`};
     font-weight: var(--heading-weight);
+  }
+
+  @keyframes tick {
+    from {
+      stroke-dashoffset: ${(props) => `${props.progress - 100}px`};
+    }
+    to {
+      stroke-dashoffset: ${(props) => `${props.progress}px`};
+    }
   }
 `;
