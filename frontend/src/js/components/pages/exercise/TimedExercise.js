@@ -1,6 +1,6 @@
 import React, { Fragment, useState, useEffect, useRef } from 'react';
 
-import CountdownCircle from './CountdownCircle';
+import CountdownCircle from '../../elements/CountdownCircle';
 
 import tickSound from './../../../../audio/tick.wav';
 import doneSound from './../../../../audio/bell.wav';
@@ -76,8 +76,8 @@ const TimedExercise = ({
     <Fragment>
       <CountdownCircle
         ref={progressRef}
-        seconds={countdownDone ? duration : countdown}
-        secondsLeft={countdownDone ? secondsLeft : countdownSeconds}
+        time={countdownDone ? duration : countdown}
+        timeLeft={countdownDone ? secondsLeft : countdownSeconds}
         unit={countdownDone ? 's' : ''}
         fillColor={(props) =>
           `rgba(${props.theme.fontColorDefault},${countdownDone ? '1' : '0.5'})`

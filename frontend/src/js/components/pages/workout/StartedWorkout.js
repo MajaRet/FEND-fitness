@@ -50,7 +50,7 @@ const StartedWorkout = ({
       </TextButton>
       {completedExercises[exerciseIndex] ? (
         <CompletedExercise
-          exercise={exercise.exercise}
+          exercise={exercise}
           repeatExercise={() => setExerciseCompleted(false)}
         />
       ) : exercise.__typename === 'ExerciseWithReps' ? (
@@ -94,6 +94,11 @@ export default styled(StartedWorkout)`
   .title,
   .header {
     height: 23%;
+  }
+
+  .title,
+  .subtitle {
+    text-align: center;
   }
 
   .task {

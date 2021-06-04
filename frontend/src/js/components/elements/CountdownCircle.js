@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
-import CircularProgressBar from './../../elements/CircularProgressBar';
+import CircularProgressBar from './CircularProgressBar';
 
 const CountdownCircle = React.forwardRef(
-  ({ className, seconds, secondsLeft, unit, fillColor, emptyColor }, ref) => {
+  ({ className, time, timeLeft, unit, fillColor, emptyColor }, ref) => {
     const [started, setStarted] = useState(false);
 
     // Used to immediately start the first transition.
@@ -15,7 +15,7 @@ const CountdownCircle = React.forwardRef(
     const radius = 175;
 
     const progressOffset = started
-      ? (1 - Math.max(secondsLeft - 1, 0) / seconds) * 2 * Math.PI * radius
+      ? (1 - Math.max(timeLeft - 1, 0) / time) * 2 * Math.PI * radius
       : 0;
 
     return (
@@ -25,7 +25,7 @@ const CountdownCircle = React.forwardRef(
         radius={radius}
         progress={progressOffset}
         thickness={20}
-        centerText={`${secondsLeft}${unit}`}
+        centerText={`${timeLeft}${unit}`}
         filledColor={(props) =>
           fillColor || `rgb(${props.theme.fontColorDefault})`
         }
