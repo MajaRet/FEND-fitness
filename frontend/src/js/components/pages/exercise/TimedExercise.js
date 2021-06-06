@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect, useRef } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 
 import CountdownCircle from '../../elements/countdown/CountdownCircle';
 
@@ -34,7 +34,6 @@ const TimedExercise = ({
   const [countdownSeconds, setCountdownSeconds] = useState(countdown);
   const [secondsLeft, setSecondsLeft] = useState(duration || 0);
   const [timeUp, setTimeUp] = useState(false);
-  const progressRef = useRef(null);
 
   useEffect(() => {
     if (countdownDone) return;
@@ -75,7 +74,6 @@ const TimedExercise = ({
   return (
     <Fragment>
       <CountdownCircle
-        ref={progressRef}
         time={countdownDone ? duration : countdown}
         timeLeft={countdownDone ? secondsLeft : countdownSeconds}
         unit={countdownDone ? 's' : ''}
