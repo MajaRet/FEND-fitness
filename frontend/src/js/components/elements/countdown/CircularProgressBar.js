@@ -4,7 +4,6 @@ import styled, { keyframes } from 'styled-components';
 const animation = (props) => keyframes`
     0% {
       stroke-dashoffset: ${props.prevOffset};
-      }};
     }
     100% {
       stroke-dashoffset:  ${props.progress};};
@@ -78,8 +77,5 @@ export default styled(CircularProgressBar)`
     font-size: calc(var(--h1-size) * 1.75);
     fill: ${(props) => props.filledColor || 'black'};
     font-weight: var(--heading-weight);
-  }
-
-  @keyframes initialTransition {
   }
 `;
