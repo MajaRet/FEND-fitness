@@ -1,9 +1,19 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 
-const CircularProgressBar = React.forwardRef((props, ref) => {
+const animation = (props) => keyframes`
+    0% {
+      stroke-dashoffset: ${props.prevOffset};
+      }};
+    }
+    100% {
+      stroke-dashoffset:  ${props.progress};};
+    }
+`;
+
+const CircularProgressBar = (props) => {
   const { className, progress, radius, thickness, centerText } = props;
-
+  console.log(`Comp: ${progress}`);
   const circumference = 2 * Math.PI * radius;
   return (
     <div className={className}>
@@ -21,13 +31,12 @@ const CircularProgressBar = React.forwardRef((props, ref) => {
         <circle
           className="circle progress"
           r={radius}
-          ref={ref}
           strokeWidth={thickness}
           cx="50%"
           cy="50%"
           strokeDasharray={circumference}
           strokeDashoffset={progress}
-          style={{ transition: 'all 1s ease-in-out' }}
+          style={{ transition: 'stroke 1s ease-in-out' }}
         ></circle>
         <text
           className="text"
@@ -42,7 +51,7 @@ const CircularProgressBar = React.forwardRef((props, ref) => {
       </svg>
     </div>
   );
-});
+};
 
 export default styled(CircularProgressBar)`
   position: relative;
@@ -58,6 +67,11 @@ export default styled(CircularProgressBar)`
 
     &.progress {
       stroke: ${(props) => props.filledColor || 'black'};
+
+      animation-name: ${animation};
+      animation-duration: 1s;
+      animation-timing-function: ease-in-out;
+      animation-fill-mode: forwards;
     }
   }
 
@@ -65,5 +79,8 @@ export default styled(CircularProgressBar)`
     font-size: calc(var(--h1-size) * 2);
     fill: ${(props) => props.filledColor || 'black'};
     font-weight: var(--heading-weight);
+  }
+
+  @keyframes initialTransition {
   }
 `;
