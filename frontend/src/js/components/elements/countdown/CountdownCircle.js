@@ -11,20 +11,17 @@ const CountdownCircle = ({
   fillColor,
   emptyColor,
 }) => {
-  const radius = 175;
-
   const prevOffset = useRef(0);
 
+  const radius = 150;
   const progressOffset =
     (1 - Math.max(timeLeft - 1, 0) / time) * 2 * Math.PI * radius;
 
-  console.log(prevOffset.current, progressOffset);
   const res = (
     <CircularProgressBar
       className={className}
       radius={radius}
       progress={progressOffset}
-      slice={(radius * 2 * Math.PI) / time}
       prevOffset={prevOffset.current}
       thickness={20}
       centerText={`${timeLeft}${unit}`}

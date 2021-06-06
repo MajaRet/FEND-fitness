@@ -13,7 +13,6 @@ const animation = (props) => keyframes`
 
 const CircularProgressBar = (props) => {
   const { className, progress, radius, thickness, centerText } = props;
-  console.log(`Comp: ${progress}`);
   const circumference = 2 * Math.PI * radius;
   return (
     <div className={className}>
@@ -76,7 +75,7 @@ export default styled(CircularProgressBar)`
   }
 
   .text {
-    font-size: calc(var(--h1-size) * 2);
+    font-size: calc(var(--h1-size) * 1.75);
     fill: ${(props) => props.filledColor || 'black'};
     font-weight: var(--heading-weight);
   }
