@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import WorkoutList from './WorkoutList';
 import ProgramHeader from './ProgramHeader';
-import ProgramDiagram from './ProgramDiagram';
+import ProgramChart from './ProgramChart';
 import ProgramDescription from './ProgramDescription';
 import Button from './../buttons/Button';
 import CloseButton from './../buttons/CloseButton';
@@ -14,7 +14,7 @@ const Program = ({ closeOverlay, className, program }) => {
       <CloseButton onClick={closeOverlay} />
       <ProgramHeader program={program} />
       <ProgramDescription program={program} />
-      <ProgramDiagram program={program} />
+      <ProgramChart id={program.id} />
       <WorkoutList id={program.id} duration={program.duration} />
       <Button>jetzt starten</Button>
     </div>
@@ -24,8 +24,7 @@ const Program = ({ closeOverlay, className, program }) => {
 export default styled(Program)`
   background-color: ${(props) => props.theme.backgroundPrimary};
 
-  > div,
-  > p {
+  > :not(${Button}) {
     padding: var(--standard-padding-vertical) var(--standard-padding-horizontal);
   }
 
