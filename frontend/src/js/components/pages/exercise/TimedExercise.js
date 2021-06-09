@@ -24,6 +24,19 @@ function tick(advance, sound) {
   };
 }
 
+/**
+ * A component rendering a timed exercise or a timed pause.
+ * The exercise or pause is marked as completed once its timer runs out.
+ *
+ * @param {Number} duration           The duration of the exercise or pasue in
+ *                                    seconds.
+ * @param {Object} exercise           The exercise to be done.
+ * @param {Function} completeExercise Callback function to mark the exercise as
+ *                                    completed.
+ * @param {Number} countdown          The number of seconds on a countdown
+ *                                    that precedes the exercise timer. If 0
+ *                                    or not given, no countdown will be shown.
+ */
 const TimedExercise = ({
   duration,
   exercise,

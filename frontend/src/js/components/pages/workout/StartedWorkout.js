@@ -5,7 +5,7 @@ import WorkoutHeader from './WorkoutHeader';
 import RepeatedExercise from '../exercise/RepeatedExercise';
 import TimedExercise from '../exercise/TimedExercise';
 import LabelButton from './../../elements/labels/LabelButton';
-import TextButton from './../../elements/buttons/TextButton';
+import TextButton from './../../elements/buttons/ColoredTextButton';
 import CompletedExercise from '../exercise/CompletedExercise';
 
 const isPause = (exercise) => exercise.title === 'Pause';
@@ -33,6 +33,7 @@ const StartedWorkout = ({
       <TextButton
         className="skip-button left"
         disabled={isFirst}
+        size={80}
         onClick={() => {
           progress(-1);
         }}
@@ -42,6 +43,7 @@ const StartedWorkout = ({
       <TextButton
         className="skip-button right"
         disabled={isLast}
+        size={80}
         onClick={() => {
           progress(1);
         }}

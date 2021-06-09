@@ -25,6 +25,7 @@ export default styled(CardHeader)`
   width: 90%;
 
   svg path {
+    stroke: ${(props) => `rgb(${props.theme.fontColorDefault})`};
     fill: ${(props) =>
       props.isFavorite ? `rgb(${props.theme.fontColorDefault})` : null};
   }

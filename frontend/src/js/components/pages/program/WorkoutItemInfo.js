@@ -26,5 +26,8 @@ export default styled(WorkoutItemInfo)`
 
   .favorite {
     margin-top: 30px;
+    path {
+      stroke: ${(props) => `rgb(${props.theme.fontColorDefault})`};
+    }
   }
 `;

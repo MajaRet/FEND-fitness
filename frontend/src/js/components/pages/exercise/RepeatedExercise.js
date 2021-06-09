@@ -1,7 +1,17 @@
 import React, { Fragment } from 'react';
 import Button from '../../elements/buttons/Button';
 
-const RepeatedExercise = ({ className, reps, exercise, completeExercise }) => {
+/**
+ * A component rendering an exercise with repetitions and a button
+ * to mark it as completed.
+ *
+ * @param {Number} reps               The number of times the exercise is
+ *                                    repeated.
+ * @param {Object} exercise           The exercise to be done.
+ * @param {Function} completeExercise Callback function to mark the exercise as
+ *                                    completed.
+ */
+const RepeatedExercise = ({ reps, exercise, completeExercise }) => {
   return (
     <Fragment>
       <h1 className="task repeated">{reps} x</h1>
