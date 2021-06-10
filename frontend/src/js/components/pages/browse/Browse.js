@@ -1,13 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
-import { useLazyQuery, gql } from '@apollo/client';
+// import { useLazyQuery, gql } from '@apollo/client';
 import { Link } from 'react-router-dom';
+
+import { useLazyQuery } from '../../../api/sanity';
 
 import ProgramCard from './ProgramCard';
 import Label from './../../elements/labels/Label';
 import FilterForm from './FilterForm';
 import LoadingSpinner from './../../elements/loading/LoadingSpinner';
 
+/*
 const loadProgramsQuery = gql`
   query LoadPrograms($offset: Int!, $where: ProgramFilter) {
     allProgram(limit: 5, offset: $offset, where: $where) {
@@ -18,6 +21,19 @@ const loadProgramsQuery = gql`
     }
   }
 `;
+*/
+
+const getPrograms = `*[_type == "user" && name == "Schneewittchen"]{
+  name,
+  activeProgram,
+  "favorites": favorites[]{_ref},
+  "programs": *[_type == "program"] {
+    title,
+    slug,
+    "favorite": count(*[^._id in (^.^.favorites[]._ref)]) > 0,
+    "active": count(*[^._id == ^.^.activeProgram._ref]) > 0
+  }[$offset ... $offset + 5]
+}`;
 
 let observer;
 
@@ -32,8 +48,7 @@ const Browse = ({ className }) => {
   const [programList, setProgramList] = useState([]);
   const [allLoaded, setAllLoaded] = useState(false);
   const [filter, setFilter] = useState({});
-  const [loadPrograms, { error, loading, data }] =
-    useLazyQuery(loadProgramsQuery);
+  const [loadPrograms, { error, loading, data }] = useLazyQuery(getPrograms);
 
   // A bottom marker element
   const lastElemRef = useRef();
@@ -41,10 +56,11 @@ const Browse = ({ className }) => {
   // set programList
   useEffect(() => {
     if (data) {
-      if (data.allProgram.length === 0) {
+      const [{ programs }] = data;
+      if (programs.length === 0) {
         setAllLoaded(true);
       }
-      setProgramList((programList) => programList.concat(data.allProgram));
+      setProgramList((programList) => programList.concat(programs));
     }
   }, [data]);
 
@@ -62,11 +78,11 @@ const Browse = ({ className }) => {
       observer = new IntersectionObserver(
         (entries) => {
           if (entries[0].intersectionRatio > 0) {
+            // The end of the program list should be observed only once,
+            // so unobserve it.
+            observer.unobserve(entries[0].target);
             loadPrograms({
-              variables: {
-                offset: programList.length,
-                where: { ...filter },
-              },
+              offset: programList.length,
             });
           }
         },
@@ -92,7 +108,7 @@ const Browse = ({ className }) => {
           setFavorite={(b) => {
             const newProg = { ...program, favorite: b };
             // Persist the favorite status by writing it back to the backend.
-            persistFavorite(program.id, b);
+            persistFavorite(program._id, b);
             setProgramList((programList) => [
               ...programList.slice(0, i),
               newProg,

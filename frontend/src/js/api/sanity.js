@@ -1,5 +1,5 @@
 import sanityClient from '@sanity/client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 const client = sanityClient({
   projectId: 'eae3hj1s',
@@ -15,17 +15,18 @@ const client = sanityClient({
  * @param {Function} setFetchState A callback function to set the state inside
  *                                 the hooks.
  */
-const execute = (query, params, setFetchState) => {
+const execute = (query, params, setLoading, setError, setData) => {
   client.fetch(query, params).then(
     (res) => {
       if (res) {
-        setFetchState({ data: res });
+        setData(res);
+        setLoading(false);
       } else {
-        setFetchState({ error: true });
+        setError(true);
       }
     },
     () => {
-      setFetchState({ error: true });
+      setError(true);
     }
   );
 };
@@ -39,13 +40,15 @@ const execute = (query, params, setFetchState) => {
  * and carries the fetched data in its data property after it arrives.
  */
 export const useQuery = (query, params) => {
-  const [fetchState, setFetchState] = useState({ loading: true });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+  const [data, setData] = useState(null);
 
   useEffect(() => {
-    execute(query, params, setFetchState);
+    execute(query, params, setLoading, setError, setData);
   }, [params, query]);
 
-  return fetchState;
+  return { loading, error, data };
 };
 
 /**
@@ -57,11 +60,17 @@ export const useQuery = (query, params) => {
  * object that indicates the fetching status (loading, error) and carries
  * the fetched data in its data property after it arrives.
  */
-export const useLazyQuery = (query, params) => {
-  const [fetchState, setFetchState] = useState({ loading: true });
+export const useLazyQuery = (query) => {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
+  const [data, setData] = useState(null);
 
-  const executeQuery = () => {
-    execute(query, params, setFetchState);
-  };
-  return [executeQuery, fetchState];
+  const executeQuery = useCallback(
+    (params) => {
+      setLoading(true);
+      execute(query, params, setLoading, setError, setData);
+    },
+    [query]
+  );
+  return [executeQuery, { loading, error, data }];
 };
