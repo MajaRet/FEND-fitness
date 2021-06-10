@@ -22,10 +22,14 @@ const execute = (query, params, setLoading, setError, setData) => {
         setData(res);
         setLoading(false);
       } else {
+        setData(null);
+        setLoading(false);
         setError(true);
       }
     },
     () => {
+      setData(null);
+      setLoading(false);
       setError(true);
     }
   );

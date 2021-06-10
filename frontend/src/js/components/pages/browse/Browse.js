@@ -10,24 +10,16 @@ import Label from './../../elements/labels/Label';
 import FilterForm from './FilterForm';
 import LoadingSpinner from './../../elements/loading/LoadingSpinner';
 
-/*
-const loadProgramsQuery = gql`
-  query LoadPrograms($offset: Int!, $where: ProgramFilter) {
-    allProgram(limit: 5, offset: $offset, where: $where) {
-      title
-      slug {
-        current
-      }
-    }
-  }
-`;
-*/
-
 const getPrograms = `*[_type == "user" && name == "Schneewittchen"]{
   name,
   activeProgram,
   "favorites": favorites[]{_ref},
-  "programs": *[_type == "program"] {
+  "programs": *[_type == "program" 
+  && ($keyword == "" || title match $keyword || description match $keyword)
+  && ($minDuration == -1 || duration >= $minDuration)
+  && ($maxDuration == -1 || duration <= $maxDuration)
+  && (!$favorite || _id in ^.favorites[]._ref)
+  && ($difficulty == "" || difficulty == $difficulty)] {
     title,
     slug,
     "favorite": count(*[^._id in (^.^.favorites[]._ref)]) > 0,
@@ -41,13 +33,18 @@ let observer;
 // it should write information back to the backend.
 const persistFavorite = (id, b) => {
   console.log('Favoriting not implemented yet.');
-  // programs.find((program) => id === program.id).favorite = b;
 };
 
 const Browse = ({ className }) => {
   const [programList, setProgramList] = useState([]);
   const [allLoaded, setAllLoaded] = useState(false);
-  const [filter, setFilter] = useState({});
+  const [filter, setFilter] = useState({
+    keyword: '',
+    maxDuration: -1,
+    minDuration: -1,
+    favorite: false,
+    difficulty: '',
+  });
   const [loadPrograms, { error, loading, data }] = useLazyQuery(getPrograms);
 
   // A bottom marker element
@@ -83,6 +80,7 @@ const Browse = ({ className }) => {
             observer.unobserve(entries[0].target);
             loadPrograms({
               offset: programList.length,
+              ...filter,
             });
           }
         },
@@ -119,11 +117,6 @@ const Browse = ({ className }) => {
       </Link>
     );
   });
-
-  // TODO remove
-  if (error) {
-    console.log(error);
-  }
 
   return (
     <div className={className}>

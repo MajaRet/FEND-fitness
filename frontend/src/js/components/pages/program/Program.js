@@ -40,11 +40,6 @@ const Program = ({ className }) => {
 
   const { error, data, loading } = useQuery(query);
 
-  // TODO remove
-  if (error) {
-    console.log(error);
-  }
-
   let program;
   if (data) {
     [program] = data.allProgram;

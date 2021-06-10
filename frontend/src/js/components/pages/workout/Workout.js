@@ -31,8 +31,7 @@ const Workout = ({ day, workoutId, closeWorkout }) => {
        }
     }
 }`;
-  const { error, loading, data } = useQuery(query);
-  if (error) console.log(error);
+  const { loading, data } = useQuery(query);
   const workout = data?.Workout;
   const [workoutStarted, setWorkoutStarted] = useState(false);
   // TODO take completion status from the workout
