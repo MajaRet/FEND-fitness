@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
+
+import { UserContext } from '../../../context';
 
 import WorkoutInfo from './WorkoutInfo';
 import { ReactComponent as WorkoutImage } from './../../../../img/svg/Programme large.svg';
@@ -26,6 +28,7 @@ const StyledDashboard = styled.div`
 `;
 
 const Dashboard = (props) => {
+  const user = useContext(UserContext);
   const currHours = new Date().getHours();
   const timeOfDay =
     currHours < 11 ? 'Morgen' : currHours < 17 ? 'Tag' : 'Abend';
@@ -36,7 +39,7 @@ const Dashboard = (props) => {
         <br />
         {timeOfDay},
         <br />
-        {props.user.name}
+        {user.name}
       </h1>
       <main>
         <div className="subheader">

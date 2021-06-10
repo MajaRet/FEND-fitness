@@ -6,6 +6,7 @@ import { ApolloProvider } from '@apollo/client/react';
 
 import GlobalStyle from '../style/globalStyles';
 import theme from '../style/Theme';
+import { UserContext } from '../context';
 
 import Dashboard from './pages/dashboard/Dashboard';
 import Navigation from './navigation/Navigation';
@@ -30,32 +31,32 @@ const App = () => {
     <BrowserRouter>
       <ApolloProvider client={client}>
         <ThemeProvider theme={theme}>
-          <Fragment>
-            <GlobalStyle />
-            <StyledApp>
-              <Switch>
-                <Route path="/" exact>
-                  <Dashboard user={dummyUser} />
-                </Route>
-                <Route path="/browse" exact>
-                  <Browse />
-                </Route>
-                <Route path="/program/:id">
-                  <Browse />
-                  <Overlay>
-                    <Program />
-                  </Overlay>
-                </Route>
-              </Switch>
-              <Navigation />
-            </StyledApp>
-          </Fragment>
+          <UserContext.Provider value={{ name: 'Schneewittchen' }}>
+            <Fragment>
+              <GlobalStyle />
+              <StyledApp>
+                <Switch>
+                  <Route path="/" exact>
+                    <Dashboard />
+                  </Route>
+                  <Route path="/browse" exact>
+                    <Browse />
+                  </Route>
+                  <Route path="/program/:id">
+                    <Browse />
+                    <Overlay>
+                      <Program />
+                    </Overlay>
+                  </Route>
+                </Switch>
+                <Navigation />
+              </StyledApp>
+            </Fragment>
+          </UserContext.Provider>
         </ThemeProvider>
       </ApolloProvider>
     </BrowserRouter>
   );
 };
-
-const dummyUser = { name: 'Schneewittchen' };
 
 export default App;
