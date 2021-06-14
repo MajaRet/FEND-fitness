@@ -8,7 +8,7 @@ const client = sanityClient({
   projectId: 'eae3hj1s',
   dataset: 'production',
   apiVersion: '2021-06-09',
-  useCdn: false,
+  useCdn: true,
   token: process.env.REACT_APP_SANITY_WRITE_TOKEN,
 });
 
@@ -26,7 +26,8 @@ const client = sanityClient({
  */
 async function executeFetch(query, params, setLoading, setError, setData) {
   try {
-    setError(false);
+    // TODO Remove, just a check for overfetching
+    console.log('%cATTENTION: Fetching', 'color: blue');
     const data = await client.fetch(query, params);
     if (data) {
       setData(data);
@@ -56,8 +57,9 @@ export const useQuery = (query, params) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [data, setData] = useState(null);
-
   useEffect(() => {
+    // TODO Remove
+    console.log('%cATTENTION: useQuery', 'color: orange');
     executeFetch(query, params, setLoading, setError, setData);
   }, [params, query]);
 
@@ -81,6 +83,7 @@ export const useLazyQuery = (query) => {
   const executeQuery = useCallback(
     (params) => {
       setLoading(true);
+      console.log('%cATTENTION: useLazyQuery executed', 'color: purple');
       executeFetch(query, params, setLoading, setError, setData);
     },
     [query]

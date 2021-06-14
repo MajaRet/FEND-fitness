@@ -26,7 +26,7 @@ const getPrograms = `*[_type == "user" && name == $userName]{
     slug,
     "favorite": count(*[^._id in (^.^.favorites[]._ref)]) > 0,
     "active": count(*[^._id == ^.^.activeProgram._ref]) > 0
-  }[$offset ... $offset + ${pageSize}]
+  }[$offset ... $offset + 5]
 }`;
 
 let observer;

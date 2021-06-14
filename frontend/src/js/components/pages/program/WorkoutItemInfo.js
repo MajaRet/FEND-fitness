@@ -11,7 +11,7 @@ const WorkoutItemInfo = ({ className, workout }) => {
   return (
     <div className={className}>
       <p>Tag {workout.day}</p>
-      <WorkoutDetailsLabel workout={workout.Workout} />
+      <WorkoutDetailsLabel workout={workout.workout} />
       <HeartIcon className="favorite" />
     </div>
   );

@@ -1,7 +1,9 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useState, useMemo, useContext } from 'react';
 import styled from 'styled-components';
-import { useQuery, gql } from '@apollo/client';
 import { useParams } from 'react-router-dom';
+
+import { useQuery } from '../../../api/sanity';
+import { UserContext } from '../../../context';
 
 import WorkoutList from './WorkoutList';
 import ProgramHeader from './ProgramHeader';
@@ -15,7 +17,48 @@ import LoadingScreen from './../../elements/loading/LoadingScreen';
 const Program = ({ className }) => {
   const [workoutOpen, setWorkoutOpen] = useState(false);
   const { id } = useParams();
+  const user = useContext(UserContext);
 
+  const query = `*[_type == "program" && slug.current == $slug]{
+    title,
+    duration,
+    difficulty,
+    focus,
+    description,
+    "workouts": workouts[]{ 
+      day,
+      "workout": Workout-> {
+        title,
+        categories,
+        calories,
+        duration
+      }
+    }
+  }`;
+  const params = useMemo(() => {
+    return { slug: id };
+  }, [id]);
+  /*
+  const query = `*[_type == "program" && slug.current == $slug]{
+    title,
+    duration,
+    difficulty,
+    focus,
+    description,
+    "workouts": workouts {
+      day,
+      "workout": Workout { 
+        _id,
+        title,
+        categories,
+        calories,
+        duration
+      }
+    }`;
+  const params = { slug: id };
+  */
+
+  /*
   const query = gql`
     query GetProgram {
       allProgram(where: {slug: {current: {eq: "${id}"} }}) {
@@ -24,7 +67,7 @@ const Program = ({ className }) => {
         difficulty
         focus
         description
-        workouts {
+        workouts { 
           day
           Workout { 
             _id
@@ -37,23 +80,17 @@ const Program = ({ className }) => {
       }
     }
   `;
-
-  const { error, data, loading } = useQuery(query);
+*/
+  const { data, loading } = useQuery(query, params);
 
   let program;
   if (data) {
-    [program] = data.allProgram;
+    [program] = data;
     // TODO Don't just take the first workout, take the current one.
     // Need support in the backend for that.
-    const currentWorkout = program.workouts[0];
+    // const currentWorkout = program.workouts[0];
     if (workoutOpen)
-      return (
-        <Workout
-          workoutId={currentWorkout.Workout._id}
-          day={currentWorkout.day}
-          closeWorkout={() => setWorkoutOpen(false)}
-        />
-      );
+      return <Workout closeWorkout={() => setWorkoutOpen(false)} />;
   }
   return (
     <div className={className}>
@@ -66,7 +103,7 @@ const Program = ({ className }) => {
           <ProgramDescription description={program.description} />
           <ProgramChart
             categories={program.workouts.flatMap(
-              ({ Workout }) => Workout.categories
+              ({ workout }) => workout.categories
             )}
           />
           <WorkoutList
