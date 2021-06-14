@@ -1,38 +1,58 @@
-import React, { Fragment, useEffect, useState } from 'react';
-import { useQuery, gql } from '@apollo/client';
+import React, {
+  Fragment,
+  useEffect,
+  useState,
+  useMemo,
+  useContext,
+} from 'react';
+import { useParams } from 'react-router-dom';
+
+import { useQuery } from '../../../api/sanity';
+import { UserContext } from '../../../context';
 
 import StartedWorkout from './StartedWorkout';
 import WorkoutOverview from './WorkoutOverview';
 import LoadingScreen from '../../elements/loading/LoadingScreen';
 import BackButton from './../../elements/buttons/BackButton';
 
-const Workout = ({ day, workoutId, closeWorkout }) => {
-  const query = gql`
-  query {
-    Workout(id: "${workoutId}") {
-      title
-      categories
-      calories
-      duration
-      exercises {
-        __typename
-        ... on ExerciseWithReps {
-           reps
-           exercise {
-            title
-            }
-         }
-        ... on ExerciseWithDuration {
-          duration
-          exercise {
-             title
-           }
+const Workout = ({ closeWorkout }) => {
+  const { programSlug, day } = useParams();
+  console.log(`%c${programSlug}, ${day}`, 'color: green');
+  const user = useContext(UserContext);
+
+  const query = `*[_type == "user" && name == $name] {
+    "program": *[_type == "program" && slug.current == $programSlug] {
+      "currentWorkout": workouts[day == 1] {
+        "workout": Workout-> {
+          title,
+          categories,
+          description,
+          duration,
+          calories,
+          "exercises": exercises[]{
+            _type,
+            duration,
+            reps,
+            exercise-> { title }
+          }
         }
-       }
+      }
     }
-}`;
-  const { loading, data } = useQuery(query);
-  const workout = data?.Workout;
+   }`;
+
+  const params = useMemo(
+    () => ({ name: user.name, programSlug }),
+    [user, programSlug]
+  );
+  const { loading, data } = useQuery(query, params);
+
+  console.log(data);
+  let workout;
+  if (data) {
+    workout = data[0]?.program[0]?.currentWorkout[0]?.workout;
+  }
+  console.log(workout);
+
   const [workoutStarted, setWorkoutStarted] = useState(false);
   // TODO take completion status from the workout
   const [completedExercises, setCompletedExercises] = useState([]);
@@ -71,14 +91,14 @@ const Workout = ({ day, workoutId, closeWorkout }) => {
   }, [completedExercises]);
 
   useEffect(() => {
-    if (data) {
+    if (workout) {
       setCompletedExercises((complEx) =>
         complEx.length === 0
-          ? Array(data.Workout.exercises.length).fill(false)
+          ? Array(workout.exercises.length).fill(false)
           : complEx
       );
     }
-  }, [data]);
+  }, [workout]);
 
   if (loading) {
     return (

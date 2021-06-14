@@ -1,9 +1,8 @@
-import React, { Fragment, useState, useMemo, useContext } from 'react';
+import React, { Fragment, useState, useMemo } from 'react';
 import styled from 'styled-components';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 
 import { useQuery } from '../../../api/sanity';
-import { UserContext } from '../../../context';
 
 import WorkoutList from './WorkoutList';
 import ProgramHeader from './ProgramHeader';
@@ -17,7 +16,7 @@ import LoadingScreen from './../../elements/loading/LoadingScreen';
 const Program = ({ className }) => {
   const [workoutOpen, setWorkoutOpen] = useState(false);
   const { id } = useParams();
-  const user = useContext(UserContext);
+  console.log(`%c${id}`, 'color: brown');
 
   const query = `*[_type == "program" && slug.current == $slug]{
     title,
@@ -110,14 +109,9 @@ const Program = ({ className }) => {
             workouts={program.workouts}
             duration={program.duration}
           />
-          <Button
-            className="start-button"
-            onClick={() => {
-              setWorkoutOpen(true);
-            }}
-          >
-            jetzt starten
-          </Button>
+          <Link to={`${id}/${1}`}>
+            <Button className="start-button">jetzt starten</Button>
+          </Link>
         </Fragment>
       ) : (
         'Fehler!'

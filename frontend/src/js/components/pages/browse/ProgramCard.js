@@ -12,10 +12,7 @@ const ProgramCard = ({ className, program, setFavorite }) => {
     <Fragment>
       {detailsOpen ? (
         <Overlay>
-          <Program
-            programId={program._id}
-            closeOverlay={() => setDetailsOpen(false)}
-          />
+          <Program closeOverlay={() => setDetailsOpen(false)} />
         </Overlay>
       ) : null}
       <div className={className}>

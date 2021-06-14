@@ -10,6 +10,7 @@ import Dashboard from './pages/dashboard/Dashboard';
 import Navigation from './navigation/Navigation';
 import Browse from './pages/browse/Browse';
 import Program from './pages/program/Program';
+import Workout from './pages/workout/Workout';
 import Overlay from './util/Overlay';
 
 const StyledApp = styled.div`
@@ -38,6 +39,11 @@ const App = () => {
                 </Route>
                 <Route path="/browse" exact>
                   <Browse />
+                </Route>
+                <Route path="/program/:programSlug/:day">
+                  <Overlay>
+                    <Workout />
+                  </Overlay>
                 </Route>
                 <Route path="/program/:id">
                   <Browse />

@@ -21,6 +21,7 @@ const StartedWorkout = ({
   stopWorkout,
   exerciseIndex,
 }) => {
+  console.log(exercise);
   return (
     <div className={className}>
       <WorkoutHeader
@@ -55,13 +56,13 @@ const StartedWorkout = ({
           exercise={exercise}
           repeatExercise={() => setExerciseCompleted(false)}
         />
-      ) : exercise.__typename === 'ExerciseWithReps' ? (
+      ) : exercise._type === 'exerciseWithReps' ? (
         <RepeatedExercise
           reps={exercise.reps}
           exercise={exercise.exercise}
           completeExercise={() => setExerciseCompleted(true)}
         />
-      ) : exercise.__typename === 'ExerciseWithDuration' ? (
+      ) : exercise._type === 'exerciseWithDuration' ? (
         <TimedExercise
           className="exercise timed"
           duration={exercise.duration}
