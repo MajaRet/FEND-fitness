@@ -10,6 +10,7 @@ import Label from './../../elements/labels/Label';
 import FilterForm from './FilterForm';
 import LoadingSpinner from './../../elements/loading/LoadingSpinner';
 
+const pageSize = 5;
 const getPrograms = `*[_type == "user" && name == $userName]{
   name,
   activeProgram,
@@ -25,7 +26,7 @@ const getPrograms = `*[_type == "user" && name == $userName]{
     slug,
     "favorite": count(*[^._id in (^.^.favorites[]._ref)]) > 0,
     "active": count(*[^._id == ^.^.activeProgram._ref]) > 0
-  }[$offset ... $offset + 5]
+  }[$offset ... $offset + ${pageSize}]
 }`;
 
 let observer;
@@ -62,7 +63,7 @@ const Browse = ({ className }) => {
   useEffect(() => {
     if (data) {
       const [{ programs }] = data;
-      if (programs.length === 0) {
+      if (programs.length < pageSize) {
         setAllLoaded(true);
       }
       setProgramList((programList) => programList.concat(programs));
