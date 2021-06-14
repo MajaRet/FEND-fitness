@@ -1,39 +1,48 @@
 import sanityClient from '@sanity/client';
 import { useState, useEffect, useCallback } from 'react';
+import { nanoid } from 'nanoid';
 
+// NOTE: The write token is *not* secure as it will be exposed by React.
+// But since this is a practice application, it doesn't matter much.
 const client = sanityClient({
   projectId: 'eae3hj1s',
   dataset: 'production',
   apiVersion: '2021-06-09',
-  useCdn: true,
+  useCdn: false,
+  token: process.env.REACT_APP_SANITY_WRITE_TOKEN,
 });
 
 /**
  * Helper function for the hooks that handles the actual fetching.
- * @param {String} query           A GROQ query string.
- * @param {Object} params          An object with the query's parameters.
- * @param {Function} setFetchState A callback function to set the state inside
- *                                 the hooks.
+ *
+ * @param {String} query        A GROQ query string.
+ * @param {Object} params       An object with the query's parameters.
+ * @param {Function} setLoading A callback function to set the loading state
+ *                              inside a querying hook.
+ * @param {Function} setError   A callback function to set the error state
+ *                              inside a querying hook.
+ * @param {Function} setData    A callback function to set the fetched data
+ *                              inside a querying hook.
  */
-const execute = (query, params, setLoading, setError, setData) => {
-  client.fetch(query, params).then(
-    (res) => {
-      if (res) {
-        setData(res);
-        setLoading(false);
-      } else {
-        setData(null);
-        setLoading(false);
-        setError(true);
-      }
-    },
-    () => {
+async function executeFetch(query, params, setLoading, setError, setData) {
+  try {
+    setError(false);
+    const data = await client.fetch(query, params);
+    if (data) {
+      setData(data);
+      setLoading(false);
+    } else {
       setData(null);
       setLoading(false);
       setError(true);
     }
-  );
-};
+  } catch (error) {
+    setData(null);
+    setLoading(false);
+    setError(true);
+    console.log(error);
+  }
+}
 
 /**
  * A custom hook to execute a GROQ query immediately.
@@ -49,7 +58,7 @@ export const useQuery = (query, params) => {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    execute(query, params, setLoading, setError, setData);
+    executeFetch(query, params, setLoading, setError, setData);
   }, [params, query]);
 
   return { loading, error, data };
@@ -72,9 +81,62 @@ export const useLazyQuery = (query) => {
   const executeQuery = useCallback(
     (params) => {
       setLoading(true);
-      execute(query, params, setLoading, setError, setData);
+      executeFetch(query, params, setLoading, setError, setData);
     },
     [query]
   );
   return [executeQuery, { loading, error, data }];
 };
+
+/* Mutations */
+
+/**
+ * Adds a new reference to a list of references specific to a user, like
+ * favorites or completed programs.
+ *
+ * @param {String} userId    The current user's id.
+ * @param {String} fieldName The name of the field to add to. Should be a list.
+ * @param {String} newRef    The reference pointing to the element to add.
+ */
+export async function addToUserList(userId, fieldName, newRef) {
+  client
+    .patch(userId)
+    .setIfMissing({ favorites: [] })
+    .append(fieldName, [{ _type: 'reference', _ref: newRef, _key: nanoid() }])
+    .commit()
+    .catch((error) => console.log(error));
+}
+
+/**
+ * Removes a reference from a list of references specific to a user, like
+ * favorites or completed programs.
+ *
+ * @param {String} userId         The current user's id.
+ * @param {String} fieldName      The name of the field to remove from.
+ *                                Should be a list.
+ * @param {String} refToDelete    The reference pointing to the element to
+ *                                remove.
+ */
+export async function removeFromUserList(userId, fieldName, refToDelete) {
+  client
+    .patch(userId)
+    .unset([`${fieldName}[_ref == "${refToDelete}"]`])
+    .commit()
+    .catch((error) => console.log(error));
+}
+
+/**
+ * Set a given program's favorite status.
+ *
+ * @param {String} userId    The current user's id.
+ * @param {String} programId The program's id.
+ * @param {Boolean} fav      A flag indicating what to set the favorite status
+ *                           to.
+ */
+export async function writeFavorite(userId, programId, fav) {
+  if (fav) {
+    addToUserList(userId, 'favorites', programId);
+  } else {
+    removeFromUserList(userId, 'favorites', programId);
+  }
+}

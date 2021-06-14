@@ -1,16 +1,16 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import styled from 'styled-components';
-// import { useLazyQuery, gql } from '@apollo/client';
 import { Link } from 'react-router-dom';
 
-import { useLazyQuery } from '../../../api/sanity';
+import { useLazyQuery, writeFavorite } from '../../../api/sanity';
+import { UserContext } from '../../../context';
 
 import ProgramCard from './ProgramCard';
 import Label from './../../elements/labels/Label';
 import FilterForm from './FilterForm';
 import LoadingSpinner from './../../elements/loading/LoadingSpinner';
 
-const getPrograms = `*[_type == "user" && name == "Schneewittchen"]{
+const getPrograms = `*[_type == "user" && name == $userName]{
   name,
   activeProgram,
   "favorites": favorites[]{_ref},
@@ -19,7 +19,8 @@ const getPrograms = `*[_type == "user" && name == "Schneewittchen"]{
   && ($minDuration == -1 || duration >= $minDuration)
   && ($maxDuration == -1 || duration <= $maxDuration)
   && (!$favorite || _id in ^.favorites[]._ref)
-  && ($difficulty == "" || difficulty == $difficulty)] {
+  && ($difficulty == "none" || $difficulty == "all" || $difficulty == "" || difficulty == $difficulty)] {
+    _id,
     title,
     slug,
     "favorite": count(*[^._id in (^.^.favorites[]._ref)]) > 0,
@@ -29,10 +30,15 @@ const getPrograms = `*[_type == "user" && name == "Schneewittchen"]{
 
 let observer;
 
-// Right now, this just changes the constant array, but eventually
-// it should write information back to the backend.
-const persistFavorite = (id, b) => {
-  console.log('Favoriting not implemented yet.');
+/**
+ * Persist a new favorite status in the backend.
+ *
+ * @param {String} userId The currently logged-in user's id.
+ * @param {String} id     The id of the program to be favorited.
+ * @param {Boolean} b     A flag indicating whether to favorite or unfavorite.
+ */
+const persistFavorite = (userId, id, b) => {
+  writeFavorite(userId, id, b);
 };
 
 const Browse = ({ className }) => {
@@ -45,7 +51,9 @@ const Browse = ({ className }) => {
     favorite: false,
     difficulty: '',
   });
-  const [loadPrograms, { error, loading, data }] = useLazyQuery(getPrograms);
+
+  const user = useContext(UserContext);
+  const [loadPrograms, { loading, data }] = useLazyQuery(getPrograms);
 
   // A bottom marker element
   const lastElemRef = useRef();
@@ -67,6 +75,7 @@ const Browse = ({ className }) => {
     setAllLoaded(false);
   }, [filter]);
 
+  // Loading new elements if the bottom of the page is reached.
   useEffect(() => {
     const lastElem = lastElemRef.current;
     if (!allLoaded) {
@@ -80,6 +89,7 @@ const Browse = ({ className }) => {
             observer.unobserve(entries[0].target);
             loadPrograms({
               offset: programList.length,
+              userName: user.name,
               ...filter,
             });
           }
@@ -96,7 +106,7 @@ const Browse = ({ className }) => {
       observer.unobserve(lastElem);
     }
     return () => observer?.unobserve(lastElem);
-  }, [loadPrograms, allLoaded, filter, programList]);
+  }, [loadPrograms, allLoaded, filter, programList, user]);
 
   const programCards = programList.map((program, i) => {
     return (
@@ -105,8 +115,8 @@ const Browse = ({ className }) => {
           program={program}
           setFavorite={(b) => {
             const newProg = { ...program, favorite: b };
-            // Persist the favorite status by writing it back to the backend.
-            persistFavorite(program._id, b);
+            // Persist the favorite status by writing it to the backend.
+            persistFavorite(user.id, program._id, b);
             setProgramList((programList) => [
               ...programList.slice(0, i),
               newProg,

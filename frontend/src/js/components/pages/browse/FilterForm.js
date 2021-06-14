@@ -86,7 +86,7 @@ const FilterForm = ({ className, setFilter }) => {
               id="difficultySelection"
               name="difficultySelection"
             >
-              <option value="none">Alle</option>
+              <option value="all">Alle</option>
               <option value="beginner">{display('beginner')}</option>
               <option value="intermediate">{display('intermediate')}</option>
               <option value="hard">{display('hard')}</option>
