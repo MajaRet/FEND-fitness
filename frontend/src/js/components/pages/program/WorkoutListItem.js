@@ -19,4 +19,8 @@ export default styled(WorkoutListItem)`
   border-radius: 5px;
 
   overflow: hidden;
+
+  &.current ${WorkoutItemInfo} {
+    background-color: ${(props) => `rgb(${props.theme.backgroundSecondary})`};
+  }
 `;

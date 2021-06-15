@@ -67,6 +67,7 @@ const Program = ({ className }) => {
           <WorkoutList
             workouts={program.workouts}
             duration={program.duration}
+            currentDay={currentDay}
           />
           <ButtonLink to={`${id}/${currentDay}`} className="start-button">
             jetzt starten

@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import WorkoutListItem from './WorkoutListItem';
 import LabelButton from '../../elements/labels/LabelButton';
 
-const WorkoutList = ({ className, workouts }) => {
+const WorkoutList = ({ className, workouts, currentDay }) => {
   const [displayedWorkouts, setDisplayedWorkouts] = useState(
     workouts.slice(0, 3)
   );
@@ -18,7 +18,13 @@ const WorkoutList = ({ className, workouts }) => {
   };
 
   const renderedExercises = displayedWorkouts.map((workout) => {
-    return <WorkoutListItem key={workout.day} workout={workout} />;
+    return (
+      <WorkoutListItem
+        className={workout.day === currentDay ? 'current' : ''}
+        key={workout.day}
+        workout={workout}
+      />
+    );
   });
 
   return (
