@@ -96,15 +96,18 @@ export const useLazyQuery = (query) => {
 /**
  * Adds a new reference to a list of references specific to a user, like
  * favorites or completed programs.
+ * The list is treated as a set, so it will not contain duplicate values
+ * and no order is guaranteed.
  *
  * @param {String} userId    The current user's id.
  * @param {String} fieldName The name of the field to add to. Should be a list.
  * @param {String} newRef    The reference pointing to the element to add.
  */
-export async function addToUserList(userId, fieldName, newRef) {
+export async function addToUserSet(userId, fieldName, newRef) {
   client
     .patch(userId)
     .setIfMissing({ favorites: [] })
+    .unset([`${fieldName}[_ref == "${newRef}"]`])
     .append(fieldName, [{ _type: 'reference', _ref: newRef, _key: nanoid() }])
     .commit()
     .catch((error) => console.log(error));
@@ -138,7 +141,7 @@ export async function removeFromUserList(userId, fieldName, refToDelete) {
  */
 export async function writeFavorite(userId, programId, fav) {
   if (fav) {
-    addToUserList(userId, 'favorites', programId);
+    addToUserSet(userId, 'favorites', programId);
   } else {
     removeFromUserList(userId, 'favorites', programId);
   }

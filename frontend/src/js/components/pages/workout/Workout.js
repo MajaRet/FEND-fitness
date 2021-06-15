@@ -22,7 +22,7 @@ const Workout = ({ closeWorkout }) => {
 
   const query = `*[_type == "user" && name == $name] {
     "program": *[_type == "program" && slug.current == $programSlug] {
-      "currentWorkout": workouts[day == 1] {
+      "currentWorkout": workouts[day == $day] {
         "workout": Workout-> {
           title,
           categories,
@@ -36,21 +36,17 @@ const Workout = ({ closeWorkout }) => {
             exercise-> { title }
           }
         }
-      }
-    }
-   }`;
+      }[0]
+    }[0]
+   }[0]`;
 
   const params = useMemo(
-    () => ({ name: user.name, programSlug }),
-    [user, programSlug]
+    () => ({ name: user.name, programSlug, day: parseInt(day) }),
+    [user, programSlug, day]
   );
   const { loading, data } = useQuery(query, params);
 
-  console.log(data);
-  let workout;
-  if (data) {
-    workout = data[0]?.program[0]?.currentWorkout[0]?.workout;
-  }
+  const workout = data?.program?.currentWorkout?.workout;
   console.log(workout);
 
   const [workoutStarted, setWorkoutStarted] = useState(false);

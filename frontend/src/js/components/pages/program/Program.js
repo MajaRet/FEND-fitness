@@ -1,25 +1,29 @@
-import React, { Fragment, useState, useMemo } from 'react';
+import React, { Fragment, useMemo, useContext } from 'react';
 import styled from 'styled-components';
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 import { useQuery } from '../../../api/sanity';
+import { UserContext } from '../../../context';
+import { getCurrentDay } from '../../../util/date';
 
 import WorkoutList from './WorkoutList';
 import ProgramHeader from './ProgramHeader';
 import ProgramChart from './ProgramChart';
 import ProgramDescription from './ProgramDescription';
 import CloseLink from '../../elements/links/CloseLink';
-import Button from '../../elements/buttons/Button';
-import Workout from '../workout/Workout';
+import ButtonLink from '../../elements/links/ButtonLink';
 import LoadingScreen from './../../elements/loading/LoadingScreen';
 
 const Program = ({ className }) => {
-  const [workoutOpen, setWorkoutOpen] = useState(false);
   const { id } = useParams();
-  console.log(`%c${id}`, 'color: brown');
+  const user = useContext(UserContext);
 
   const query = `*[_type == "program" && slug.current == $slug]{
-    title,
+      "currentWorkout": *[_type == "user" && name == $userName && activeProgram.ActiveProgram._ref == ^._id] {
+        "lastCompletedDate": activeProgram.dateOfLastWorkoutCompletion,
+        "day": activeProgram.day
+      }[0],
+      title,
     duration,
     difficulty,
     focus,
@@ -33,64 +37,19 @@ const Program = ({ className }) => {
         duration
       }
     }
-  }`;
+  }[0]`;
   const params = useMemo(() => {
-    return { slug: id };
-  }, [id]);
-  /*
-  const query = `*[_type == "program" && slug.current == $slug]{
-    title,
-    duration,
-    difficulty,
-    focus,
-    description,
-    "workouts": workouts {
-      day,
-      "workout": Workout { 
-        _id,
-        title,
-        categories,
-        calories,
-        duration
-      }
-    }`;
-  const params = { slug: id };
-  */
+    return {
+      slug: id,
+      userName: user.name,
+    };
+  }, [id, user]);
 
-  /*
-  const query = gql`
-    query GetProgram {
-      allProgram(where: {slug: {current: {eq: "${id}"} }}) {
-        title
-        duration
-        difficulty
-        focus
-        description
-        workouts { 
-          day
-          Workout { 
-            _id
-            title
-            categories
-            calories
-            duration
-          }
-        }
-      }
-    }
-  `;
-*/
   const { data, loading } = useQuery(query, params);
 
-  let program;
-  if (data) {
-    [program] = data;
-    // TODO Don't just take the first workout, take the current one.
-    // Need support in the backend for that.
-    // const currentWorkout = program.workouts[0];
-    if (workoutOpen)
-      return <Workout closeWorkout={() => setWorkoutOpen(false)} />;
-  }
+  const program = data;
+  const currentDay = program ? getCurrentDay(program.currentWorkout) : null;
+
   return (
     <div className={className}>
       <CloseLink to="/browse" />
@@ -109,9 +68,9 @@ const Program = ({ className }) => {
             workouts={program.workouts}
             duration={program.duration}
           />
-          <Link to={`${id}/${1}`}>
-            <Button className="start-button">jetzt starten</Button>
-          </Link>
+          <ButtonLink to={`${id}/${currentDay}`} className="start-button">
+            jetzt starten
+          </ButtonLink>
         </Fragment>
       ) : (
         'Fehler!'
