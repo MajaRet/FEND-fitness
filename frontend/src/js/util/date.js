@@ -7,10 +7,5 @@ export const getCurrentDay = (program) => {
   if (!program || !program.currentWorkout) {
     return 1;
   }
-
-  const { day, lastCompletedDate } = program.currentWorkout;
-  const today = new Date().toISOString().split('T')[0];
-  const todaysWorkoutCompleted = lastCompletedDate.match(today);
-  const currentDay = todaysWorkoutCompleted ? Math.max(1, day - 1) : day;
-  return currentDay;
+  return program.currentWorkout.day;
 };

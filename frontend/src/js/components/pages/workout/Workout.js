@@ -17,7 +17,6 @@ import BackButton from './../../elements/buttons/BackButton';
 
 const Workout = ({ closeWorkout }) => {
   const { programSlug, day } = useParams();
-  console.log(`%c${programSlug}, ${day}`, 'color: green');
   const user = useContext(UserContext);
 
   const query = `*[_type == "user" && name == $name] {

@@ -21,7 +21,6 @@ const StartedWorkout = ({
   stopWorkout,
   exerciseIndex,
 }) => {
-  console.log(exercise);
   return (
     <div className={className}>
       <WorkoutHeader

@@ -138,9 +138,7 @@ export async function removeFromUserList(userId, fieldName, refToDelete) {
  * @param {String} programRef The new active program's id.
  */
 export async function setActiveProgram(userId, programRef) {
-  console.log('Set active program');
   const today = new Date().toISOString();
-  console.log(today);
   const activeProgram = {
     ActiveProgram: { _ref: programRef, _type: 'reference' },
     day: 1,
