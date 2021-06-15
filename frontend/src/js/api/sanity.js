@@ -132,6 +132,29 @@ export async function removeFromUserList(userId, fieldName, refToDelete) {
 }
 
 /**
+ * Sets a new active program on the given user.
+ *
+ * @param {String} userId     The user's id.
+ * @param {String} programRef The new active program's id.
+ */
+export async function setActiveProgram(userId, programRef) {
+  console.log('Set active program');
+  const today = new Date().toISOString();
+  console.log(today);
+  const activeProgram = {
+    ActiveProgram: { _ref: programRef, _type: 'reference' },
+    day: 1,
+    dateOfLastWorkoutCompletion: today,
+    completedExercises: [],
+  };
+  client
+    .patch(userId)
+    .set({ activeProgram })
+    .commit()
+    .catch((error) => console.log(error));
+}
+
+/**
  * Set a given program's favorite status.
  *
  * @param {String} userId    The current user's id.

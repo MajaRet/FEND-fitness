@@ -2,7 +2,7 @@ import React, { Fragment, useMemo, useContext } from 'react';
 import styled from 'styled-components';
 import { useParams } from 'react-router-dom';
 
-import { useQuery } from '../../../api/sanity';
+import { useQuery, setActiveProgram } from '../../../api/sanity';
 import { UserContext } from '../../../context';
 import { getCurrentDay } from '../../../util/date';
 
@@ -14,11 +14,24 @@ import CloseLink from '../../elements/links/CloseLink';
 import ButtonLink from '../../elements/links/ButtonLink';
 import LoadingScreen from './../../elements/loading/LoadingScreen';
 
+/**
+ * Write information about the start of a program to the backend if the started
+ * program is not the currently active one.
+ * Will do nothing if the program is already active.
+ */
+const persistNewActiveProgram = (userId, program) => {
+  if (program.isActive) return;
+  // Write the new program into the backend as the active program.
+  setActiveProgram(userId, program);
+};
+
 const Program = ({ className }) => {
   const { id } = useParams();
   const user = useContext(UserContext);
 
   const query = `*[_type == "program" && slug.current == $slug]{
+      _id,
+      "isActive": count(*[_type == "user" && name == $userName && activeProgram.ActiveProgram._ref == ^._id]) > 0,
       "currentWorkout": *[_type == "user" && name == $userName && activeProgram.ActiveProgram._ref == ^._id] {
         "lastCompletedDate": activeProgram.dateOfLastWorkoutCompletion,
         "day": activeProgram.day
@@ -49,7 +62,7 @@ const Program = ({ className }) => {
 
   const program = data;
   const currentDay = program ? getCurrentDay(program.currentWorkout) : null;
-
+  console.log(program);
   return (
     <div className={className}>
       <CloseLink to="/browse" />
@@ -69,7 +82,11 @@ const Program = ({ className }) => {
             duration={program.duration}
             currentDay={currentDay}
           />
-          <ButtonLink to={`${id}/${currentDay}`} className="start-button">
+          <ButtonLink
+            onClick={() => persistNewActiveProgram(user.id, program._id)}
+            to={`${id}/${currentDay}`}
+            className="start-button"
+          >
             jetzt starten
           </ButtonLink>
         </Fragment>
