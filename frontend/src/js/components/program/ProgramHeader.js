@@ -1,12 +1,12 @@
-import React from 'react';
-import styled from 'styled-components';
+import React from "react";
+import styled from "styled-components";
 
-import InfoBar from './InfoBar';
+import InfoBar from "./InfoBar";
 
 const ProgramHeader = ({ className, program }) => {
   return (
     <header className={className}>
-      <h1>{program.title}</h1>
+      <h1>{program.title.toLowerCase()}</h1>
       <InfoBar
         type={program.type}
         duration={program.duration}
