@@ -1,6 +1,6 @@
 import React, { Fragment, useMemo, useContext } from 'react';
 import styled from 'styled-components';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 
 import { useQuery, setActiveProgram } from '../../../api/sanity';
 import { UserContext } from '../../../context';
@@ -10,8 +10,8 @@ import WorkoutList from './WorkoutList';
 import ProgramHeader from './ProgramHeader';
 import ProgramChart from './ProgramChart';
 import ProgramDescription from './ProgramDescription';
-import CloseLink from '../../elements/links/CloseLink';
-import ButtonLink from '../../elements/links/ButtonLink';
+import CloseButton from '../../elements/buttons/CloseButton';
+import Button from '../../elements/buttons/Button';
 import LoadingScreen from './../../elements/loading/LoadingScreen';
 
 /**
@@ -68,7 +68,7 @@ const Program = ({ className }) => {
   console.log(program);
   return (
     <div className={className}>
-      <CloseLink to="/browse" />
+      <CloseButton as={Link} to="/browse" />
       {loading ? (
         <LoadingScreen />
       ) : program ? (
@@ -85,7 +85,8 @@ const Program = ({ className }) => {
             duration={program.duration}
             currentDay={currentDay}
           />
-          <ButtonLink
+          <Button
+            as={Link}
             onClick={() => {
               if (!program.isActive) {
                 persistNewActiveProgram(user.id, program._id);
@@ -95,7 +96,7 @@ const Program = ({ className }) => {
             className="start-button"
           >
             jetzt starten
-          </ButtonLink>
+          </Button>
         </Fragment>
       ) : (
         'Fehler!'

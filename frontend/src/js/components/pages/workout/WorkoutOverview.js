@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 import WorkoutDetails from './WorkoutDetails';
@@ -13,12 +14,12 @@ const WorkoutOverview = ({
   day,
   completedExercises,
   startWorkout,
-  closeWorkout,
+  programURL,
   allDone,
 }) => {
   return (
     <div className={className}>
-      <BackButton onClick={closeWorkout} />
+      <BackButton as={Link} to={programURL} />
       <WorkoutHeader completedExercises={completedExercises}>
         <Label>{workout.title}</Label>
       </WorkoutHeader>
