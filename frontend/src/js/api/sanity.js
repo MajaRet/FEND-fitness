@@ -103,7 +103,7 @@ export const useLazyQuery = (query) => {
  * @param {String} fieldName The name of the field to add to. Should be a list.
  * @param {String} newRef    The reference pointing to the element to add.
  */
-export async function addToUserSet(userId, fieldName, newRef) {
+export function addToUserSet(userId, fieldName, newRef) {
   client
     .patch(userId)
     .setIfMissing({ favorites: [] })
@@ -123,7 +123,7 @@ export async function addToUserSet(userId, fieldName, newRef) {
  * @param {String} refToDelete    The reference pointing to the element to
  *                                remove.
  */
-export async function removeFromUserList(userId, fieldName, refToDelete) {
+export function removeFromUserList(userId, fieldName, refToDelete) {
   client
     .patch(userId)
     .unset([`${fieldName}[_ref == "${refToDelete}"]`])
@@ -132,12 +132,14 @@ export async function removeFromUserList(userId, fieldName, refToDelete) {
 }
 
 /**
- * Sets a new active program on the given user.
+ * Sets a new active program on the given user and adds it
+ * to the user's list of started programs if it isn't already
+ * in there.
  *
  * @param {String} userId     The user's id.
  * @param {String} programRef The new active program's id.
  */
-export async function setActiveProgram(userId, programRef) {
+export function setActiveProgram(userId, programRef) {
   const today = new Date().toISOString();
   const activeProgram = {
     ActiveProgram: { _ref: programRef, _type: 'reference' },
@@ -148,10 +150,48 @@ export async function setActiveProgram(userId, programRef) {
   client
     .patch(userId)
     .set({ activeProgram })
+    .setIfMissing({ startedPrograms: [] })
+    .unset([`startedPrograms[_ref == "${programRef}"]`])
+    .append('startedPrograms', [
+      { _type: 'reference', _ref: programRef, _key: nanoid() },
+    ])
     .commit()
     .catch((error) => console.log(error));
 }
 
+export function updateCompletedExercises(userId, newCompletedExercises) {
+  client
+    .patch(userId)
+    .set({ 'activeProgram.completedExercises': newCompletedExercises })
+    .commit()
+    .catch((error) => console.log(error));
+}
+
+export function completeCurrentWorkout(userId) {
+  const today = new Date().toISOString();
+  client
+    .patch(userId)
+    .inc({ 'activeProgram.day': 1 })
+    .set({
+      'activeProgram.dateOfLastWorkoutCompletion': today,
+      'activeProgram.completedExercises': [],
+    })
+    .commit()
+    .catch((error) => console.log(error));
+}
+
+export function completeActiveProgram(userId, programId) {
+  client
+    .patch(userId)
+    .set({ activeProgram: {} })
+    .setIfMissing({ completedPrograms: [] })
+    .unset([`completedPrograms[_ref == "${programId}"]`])
+    .append('completedPrograms', [
+      { _type: 'reference', _ref: programId, _key: nanoid() },
+    ])
+    .commit()
+    .catch((error) => console.log(error));
+}
 /**
  * Set a given program's favorite status.
  *
@@ -160,7 +200,7 @@ export async function setActiveProgram(userId, programRef) {
  * @param {Boolean} fav      A flag indicating what to set the favorite status
  *                           to.
  */
-export async function writeFavorite(userId, programId, fav) {
+export function writeFavorite(userId, programId, fav) {
   if (fav) {
     addToUserSet(userId, 'favorites', programId);
   } else {

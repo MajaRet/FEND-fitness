@@ -18,7 +18,7 @@ const ProgramCard = ({ className, program, setFavorite }) => {
       <div className={className}>
         <CardHeader
           isNew={program.isNew}
-          isFavorite={program.favorite}
+          isFavorite={program.isFavorite}
           setFavorite={setFavorite}
         />
         <h2>{program.title}</h2>
@@ -40,9 +40,9 @@ export default styled(ProgramCard)`
   border-radius: 5px;
   // TODO Also add the 'started' color to the theme.
   background-color: ${(props) =>
-    props.program.status === 'started'
+    props.program.isActive
       ? 'rgb(var(--blue2))'
-      : props.program.status === 'completed'
+      : props.program.isCompleted
       ? `rgb(${props.theme.backgroundSecondary})`
       : `rgb(${props.theme.backgroundPrimary})`};
 

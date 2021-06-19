@@ -7,7 +7,12 @@ import React, {
 } from 'react';
 import { useParams } from 'react-router-dom';
 
-import { useQuery } from '../../../api/sanity';
+import {
+  updateCompletedExercises,
+  completeCurrentWorkout,
+  completeActiveProgram,
+  useQuery,
+} from '../../../api/sanity';
 import { UserContext } from '../../../context';
 
 import StartedWorkout from './StartedWorkout';
@@ -15,13 +20,18 @@ import WorkoutOverview from './WorkoutOverview';
 import LoadingScreen from '../../elements/loading/LoadingScreen';
 import BackButton from './../../elements/buttons/BackButton';
 
-const Workout = ({ closeWorkout }) => {
-  const { programSlug, day } = useParams();
-  const user = useContext(UserContext);
-
+const Workout = () => {
   const query = `*[_type == "user" && name == $name] {
     "program": *[_type == "program" && slug.current == $programSlug] {
+      _id,
+      "completedExercises": select(
+        ^.activeProgram.ActiveProgram._ref == _id => ^.activeProgram.completedExercises,
+        true => [],
+        ),
       "currentWorkout": workouts[day == $day] {
+        "done": ^.^.activeProgram.ActiveProgram._ref == ^._id
+          &&  ^.^.activeProgram.day > day,
+        "isLastWorkout": count(^.workouts) == $day,
         "workout": Workout-> {
           title,
           categories,
@@ -39,6 +49,9 @@ const Workout = ({ closeWorkout }) => {
     }[0]
    }[0]`;
 
+  const { programSlug, day } = useParams();
+  const user = useContext(UserContext);
+
   const params = useMemo(
     () => ({ name: user.name, programSlug, day: parseInt(day) }),
     [user, programSlug, day]
@@ -46,25 +59,42 @@ const Workout = ({ closeWorkout }) => {
   const { loading, data } = useQuery(query, params);
 
   const workout = data?.program?.currentWorkout?.workout;
-  console.log(workout);
+  const programURL = `/program/${programSlug}`;
 
   const [workoutStarted, setWorkoutStarted] = useState(false);
-  // TODO take completion status from the workout
   const [completedExercises, setCompletedExercises] = useState([]);
   const [allDone, setAllDone] = useState(false);
 
-  const completeCurrentExercise = (completed) => {
+  const setCurrentExerciseCompletion = (completed) => {
+    // If we complete an exercise, move on to the next.
+    const moveOn = () => {
+      if (completed) {
+        setCurrentExercise((currEx) =>
+          Math.min(currEx + 1, workout.exercises.length - 1)
+        );
+      }
+    };
+
+    // Either persist new completed exercise or the completion of the workout.
+    const persistCompletion = () => {
+      if (newCompleted.every((b) => b)) {
+        if (data.program.currentWorkout.isLastWorkout) {
+          completeActiveProgram(user.id, data.program._id);
+        } else {
+          completeCurrentWorkout(user.id);
+        }
+      } else {
+        updateCompletedExercises(user.id, newCompleted);
+      }
+    };
+
     const newCompleted = [...completedExercises];
     newCompleted[currentExercise] = completed;
     setCompletedExercises(newCompleted);
-
-    // If we complete an exercise, move on to the next.
-    if (completed) {
-      setCurrentExercise((currEx) =>
-        Math.min(currEx + 1, workout.exercises.length - 1)
-      );
-    }
+    persistCompletion();
+    moveOn();
   };
+
   const getFirstIncompleteExercise = () => {
     return Math.max(
       0,
@@ -86,19 +116,29 @@ const Workout = ({ closeWorkout }) => {
   }, [completedExercises]);
 
   useEffect(() => {
-    if (workout) {
-      setCompletedExercises((complEx) =>
-        complEx.length === 0
-          ? Array(workout.exercises.length).fill(false)
-          : complEx
+    if (data) {
+      const complEx = data.program.completedExercises;
+      setCompletedExercises(
+        complEx && complEx.length > 0
+          ? complEx
+          : Array(workout.exercises.length).fill(
+              data.program.currentWorkout.done
+            )
+      );
+      // Skip the already completed exercises.
+      setCurrentExercise(
+        Math.max(
+          0,
+          complEx.findIndex((b) => !b)
+        )
       );
     }
-  }, [workout]);
+  }, [data, workout]);
 
   if (loading) {
     return (
       <Fragment>
-        <BackButton onClick={closeWorkout} />
+        <BackButton to={programURL} />
         <LoadingScreen />
       </Fragment>
     );
@@ -111,9 +151,7 @@ const Workout = ({ closeWorkout }) => {
             exerciseIndex={currentExercise}
             isFirst={currentExercise === 0}
             isLast={currentExercise === workout.exercises.length - 1}
-            setExerciseCompleted={(completed) => {
-              completeCurrentExercise(completed);
-            }}
+            setExerciseCompletion={setCurrentExerciseCompletion}
             stopWorkout={() => {
               setWorkoutStarted(false);
               setCurrentExercise(getFirstIncompleteExercise());
@@ -134,7 +172,7 @@ const Workout = ({ closeWorkout }) => {
             startWorkout={() => {
               setWorkoutStarted(true);
             }}
-            closeWorkout={closeWorkout}
+            programURL={programURL}
             allDone={allDone}
           />
         )}

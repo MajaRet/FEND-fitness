@@ -25,9 +25,11 @@ const Program = ({ className }) => {
   const { id } = useParams();
   const user = useContext(UserContext);
 
-  const query = `*[_type == "program" && slug.current == $slug]{
+  const query = `*[_type == "user" && name == $userName] {
+   "program": *[_type == "program" && slug.current == $slug]{
       _id,
-      "isActive": count(*[_type == "user" && name == $userName && activeProgram.ActiveProgram._ref == ^._id]) > 0,
+      "isActive": ^.activeProgram.ActiveProgram._ref == _id,
+      "completed": count(*[^._id in (^.^.completedPrograms[]._ref)]) > 0,
       "currentWorkout": *[_type == "user" && name == $userName && activeProgram.ActiveProgram._ref == ^._id] {
         "completedToday": activeProgram.dateOfLastWorkoutCompletion >= $today,
         "lastCompletedDate": activeProgram.dateOfLastWorkoutCompletion,
@@ -51,7 +53,8 @@ const Program = ({ className }) => {
         duration
       }
     }
-  }[0]`;
+  }[0]
+}[0]`;
   const params = useMemo(() => {
     return {
       slug: id,
@@ -62,10 +65,9 @@ const Program = ({ className }) => {
 
   const { data, loading } = useQuery(query, params);
 
-  const program = data;
+  const program = data?.program;
   const currentDay = getCurrentDay(program);
 
-  console.log(program);
   return (
     <div className={className}>
       <CloseButton as={Link} to="/browse" />

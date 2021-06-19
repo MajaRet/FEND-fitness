@@ -15,7 +15,7 @@ const StartedWorkout = ({
   exercise,
   isFirst,
   isLast,
-  setExerciseCompleted,
+  setExerciseCompletion,
   progress,
   completedExercises,
   stopWorkout,
@@ -53,13 +53,13 @@ const StartedWorkout = ({
       {completedExercises[exerciseIndex] ? (
         <CompletedExercise
           exercise={exercise}
-          repeatExercise={() => setExerciseCompleted(false)}
+          repeatExercise={() => setExerciseCompletion(false)}
         />
       ) : exercise._type === 'exerciseWithReps' ? (
         <RepeatedExercise
           reps={exercise.reps}
           exercise={exercise.exercise}
-          completeExercise={() => setExerciseCompleted(true)}
+          completeExercise={() => setExerciseCompletion(true)}
         />
       ) : exercise._type === 'exerciseWithDuration' ? (
         <TimedExercise
@@ -67,7 +67,7 @@ const StartedWorkout = ({
           duration={exercise.duration}
           exercise={exercise.exercise}
           countdown={isPause(exercise.exercise) ? 0 : 3}
-          completeExercise={() => setExerciseCompleted(true)}
+          completeExercise={() => setExerciseCompletion(true)}
           // Key used to force rerendering of the exercise
           key={exerciseIndex}
         />

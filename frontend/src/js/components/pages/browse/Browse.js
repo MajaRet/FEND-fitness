@@ -24,8 +24,10 @@ const getPrograms = `*[_type == "user" && name == $userName]{
     _id,
     title,
     slug,
-    "favorite": count(*[^._id in (^.^.favorites[]._ref)]) > 0,
-    "active": count(*[^._id == ^.^.activeProgram._ref]) > 0
+    "isFavorite": count(*[^._id in (^.^.favorites[]._ref)]) > 0,
+    "isActive": _id == ^.activeProgram.ActiveProgram._ref,
+    "isNew": count(*[^._id in ^.^.startedPrograms[]._ref]) == 0,
+    "isCompleted": count(*[^._id in (^.^.completedPrograms[]._ref)]) > 0
   }[$offset ... $offset + 5]
 }`;
 
@@ -115,7 +117,7 @@ const Browse = ({ className }) => {
         <ProgramCard
           program={program}
           setFavorite={(b) => {
-            const newProg = { ...program, favorite: b };
+            const newProg = { ...program, isFavorite: b };
             // Persist the favorite status by writing it to the backend.
             persistFavorite(user.id, program._id, b);
             setProgramList((programList) => [
