@@ -29,7 +29,7 @@ const Program = ({ className }) => {
    "program": *[_type == "program" && slug.current == $slug]{
       _id,
       "isActive": ^.activeProgram.ActiveProgram._ref == _id,
-      "completed": count(*[^._id in (^.^.completedPrograms[]._ref)]) > 0,
+      "isCompleted": count(*[^._id in (^.^.completedPrograms[]._ref)]) > 0,
       "currentWorkout": *[_type == "user" && name == $userName && activeProgram.ActiveProgram._ref == ^._id] {
         "completedToday": activeProgram.dateOfLastWorkoutCompletion >= $today,
         "lastCompletedDate": activeProgram.dateOfLastWorkoutCompletion,

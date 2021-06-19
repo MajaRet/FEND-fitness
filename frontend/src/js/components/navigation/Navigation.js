@@ -9,11 +9,11 @@ import { ReactComponent as ProfileIcon } from './../../../img/svg/profile.svg';
 
 const Navigation = ({ className }) => {
   return (
-    <div className={className}>
+    <nav className={className}>
       <NavItem linkText="Home" icon={HomeIcon} to="/" />{' '}
       <NavItem linkText="Browse" icon={BrowseIcon} to="/browse" />{' '}
       <NavItem linkText="Profil" icon={ProfileIcon} to="profile" />
-    </div>
+    </nav>
   );
 };
 
