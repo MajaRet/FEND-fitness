@@ -1,10 +1,4 @@
-import React, {
-  Fragment,
-  useEffect,
-  useState,
-  useMemo,
-  useContext,
-} from 'react';
+import React, { Fragment, useEffect, useState, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 
 import {
@@ -52,10 +46,8 @@ const Workout = () => {
   const { programSlug, day } = useParams();
   const user = useContext(UserContext);
 
-  const params = useMemo(
-    () => ({ name: user.name, programSlug, day: parseInt(day) }),
-    [user, programSlug, day]
-  );
+  const params = { name: user.name, programSlug, day: parseInt(day) };
+
   const { loading, data } = useQuery(query, params);
 
   const workout = data?.program?.currentWorkout?.workout;

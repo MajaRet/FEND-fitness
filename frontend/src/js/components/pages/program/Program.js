@@ -1,4 +1,4 @@
-import React, { Fragment, useMemo, useContext } from 'react';
+import React, { Fragment, useContext } from 'react';
 import styled from 'styled-components';
 import { useParams, Link } from 'react-router-dom';
 
@@ -55,13 +55,12 @@ const Program = ({ className }) => {
     }
   }[0]
 }[0]`;
-  const params = useMemo(() => {
-    return {
-      slug: id,
-      userName: user.name,
-      today: new Date().toISOString().split('T')[0],
-    };
-  }, [id, user]);
+
+  const params = {
+    slug: id,
+    userName: user.name,
+    today: new Date().toISOString().split('T')[0],
+  };
 
   const { data, loading } = useQuery(query, params);
 

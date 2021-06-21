@@ -1,6 +1,7 @@
 import sanityClient from '@sanity/client';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { nanoid } from 'nanoid';
+import equal from 'deep-equal';
 
 // NOTE: The write token is *not* secure as it will be exposed by React.
 // But since this is a practice application, it doesn't matter much.
@@ -26,7 +27,7 @@ const client = sanityClient({
  */
 async function executeFetch(query, params, setLoading, setError, setData) {
   try {
-    // TODO Remove, just a check for overfetching
+    // TODO Remove log, just a check for overfetching
     console.log('%cATTENTION: Fetching', 'color: blue');
     const data = await client.fetch(query, params);
     if (data) {
@@ -57,10 +58,22 @@ export const useQuery = (query, params) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [data, setData] = useState(null);
+
+  const queryRef = useRef(null);
+
   useEffect(() => {
-    // TODO Remove
-    console.log('%cATTENTION: useQuery', 'color: orange');
-    executeFetch(query, params, setLoading, setError, setData);
+    // Because params may have a different object identity even though the
+    // parameters didn't truly change (for example because it is declared
+    // as an object literal), we make sure that the query is only re-executed
+    // when the parameters actually have different values by performing
+    // a deep equality check with the previous parameter object.
+    const newQuery = { query, ...params };
+    if (!queryRef.current || !equal(queryRef.current, newQuery)) {
+      // TODO Remove log
+      console.log('%cATTENTION: useQuery', 'color: orange');
+      queryRef.current = newQuery;
+      executeFetch(query, params, setLoading, setError, setData);
+    }
   }, [params, query]);
 
   return { loading, error, data };
@@ -103,7 +116,7 @@ export const useLazyQuery = (query) => {
  * @param {String} fieldName The name of the field to add to. Should be a list.
  * @param {String} newRef    The reference pointing to the element to add.
  */
-export function addToUserSet(userId, fieldName, newRef) {
+function addRefToUserSet(userId, fieldName, newRef) {
   client
     .patch(userId)
     .setIfMissing({ favorites: [] })
@@ -123,12 +136,9 @@ export function addToUserSet(userId, fieldName, newRef) {
  * @param {String} refToDelete    The reference pointing to the element to
  *                                remove.
  */
-export function removeFromUserList(userId, fieldName, refToDelete) {
-  client
-    .patch(userId)
-    .unset([`${fieldName}[_ref == "${refToDelete}"]`])
-    .commit()
-    .catch((error) => console.log(error));
+function removeRefFromUserSet(userId, fieldName, refToDelete) {
+  client.patch(userId).unset([`${fieldName}[_ref == "${refToDelete}"]`]);
+  this.commit().catch((error) => console.log(error));
 }
 
 /**
@@ -202,8 +212,8 @@ export function completeActiveProgram(userId, programId) {
  */
 export function writeFavorite(userId, programId, fav) {
   if (fav) {
-    addToUserSet(userId, 'favorites', programId);
+    addRefToUserSet(userId, 'favorites', programId);
   } else {
-    removeFromUserList(userId, 'favorites', programId);
+    removeRefFromUserSet(userId, 'favorites', programId);
   }
 }
