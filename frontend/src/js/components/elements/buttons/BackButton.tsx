@@ -7,12 +7,6 @@ import { ReactComponent as BackIcon } from './../../../../img/svg/back.svg';
  * A button shaped like a 'back' arrow. Positioned in the upper right corner
  * of the page by default.
  */
-const BackButton = (props) => {
-  return (
-    <CornerButton {...props}>
-      <BackIcon />
-    </CornerButton>
-  );
-};
+const BackButton = <CornerButton children={<BackIcon />} />;
 
 export default BackButton;

@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export default styled.button`
+export default styled.button<{ color?: string; textColor?: string }>`
   padding: 12px 25px;
   border: none;
   border-radius: 50px;
