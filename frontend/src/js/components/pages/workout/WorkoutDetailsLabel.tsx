@@ -8,6 +8,7 @@ interface WorkoutDetailsLabelProps {
 }
 
 const WorkoutDetailsLabel = ({ workout }: WorkoutDetailsLabelProps) => {
+  console.log(workout);
   const workoutCategories = workout.categories
     .map((cat) => display(cat))
     .join('/');

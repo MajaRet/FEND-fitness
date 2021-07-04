@@ -4,10 +4,12 @@ import styled from 'styled-components';
 import { UserContext } from '../../../context';
 import { useQuery } from '../../../api/sanity';
 
+import { DailyProgram } from '../../../types/ProgramTypes';
+
 import WorkoutInfo from './WorkoutInfo';
 import { ReactComponent as WorkoutImage } from './../../../../img/svg/Programme large.svg';
-import LabelLink from './../../elements/labels/LabelLink';
-import LoadingSpinner from './../../elements/loading/LoadingSpinner';
+import LabelLink from '../../elements/labels/LabelLink';
+import LoadingSpinner from '../../elements/loading/LoadingSpinner';
 
 const StyledWorkoutImage = styled(WorkoutImage)`
   margin: 10px 0;
@@ -26,7 +28,7 @@ const getDailyProgram = `*[_type == "user" && name == $userName] {
   ] { 
     "done": day < ^.activeProgram.day,
     day, 
-    Workout-> {
+    "workout": Workout-> {
       title,
       duration,
       calories,
@@ -35,7 +37,22 @@ const getDailyProgram = `*[_type == "user" && name == $userName] {
   }[0]
 }[0]`;
 
-const Dashboard = ({ className }) => {
+const StyledDashboard = styled.div`
+  padding-top: 45px;
+  padding-bottom: var(--nav-height);
+
+  h1 {
+    margin-bottom: 50px;
+  }
+
+  .subheader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+`;
+
+const Dashboard = () => {
   const user = useContext(UserContext);
   const params = useMemo(
     () => ({
@@ -44,14 +61,14 @@ const Dashboard = ({ className }) => {
     }),
     [user]
   );
-  const { loading, data } = useQuery(getDailyProgram, params);
+  const { loading, data } = useQuery<DailyProgram>(getDailyProgram, params);
 
   console.log(data);
   const currHours = new Date().getHours();
   const timeOfDay =
     currHours < 11 ? 'Morgen' : currHours < 17 ? 'Tag' : 'Abend';
   return (
-    <div className={className}>
+    <StyledDashboard>
       <h1>
         Guten
         <br />
@@ -77,21 +94,8 @@ const Dashboard = ({ className }) => {
           'Daten konnten nicht geladen werden.'
         )}
       </main>
-    </div>
+    </StyledDashboard>
   );
 };
 
-export default styled(Dashboard)`
-  padding-top: 45px;
-  padding-bottom: var(--nav-height);
-
-  h1 {
-    margin-bottom: 50px;
-  }
-
-  .subheader {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-  }
-`;
+export default styled(Dashboard)``;

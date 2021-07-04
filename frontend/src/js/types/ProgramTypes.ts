@@ -31,6 +31,14 @@ export interface Program {
   workouts: WorkoutWithDay[];
 }
 
+export interface DailyProgram {
+  title: string;
+  slug: string;
+  workout: WorkoutWithDay & {
+    done: boolean;
+  };
+}
+
 export interface ProgramWrapper {
   program: Program;
 }

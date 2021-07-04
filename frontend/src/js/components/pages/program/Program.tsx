@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { useParams, Link } from 'react-router-dom';
 
 import { useQuery, setActiveProgram } from '../../../api/sanity';
-import { UserContext, UserType } from '../../../context';
+import { UserContext } from '../../../context';
 import { getCurrentDay } from '../../../util/date';
 
 import WorkoutList from './WorkoutList';
@@ -24,7 +24,7 @@ const persistNewActiveProgram = (userId: string, programId: string) => {
 
 const Program = () => {
   const { id } = useParams<{ id: string }>();
-  const user = useContext<UserType>(UserContext);
+  const user = useContext(UserContext);
 
   const query = `*[_type == "user" && name == $userName] {
    "program": *[_type == "program" && slug.current == $slug]{
