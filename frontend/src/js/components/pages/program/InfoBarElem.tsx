@@ -1,18 +1,8 @@
-import React from 'react';
 import styled from 'styled-components';
 
 import CapitalLabel from '../../elements/labels/CapitalLabel';
 
-const InfoBarElem = ({ className, text }) => {
-  return (
-    <div className={className}>
-      <div className="circle"></div>
-      <CapitalLabel>{text}</CapitalLabel>
-    </div>
-  );
-};
-
-export default styled(InfoBarElem)`
+const StyledInfoBarElem = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -26,3 +16,18 @@ export default styled(InfoBarElem)`
     background-color: ${(props) => `rgb(${props.theme.backgroundPrimary})`};
   }
 `;
+
+interface InfoBarElemProps {
+  text: string;
+}
+
+const InfoBarElem = ({ text }: InfoBarElemProps) => {
+  return (
+    <StyledInfoBarElem>
+      <div className="circle"></div>
+      <CapitalLabel>{text}</CapitalLabel>
+    </StyledInfoBarElem>
+  );
+};
+
+export default InfoBarElem;

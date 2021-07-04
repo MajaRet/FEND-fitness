@@ -5,7 +5,7 @@ import WorkoutHeader from './WorkoutHeader';
 import RepeatedExercise from '../exercise/RepeatedExercise';
 import TimedExercise from '../exercise/TimedExercise';
 import LabelButton from './../../elements/labels/LabelButton';
-import TextButton from './../../elements/buttons/ColoredTextButton';
+import { ColoredTextButton as TextButton } from './../../elements/buttons/ColoredTextButton';
 import CompletedExercise from '../exercise/CompletedExercise';
 
 const isPause = (exercise) => exercise.title === 'Pause';

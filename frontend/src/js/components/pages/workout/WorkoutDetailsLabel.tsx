@@ -1,19 +1,22 @@
-import React from 'react';
-import styled from 'styled-components';
+import { Workout } from '../../../types/ProgramTypes';
 
 import Label from '../../elements/labels/Label';
 import display from '../../../util/naming';
 
-const WorkoutDetailsLabel = ({ className, workout }) => {
+interface WorkoutDetailsLabelProps {
+  workout: Workout;
+}
+
+const WorkoutDetailsLabel = ({ workout }: WorkoutDetailsLabelProps) => {
   const workoutCategories = workout.categories
     .map((cat) => display(cat))
     .join('/');
   return (
-    <Label className={className}>
+    <Label>
       {workout.calories} kcal &bull; {workout.duration} Min. &bull;{' '}
       {workoutCategories}
     </Label>
   );
 };
 
-export default styled(WorkoutDetailsLabel)``;
+export default WorkoutDetailsLabel;

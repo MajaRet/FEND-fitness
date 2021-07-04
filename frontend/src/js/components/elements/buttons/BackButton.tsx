@@ -1,6 +1,4 @@
-import React from 'react';
-
-import CornerButton from './CornerButton';
+import { CornerButton } from './CornerButton';
 import { ReactComponent as BackIcon } from './../../../../img/svg/back.svg';
 
 /**

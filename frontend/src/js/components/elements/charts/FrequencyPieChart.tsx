@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 import {
   PieChart,
@@ -57,8 +56,11 @@ const CustomLegend = (props: LegendProps) => {
   return <StyledCustomLegend>{renderedLegend}</StyledCustomLegend>;
 };
 
+const StyledFrequencyPieChart = styled.div`
+  overflow-x: scroll;
+`;
+
 interface FrequencyPieChartProps {
-  className: string;
   elems: string[];
   startColor?: RGB;
   endColor?: RGB;
@@ -71,7 +73,6 @@ interface FrequencyPieChartProps {
  * @param {[String]} elems A list of elements.
  */
 const FrequencyPieChart = ({
-  className,
   elems,
   startColor = { r: 0, g: 0, b: 0 },
   endColor = { r: 255, g: 255, b: 255 },
@@ -80,7 +81,7 @@ const FrequencyPieChart = ({
   const colors = generateColors(elemCounts.length, startColor, endColor);
 
   return (
-    <div className={className}>
+    <StyledFrequencyPieChart>
       {elemCounts ? (
         <ResponsiveContainer width="100%" height={250}>
           <PieChart>
@@ -107,10 +108,8 @@ const FrequencyPieChart = ({
       ) : (
         'Keine Daten verfügbar'
       )}
-    </div>
+    </StyledFrequencyPieChart>
   );
 };
 
-export default styled(FrequencyPieChart)`
-  overflow-x: scroll;
-`;
+export default FrequencyPieChart;

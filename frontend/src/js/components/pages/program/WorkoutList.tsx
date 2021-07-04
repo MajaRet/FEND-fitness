@@ -1,10 +1,28 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
+
+import { WorkoutWithDay } from '../../../types/ProgramTypes';
 
 import WorkoutListItem from './WorkoutListItem';
 import LabelButton from '../../elements/labels/LabelButton';
 
-const WorkoutList = ({ className, workouts, currentDay }) => {
+const StyledWorkoutList = styled.div`
+  display: flex;
+  flex-direction: column;
+  row-gap: 14px;
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+  }
+`;
+
+interface WorkoutListProps {
+  workouts: WorkoutWithDay[];
+  currentDay: number;
+}
+
+const WorkoutList = ({ workouts, currentDay }: WorkoutListProps) => {
   const [displayedWorkouts, setDisplayedWorkouts] = useState(
     workouts.slice(0, 3)
   );
@@ -28,23 +46,14 @@ const WorkoutList = ({ className, workouts, currentDay }) => {
   });
 
   return (
-    <div className={className}>
+    <StyledWorkoutList>
       <div className="header">
         <h3>{workouts.length} Tage</h3>
         <LabelButton onClick={loadAll}>Alle anzeigen</LabelButton>
       </div>
       {renderedExercises}
-    </div>
+    </StyledWorkoutList>
   );
 };
 
-export default styled(WorkoutList)`
-  display: flex;
-  flex-direction: column;
-  row-gap: 14px;
-
-  .header {
-    display: flex;
-    justify-content: space-between;
-  }
-`;
+export default WorkoutList;

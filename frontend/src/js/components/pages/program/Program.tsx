@@ -3,27 +3,28 @@ import styled from 'styled-components';
 import { useParams, Link } from 'react-router-dom';
 
 import { useQuery, setActiveProgram } from '../../../api/sanity';
-import { UserContext } from '../../../context';
+import { UserContext, UserType } from '../../../context';
 import { getCurrentDay } from '../../../util/date';
 
 import WorkoutList from './WorkoutList';
 import ProgramHeader from './ProgramHeader';
 import ProgramChart from './ProgramChart';
 import ProgramDescription from './ProgramDescription';
-import CloseButton from '../../elements/buttons/CloseButton';
+import CloseLink from '../../elements/links/CloseLink';
 import Button from '../../elements/buttons/Button';
-import LoadingScreen from './../../elements/loading/LoadingScreen';
+import LoadingScreen from '../../elements/loading/LoadingScreen';
+import { ProgramWrapper as ProgramType } from '../../../types/ProgramTypes';
 
 /**
  * Write information about the start of a new program to the backend.
  */
-const persistNewActiveProgram = (userId, program) => {
-  setActiveProgram(userId, program);
+const persistNewActiveProgram = (userId: string, programId: string) => {
+  setActiveProgram(userId, programId);
 };
 
-const Program = ({ className }) => {
-  const { id } = useParams();
-  const user = useContext(UserContext);
+const Program = () => {
+  const { id } = useParams<{ id: string }>();
+  const user = useContext<UserType>(UserContext);
 
   const query = `*[_type == "user" && name == $userName] {
    "program": *[_type == "program" && slug.current == $slug]{
@@ -39,7 +40,7 @@ const Program = ({ className }) => {
           activeProgram.dateOfLastWorkoutCompletion < $today => activeProgram.day,
         )
       }[0],
-      title,
+    title,
     duration,
     difficulty,
     focus,
@@ -62,16 +63,16 @@ const Program = ({ className }) => {
     today: new Date().toISOString().split('T')[0],
   };
 
-  const { data, loading } = useQuery(query, params);
+  const { data, loading } = useQuery<ProgramType>(query, params);
 
   const program = data?.program;
   const currentDay = getCurrentDay(program);
 
   return (
-    <div className={className}>
-      <CloseButton as={Link} to="/browse" />
+    <StyledProgram>
+      <CloseLink to="/browse" />
       {loading ? (
-        <LoadingScreen />
+        <LoadingScreen color="red" />
       ) : program ? (
         <Fragment>
           <ProgramHeader program={program} />
@@ -81,11 +82,7 @@ const Program = ({ className }) => {
               ({ workout }) => workout.categories
             )}
           />
-          <WorkoutList
-            workouts={program.workouts}
-            duration={program.duration}
-            currentDay={currentDay}
-          />
+          <WorkoutList workouts={program.workouts} currentDay={currentDay} />
           <Button
             as={Link}
             onClick={() => {
@@ -102,11 +99,11 @@ const Program = ({ className }) => {
       ) : (
         'Fehler!'
       )}
-    </div>
+    </StyledProgram>
   );
 };
 
-export default styled(Program)`
+const StyledProgram = styled.div`
   min-height: 100vh;
 
   > :not(.start-button) {
@@ -122,3 +119,5 @@ export default styled(Program)`
 
   background-color: ${(props) => `rgb(${props.theme.backgroundPrimary})`};
 `;
+
+export default Program;

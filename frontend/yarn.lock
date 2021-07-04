@@ -1894,6 +1894,11 @@
   resolved "https://registry.yarnpkg.com/@types/d3-time/-/d3-time-2.0.0.tgz#831dd093db91f16b83ba980e194bb8e4bcef44d6"
   integrity sha512-Abz8bTzy8UWDeYs9pCa3D37i29EWDjNTjemdk0ei1ApYVNqulYlGUKip/jLOpogkPSsPz/GvZCYiC7MFlEk0iQ==
 
+"@types/deep-equal@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@types/deep-equal/-/deep-equal-1.0.1.tgz#71cfabb247c22bcc16d536111f50c0ed12476b03"
+  integrity sha512-mMUu4nWHLBlHtxXY17Fg6+ucS/MnndyOWyOe7MmwkoMYxvfQU2ajtRaEvqSUv+aVkMqH/C0NCI8UoVfRNQ10yg==
+
 "@types/eslint@^7.2.6":
   version "7.2.6"
   resolved "https://registry.yarnpkg.com/@types/eslint/-/eslint-7.2.6.tgz#5e9aff555a975596c03a98b59ecd103decc70c3c"
@@ -2062,13 +2067,6 @@
     "@types/prop-types" "*"
     "@types/scheduler" "*"
     csstype "^3.0.2"
-
-"@types/recharts@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@types/recharts/-/recharts-2.0.0.tgz#2fe20913b5d69b0fc0202c32ee7d9ffbfb36ac7a"
-  integrity sha512-O9iWQ9y0nu/EFslfBed6fZYJGzyjeSV+nv6S5UTLcoPVpeCUBJ1gap6VGfbYJJ59n+xQpVQnkaYZzhWmg8hifw==
-  dependencies:
-    recharts "*"
 
 "@types/resize-observer-browser@^0.1.5":
   version "0.1.5"
@@ -10033,7 +10031,7 @@ recharts-scale@^0.4.4:
   dependencies:
     decimal.js-light "^2.4.1"
 
-recharts@*, recharts@^2.0.9:
+recharts@^2.0.9:
   version "2.0.9"
   resolved "https://registry.yarnpkg.com/recharts/-/recharts-2.0.9.tgz#048068eb01383291104548388712026948275f70"
   integrity sha512-JNsXE80PuF3hugUCE7JqDOMSvu5xQLxtjOaqFKKZI2pCJ1PVJzhwDv4TWk0nO4AvADbeWzYEHbg8C5Hcrh42UA==

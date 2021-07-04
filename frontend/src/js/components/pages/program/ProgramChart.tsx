@@ -5,27 +5,33 @@ import FrequencyPieChart from '../../elements/charts/FrequencyPieChart';
 
 import display from '../../../util/naming';
 
+const StyledProgramChart = styled.section`
+  background-color: white;
+`;
+
+interface ProgramChartProps {
+  categories: string[];
+}
+
 /**
  * A component that shows a pie chart depicting the relative frequencies
  * of workout categories in the given category list.
  *
- * @param {[String]} categories A list of categories
+ * @param {[string]} categories A list of categories
  */
-const ProgramChart = ({ className, categories }) => {
+const ProgramChart = ({ categories }: ProgramChartProps) => {
   const displayedCategories = categories.map((cat) => display(cat));
 
   return (
-    <section className={className}>
+    <StyledProgramChart>
       <h3>So ist das Programm aufgeteilt:</h3>
       <FrequencyPieChart
         elems={displayedCategories}
         startColor={{ r: 122, g: 135, b: 120 }}
         endColor={{ r: 210, g: 221, b: 208 }}
       />
-    </section>
+    </StyledProgramChart>
   );
 };
 
-export default styled(ProgramChart)`
-  background-color: white;
-`;
+export default ProgramChart;

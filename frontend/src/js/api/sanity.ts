@@ -25,7 +25,13 @@ const client = sanityClient({
  * @param {Function} setData    A callback function to set the fetched data
  *                              inside a querying hook.
  */
-async function executeFetch(query, params, setLoading, setError, setData) {
+async function executeFetch<FetchResult>(
+  query: string,
+  params: object,
+  setLoading: (isLoading: boolean) => void,
+  setError: (hasError: boolean) => void,
+  setData: (data: FetchResult | null) => void
+) {
   try {
     // TODO Remove log, just a check for overfetching
     console.log('%cATTENTION: Fetching', 'color: blue');
@@ -54,12 +60,15 @@ async function executeFetch(query, params, setLoading, setError, setData) {
  * @returns an object that indicates the fetching status (loading, error)
  * and carries the fetched data in its data property after it arrives.
  */
-export const useQuery = (query, params) => {
+export function useQuery<FetchResult>(
+  query: string,
+  params: object | undefined
+) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  const [data, setData] = useState(null);
+  const [data, setData] = useState<FetchResult | null>(null);
 
-  const queryRef = useRef(null);
+  const queryRef = useRef<object | null>(null);
 
   useEffect(() => {
     // Because params may have a different object identity even though the
@@ -72,12 +81,12 @@ export const useQuery = (query, params) => {
       // TODO Remove log
       console.log('%cATTENTION: useQuery', 'color: orange');
       queryRef.current = newQuery;
-      executeFetch(query, params, setLoading, setError, setData);
+      executeFetch(query, params || {}, setLoading, setError, setData);
     }
   }, [params, query]);
 
   return { loading, error, data };
-};
+}
 
 /**
  * A custom hook to execute a GROQ query manually.
@@ -88,21 +97,21 @@ export const useQuery = (query, params) => {
  * object that indicates the fetching status (loading, error) and carries
  * the fetched data in its data property after it arrives.
  */
-export const useLazyQuery = (query) => {
+export function useLazyQuery<FetchResult>(query: string) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
-  const [data, setData] = useState(null);
+  const [data, setData] = useState<FetchResult | null>(null);
 
   const executeQuery = useCallback(
-    (params) => {
+    (params: object | undefined) => {
       setLoading(true);
       console.log('%cATTENTION: useLazyQuery executed', 'color: purple');
-      executeFetch(query, params, setLoading, setError, setData);
+      executeFetch(query, params || {}, setLoading, setError, setData);
     },
     [query]
   );
   return [executeQuery, { loading, error, data }];
-};
+}
 
 /* Mutations */
 
@@ -116,7 +125,7 @@ export const useLazyQuery = (query) => {
  * @param {String} fieldName The name of the field to add to. Should be a list.
  * @param {String} newRef    The reference pointing to the element to add.
  */
-function addRefToUserSet(userId, fieldName, newRef) {
+function addRefToUserSet(userId: string, fieldName: string, newRef: string) {
   client
     .patch(userId)
     .setIfMissing({ favorites: [] })
@@ -136,9 +145,16 @@ function addRefToUserSet(userId, fieldName, newRef) {
  * @param {String} refToDelete    The reference pointing to the element to
  *                                remove.
  */
-function removeRefFromUserSet(userId, fieldName, refToDelete) {
-  client.patch(userId).unset([`${fieldName}[_ref == "${refToDelete}"]`]);
-  this.commit().catch((error) => console.log(error));
+function removeRefFromUserSet(
+  userId: string,
+  fieldName: string,
+  refToDelete: string
+) {
+  client
+    .patch(userId)
+    .unset([`${fieldName}[_ref == "${refToDelete}"]`])
+    .commit()
+    .catch((error) => console.log(error));
 }
 
 /**
@@ -149,7 +165,7 @@ function removeRefFromUserSet(userId, fieldName, refToDelete) {
  * @param {String} userId     The user's id.
  * @param {String} programRef The new active program's id.
  */
-export function setActiveProgram(userId, programRef) {
+export function setActiveProgram(userId: string, programRef: string) {
   const today = new Date().toISOString();
   const activeProgram = {
     ActiveProgram: { _ref: programRef, _type: 'reference' },
@@ -169,7 +185,10 @@ export function setActiveProgram(userId, programRef) {
     .catch((error) => console.log(error));
 }
 
-export function updateCompletedExercises(userId, newCompletedExercises) {
+export function updateCompletedExercises(
+  userId: string,
+  newCompletedExercises: boolean[]
+) {
   client
     .patch(userId)
     .set({ 'activeProgram.completedExercises': newCompletedExercises })
@@ -177,7 +196,7 @@ export function updateCompletedExercises(userId, newCompletedExercises) {
     .catch((error) => console.log(error));
 }
 
-export function completeCurrentWorkout(userId) {
+export function completeCurrentWorkout(userId: string) {
   const today = new Date().toISOString();
   client
     .patch(userId)
@@ -190,7 +209,7 @@ export function completeCurrentWorkout(userId) {
     .catch((error) => console.log(error));
 }
 
-export function completeActiveProgram(userId, programId) {
+export function completeActiveProgram(userId: string, programId: string) {
   client
     .patch(userId)
     .set({ activeProgram: {} })
@@ -210,8 +229,12 @@ export function completeActiveProgram(userId, programId) {
  * @param {Boolean} fav      A flag indicating what to set the favorite status
  *                           to.
  */
-export function writeFavorite(userId, programId, fav) {
-  if (fav) {
+export function writeFavorite(
+  userId: string,
+  programId: string,
+  isFavorite: boolean
+) {
+  if (isFavorite) {
     addRefToUserSet(userId, 'favorites', programId);
   } else {
     removeRefFromUserSet(userId, 'favorites', programId);

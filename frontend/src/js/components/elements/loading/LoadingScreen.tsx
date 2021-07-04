@@ -1,17 +1,12 @@
 import styled from 'styled-components';
-import React from 'react';
 
 import LoadingSpinner from './LoadingSpinner';
 
-const LoadingScreen = ({ className, color }) => {
-  return (
-    <div className={className}>
-      <LoadingSpinner />
-    </div>
-  );
-};
+interface LoadingScreenProps {
+  color?: string;
+}
 
-export default styled(LoadingScreen)`
+const StyledLoadingScreen = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -22,3 +17,13 @@ export default styled(LoadingScreen)`
     return props.color || `rgb(${props.theme.backgroundPrimary})`;
   }};
 `;
+
+const LoadingScreen = (_: LoadingScreenProps) => {
+  return (
+    <StyledLoadingScreen>
+      <LoadingSpinner />
+    </StyledLoadingScreen>
+  );
+};
+
+export default LoadingScreen;

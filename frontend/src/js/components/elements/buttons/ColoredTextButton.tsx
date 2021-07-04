@@ -1,4 +1,5 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
+import { Link } from 'react-router-dom';
 
 const color = (props: any): string =>
   props.color
@@ -7,13 +8,7 @@ const color = (props: any): string =>
       : `rgb(${props.rgb})`
     : `rgb(${props.theme.fontColorDefault})`;
 
-// Color can be given as a comma-separated 3-tuple of RGB values,
-// e.g. "250,40,12".
-// size is given as a number and interpreted as pixels.
-/**
- * A button
- */
-export default styled.button<{ size?: number }>`
+const styles = css<{ size?: number }>`
   padding: 0;
   color: ${color};
   stroke: ${color};
@@ -23,4 +18,11 @@ export default styled.button<{ size?: number }>`
   &[disabled] {
     opacity: 0.5;
   }
+`;
+
+export const ColoredTextButton = styled.button`
+  ${styles}
+`;
+export const ColoredTextLink = styled(Link)`
+  ${styles}
 `;
