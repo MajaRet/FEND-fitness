@@ -109,7 +109,6 @@ const Browse = ({ className }) => {
       observer.unobserve(lastElem);
     }
     return () => {
-      console.log('Unmount!');
       observer?.unobserve(lastElem);
     };
   }, [loadPrograms, allLoaded, filter, programList, user]);

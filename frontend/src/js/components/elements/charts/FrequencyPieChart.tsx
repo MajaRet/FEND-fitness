@@ -1,10 +1,17 @@
 import React from 'react';
 import styled from 'styled-components';
-import { PieChart, Pie, Cell, Legend, ResponsiveContainer } from 'recharts';
+import {
+  PieChart,
+  Pie,
+  Cell,
+  Legend,
+  ResponsiveContainer,
+  LegendProps,
+} from 'recharts';
 
-import Label from '../../elements/labels/Label';
+import Label from '../labels/Label';
 
-import generateColors from '../../../util/color';
+import { generateColors, RGB } from '../../../util/color';
 import { histogram } from '../../../util/histogram';
 
 /**
@@ -17,25 +24,7 @@ const Circle = styled.div`
   background-color: ${(props) => props.color};
 `;
 
-/**
- * A component that renders a legend consisting of labels associated with
- * colored circles.
- *
- * @param {[Object]} payload A list of label/color pairs to display.
- */
-const CustomLegend = ({ className, payload }) => {
-  const renderedLegend = payload.map(({ value, color }) => {
-    return (
-      <div key={value}>
-        <Circle color={color} />
-        <Label>{value}</Label>
-      </div>
-    );
-  });
-  return <div className={className}>{renderedLegend}</div>;
-};
-
-const StyledCustomLegend = styled(CustomLegend)`
+const StyledCustomLegend = styled.div`
   display: flex;
   flex-direction: column;
   row-gap: 15px;
@@ -45,6 +34,35 @@ const StyledCustomLegend = styled(CustomLegend)`
     column-gap: 12px;
   }
 `;
+
+/**
+ * A component that renders a legend consisting of labels associated with
+ * colored circles.
+ *
+ * @param {[Object]} payload A list of label/color pairs to display.
+ */
+const CustomLegend = (props: LegendProps) => {
+  const { payload } = props;
+  if (payload === undefined) {
+    return null;
+  }
+  const renderedLegend = payload.map(({ value, color }) => {
+    return (
+      <div key={value}>
+        <Circle color={color} />
+        <Label>{value}</Label>
+      </div>
+    );
+  });
+  return <StyledCustomLegend>{renderedLegend}</StyledCustomLegend>;
+};
+
+interface FrequencyPieChartProps {
+  className: string;
+  elems: string[];
+  startColor?: RGB;
+  endColor?: RGB;
+}
 
 /**
  * A component that renders a pie chart depicting the relative frequencies
@@ -57,7 +75,7 @@ const FrequencyPieChart = ({
   elems,
   startColor = { r: 0, g: 0, b: 0 },
   endColor = { r: 255, g: 255, b: 255 },
-}) => {
+}: FrequencyPieChartProps) => {
   const elemCounts = Object.values(histogram(elems));
   const colors = generateColors(elemCounts.length, startColor, endColor);
 
@@ -73,8 +91,8 @@ const FrequencyPieChart = ({
               outerRadius={80}
               fill="#8884d8"
             >
-              {elemCounts?.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={colors[index]} />
+              {elemCounts?.map((keyValuePair, index) => (
+                <Cell key={keyValuePair.name} fill={colors[index]} />
               ))}
             </Pie>
             <Legend
@@ -82,7 +100,7 @@ const FrequencyPieChart = ({
               align="center"
               wrapperStyle={{ marginLeft: '100px' }}
               verticalAlign="middle"
-              content={<StyledCustomLegend />}
+              content={<CustomLegend />}
             />
           </PieChart>
         </ResponsiveContainer>

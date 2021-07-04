@@ -3,7 +3,9 @@
 // the next day.
 // NOTE: This is checked on client side because of apparent bugs in GROQ
 // Datetime matching.
-export const getCurrentDay = (program) => {
+export const getCurrentDay = (program: {
+  currentWorkout: { day: number };
+}): number => {
   if (!program || !program.currentWorkout) {
     return 1;
   }
