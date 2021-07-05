@@ -23,6 +23,6 @@ export default styled(InfoBarElem)`
     height: 25px;
     border-radius: 50%;
 
-    background-color: ${(props) => props.theme.backgroundPrimary};
+    background-color: ${(props) => `rgb(${props.theme.backgroundPrimary})`};
   }
 `;

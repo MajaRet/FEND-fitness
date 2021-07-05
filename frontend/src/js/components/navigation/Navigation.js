@@ -28,5 +28,5 @@ export default styled(Navigation)`
   padding: 10px 40px 2px 40px;
   width: 100vw;
 
-  background-color: ${(props) => props.theme.backgroundPrimary};
+  background-color: ${(props) => `rgb(${props.theme.backgroundPrimary})`};
 `;

@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { PieChart, Pie, Cell, Legend, ResponsiveContainer } from 'recharts';
 import Label from './../labels/Label';
+import { histogram } from './../../util';
+import display from '../../naming';
 
 // Generates an array of @number colors between two fixed colors.
 function generateColors(number) {
@@ -59,61 +61,26 @@ const StyledCustomLegend = styled(CustomLegend)`
   }
 `;
 
-// TODO remove
-const testWorkouts = [
-  {
-    category: 'Krafttraining',
-  },
-  {
-    category: 'Koordination',
-  },
-  {
-    category: 'Beweglichkeit',
-  },
-  {
-    category: 'Kardio',
-  },
-  {
-    category: 'Krafttraining',
-  },
-  {
-    category: 'Geschicklichkeit',
-  },
-];
-
-const ProgramChart = ({ className, id }) => {
-  const [categories, setCategories] = useState(null);
-  const [colors, setColors] = useState([]);
-
-  // Construct a pie chart for the relative category occurrences.
-  useEffect(() => {
-    const workoutCategories = testWorkouts.map((workout) => workout.category);
-    const histogram = {};
-    workoutCategories.forEach((cat) => {
-      histogram[cat] = {
-        name: cat,
-        value: histogram[cat] ? histogram[cat].value + 1 : 1,
-      };
-    });
-    const vals = Object.values(histogram);
-    setCategories(vals);
-    setColors(generateColors(vals.length));
-  }, []);
+const ProgramChart = ({ className, categories }) => {
+  const categoryCounts = Object.values(
+    histogram(categories.map((cat) => display(cat)))
+  );
+  const colors = generateColors(categoryCounts.length);
 
   return (
     <section className={className}>
       <h3>So ist das Programm aufgeteilt:</h3>
-      {categories ? (
+      {categoryCounts ? (
         <ResponsiveContainer width="100%" height={250}>
           <PieChart>
             <Pie
-              data={categories}
+              data={categoryCounts}
               cx="30%"
               dataKey="value"
               outerRadius={80}
               fill="#8884d8"
             >
-              {categories?.map((entry, index) => (
+              {categoryCounts?.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={colors[index]} />
               ))}
             </Pie>

@@ -4,16 +4,20 @@ import styled from 'styled-components';
 import Label from './../labels/Label';
 
 import { ReactComponent as HeartIcon } from './../../../img/svg/heart.svg';
+import display from '../../naming';
 
 const WorkoutItemInfo = ({ className, workout }) => {
   // NOTE: The heart icon is not currently a button and doesn't do anything
   // when clicked.
+  const workoutCategories = workout.Workout.categories
+    .map((cat) => display(cat))
+    .join('/');
   return (
     <div className={className}>
-      <p>Tag {workout.day}</p>
+      <p>Tag {workout.week}</p>
       <Label>
-        {workout.calories} kcal &bull; {workout.duration} Min. &bull;{' '}
-        {workout.category}
+        {workout.Workout.calories} kcal &bull; {workout.Workout.duration} Min.
+        &bull; {workoutCategories}
       </Label>
       <HeartIcon className="favorite" />
     </div>
@@ -25,7 +29,7 @@ export default styled(WorkoutItemInfo)`
 
   padding: 15px;
 
-  background-color: ${(props) => props.theme.backgroundDefault};
+  background-color: ${(props) => `rgb(${props.theme.backgroundDefault})`};
 
   .favorite {
     margin-top: 30px;
