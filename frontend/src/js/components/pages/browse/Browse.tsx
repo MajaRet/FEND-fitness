@@ -1,20 +1,19 @@
-import React, { useState, useEffect, useRef, useContext } from 'react';
+import { useState, useEffect, useRef, useContext } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 
 import { useLazyQuery, writeFavorite } from '../../../api/sanity';
 import { UserContext } from '../../../context';
+import { BrowseList, BrowsedProgram, Filter } from '../../../types/BrowseTypes';
 
 import ProgramCard from './ProgramCard';
-import Label from './../../elements/labels/Label';
+import Label from '../../elements/labels/Label';
 import FilterForm from './FilterForm';
-import LoadingSpinner from './../../elements/loading/LoadingSpinner';
+import LoadingSpinner from '../../elements/loading/LoadingSpinner';
 
 const pageSize = 5;
+
 const getPrograms = `*[_type == "user" && name == $userName]{
-  name,
-  activeProgram,
-  "favorites": favorites[]{_ref},
   "programs": *[_type == "program" 
   && ($keyword == "" || title match $keyword || description match $keyword)
   && ($minDuration == -1 || duration >= $minDuration)
@@ -29,9 +28,9 @@ const getPrograms = `*[_type == "user" && name == $userName]{
     "isNew": count(*[^._id in ^.^.startedPrograms[]._ref]) == 0,
     "isCompleted": count(*[^._id in (^.^.completedPrograms[]._ref)]) > 0
   }[$offset ... $offset + 5]
-}`;
+}[0]`;
 
-let observer;
+let observer: IntersectionObserver;
 
 /**
  * Persist a new favorite status in the backend.
@@ -40,14 +39,26 @@ let observer;
  * @param {String} id     The id of the program to be favorited.
  * @param {Boolean} b     A flag indicating whether to favorite or unfavorite.
  */
-const persistFavorite = (userId, id, b) => {
-  writeFavorite(userId, id, b);
+const persistFavorite = (
+  userId: string,
+  programId: string,
+  isFavorite: boolean
+) => {
+  writeFavorite(userId, programId, isFavorite);
 };
 
-const Browse = ({ className }) => {
-  const [programList, setProgramList] = useState([]);
+const StyledBrowse = styled.div`
+  display: flex;
+  flex-direction: column;
+  row-gap: 20px;
+
+  padding: 75px 0;
+`;
+
+const Browse = () => {
+  const [programList, setProgramList] = useState<BrowsedProgram[]>([]);
   const [allLoaded, setAllLoaded] = useState(false);
-  const [filter, setFilter] = useState({
+  const [filter, setFilter] = useState<Filter>({
     keyword: '',
     maxDuration: -1,
     minDuration: -1,
@@ -56,15 +67,16 @@ const Browse = ({ className }) => {
   });
 
   const user = useContext(UserContext);
-  const [loadPrograms, { loading, data }] = useLazyQuery(getPrograms);
+  const [loadPrograms, { loading, data }] =
+    useLazyQuery<BrowseList>(getPrograms);
 
   // A bottom marker element
-  const lastElemRef = useRef();
+  const lastElemRef = useRef(null);
 
   // set programList
   useEffect(() => {
     if (data) {
-      const [{ programs }] = data;
+      const { programs } = data;
       if (programs.length < pageSize) {
         setAllLoaded(true);
       }
@@ -81,6 +93,7 @@ const Browse = ({ className }) => {
   // Loading new elements if the bottom of the page is reached.
   useEffect(() => {
     const lastElem = lastElemRef.current;
+    if (!lastElem) return;
     if (!allLoaded) {
       // If the observer is already set, unregister it.
       observer?.unobserve(lastElem);
@@ -89,7 +102,7 @@ const Browse = ({ className }) => {
           if (entries[0].intersectionRatio > 0) {
             // The end of the program list should be observed only once,
             // so unobserve it.
-            observer.unobserve(entries[0].target);
+            observer.disconnect();
             loadPrograms({
               offset: programList.length,
               userName: user.name,
@@ -106,35 +119,33 @@ const Browse = ({ className }) => {
       observer.observe(lastElem);
     } else {
       // Since all programs have been loaded, the observer is removed.
-      observer.unobserve(lastElem);
+      observer.disconnect();
     }
     return () => {
-      observer?.unobserve(lastElem);
+      observer?.disconnect();
     };
   }, [loadPrograms, allLoaded, filter, programList, user]);
 
   const programCards = programList.map((program, i) => {
+    const handleFavoriting = (isFavorite: boolean) => {
+      const newProg = { ...program, isFavorite };
+      // Persist the favorite status by writing it to the backend.
+      persistFavorite(user.id, program._id, isFavorite);
+      setProgramList((programList) => [
+        ...programList.slice(0, i),
+        newProg,
+        ...programList.slice(i + 1),
+      ]);
+    };
     return (
-      <Link key={i} to={`/program/${program.slug.current}`}>
-        <ProgramCard
-          program={program}
-          setFavorite={(b) => {
-            const newProg = { ...program, isFavorite: b };
-            // Persist the favorite status by writing it to the backend.
-            persistFavorite(user.id, program._id, b);
-            setProgramList((programList) => [
-              ...programList.slice(0, i),
-              newProg,
-              ...programList.slice(i + 1),
-            ]);
-          }}
-        />
+      <Link key={program._id} to={`/program/${program.slug.current}`}>
+        <ProgramCard program={program} setFavorite={handleFavoriting} />
       </Link>
     );
   });
 
   return (
-    <div className={className}>
+    <StyledBrowse>
       <h2>Browse</h2>
       <FilterForm setFilter={setFilter} />
       {programCards}
@@ -147,14 +158,8 @@ const Browse = ({ className }) => {
           'Keine weiteren Programme verfügbar'
         )}
       </Label>
-    </div>
+    </StyledBrowse>
   );
 };
 
-export default styled(Browse)`
-  display: flex;
-  flex-direction: column;
-  row-gap: 20px;
-
-  padding: 75px 0;
-`;
+export default Browse;

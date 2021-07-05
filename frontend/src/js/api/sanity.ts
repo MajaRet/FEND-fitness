@@ -52,6 +52,12 @@ async function executeFetch<FetchResult>(
   }
 }
 
+interface QueryState<FetchResult> {
+  loading: boolean;
+  error: boolean;
+  data: FetchResult | null;
+}
+
 /**
  * A custom hook to execute a GROQ query immediately.
  *
@@ -63,7 +69,7 @@ async function executeFetch<FetchResult>(
 export function useQuery<FetchResult>(
   query: string,
   params: object | undefined
-) {
+): QueryState<FetchResult> {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [data, setData] = useState<FetchResult | null>(null);
@@ -97,7 +103,9 @@ export function useQuery<FetchResult>(
  * object that indicates the fetching status (loading, error) and carries
  * the fetched data in its data property after it arrives.
  */
-export function useLazyQuery<FetchResult>(query: string) {
+export function useLazyQuery<FetchResult>(
+  query: string
+): [(params: object | undefined) => void, QueryState<FetchResult>] {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [data, setData] = useState<FetchResult | null>(null);

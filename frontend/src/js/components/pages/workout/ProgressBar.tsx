@@ -1,29 +1,9 @@
-import React from 'react';
 import styled from 'styled-components';
 
 import { ReactComponent as Circle } from './../../../../img/svg/circle.svg';
 import { ReactComponent as CircleWithCheckmark } from './../../../../img/svg/circleChecked.svg';
 
-const ProgressBar = ({ className, completedExercises, currentExercise }) => {
-  const progressBar = completedExercises
-    .flatMap((completed, i) => [
-      <hr key={`divider-${i}`} />,
-      completed ? (
-        <CircleWithCheckmark key={`circle-${i}`} className="circle completed" />
-      ) : (
-        <Circle
-          key={`circle-${i}`}
-          className={`circle incomplete${
-            i === currentExercise ? ' active' : ''
-          }`}
-        />
-      ),
-    ])
-    .slice(1);
-  return <div className={className}>{progressBar}</div>;
-};
-
-export default styled(ProgressBar)`
+const StyledProgressBar = styled.div<ProgressBarProps>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -58,3 +38,31 @@ export default styled(ProgressBar)`
       100}%;
   }
 `;
+
+interface ProgressBarProps {
+  completedExercises: boolean[];
+  currentExercise?: number;
+}
+
+const ProgressBar = (props: ProgressBarProps) => {
+  const { completedExercises, currentExercise } = props;
+
+  const progressBar = completedExercises
+    .flatMap((completed, i) => [
+      <hr key={`divider-${i}`} />,
+      completed ? (
+        <CircleWithCheckmark key={`circle-${i}`} className="circle completed" />
+      ) : (
+        <Circle
+          key={`circle-${i}`}
+          className={`circle incomplete${
+            i === currentExercise ? ' active' : ''
+          }`}
+        />
+      ),
+    ])
+    .slice(1);
+  return <StyledProgressBar {...props}>{progressBar}</StyledProgressBar>;
+};
+
+export default ProgressBar;

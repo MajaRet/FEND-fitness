@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 
 import NavItem from './NavItem';
@@ -7,17 +6,7 @@ import { ReactComponent as HomeIcon } from './../../../img/svg/home.svg';
 import { ReactComponent as BrowseIcon } from './../../../img/svg/dumbbell.svg';
 import { ReactComponent as ProfileIcon } from './../../../img/svg/profile.svg';
 
-const Navigation = ({ className }) => {
-  return (
-    <nav className={className}>
-      <NavItem linkText="Home" icon={HomeIcon} to="/" />{' '}
-      <NavItem linkText="Browse" icon={BrowseIcon} to="/browse" />{' '}
-      <NavItem linkText="Profil" icon={ProfileIcon} to="profile" />
-    </nav>
-  );
-};
-
-export default styled(Navigation)`
+const StyledNavigation = styled.nav`
   position: fixed;
   left: 0;
   bottom: 0;
@@ -30,3 +19,15 @@ export default styled(Navigation)`
 
   background-color: ${(props) => `rgb(${props.theme.backgroundPrimary})`};
 `;
+
+const Navigation = () => {
+  return (
+    <StyledNavigation>
+      <NavItem linkText="Home" icon={HomeIcon} to="/" />{' '}
+      <NavItem linkText="Browse" icon={BrowseIcon} to="/browse" />{' '}
+      <NavItem linkText="Profil" icon={ProfileIcon} to="profile" />
+    </StyledNavigation>
+  );
+};
+
+export default styled(Navigation)``;

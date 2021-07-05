@@ -8,11 +8,12 @@ import {
   useQuery,
 } from '../../../api/sanity';
 import { UserContext } from '../../../context';
+import { Workout as WorkoutType } from '../../../types/WorkoutTypes';
 
 import StartedWorkout from './StartedWorkout';
 import WorkoutOverview from './WorkoutOverview';
 import LoadingScreen from '../../elements/loading/LoadingScreen';
-import BackButton from './../../elements/buttons/BackButton';
+import BackButton from '../../elements/buttons/BackButton';
 
 const Workout = () => {
   const query = `*[_type == "user" && name == $name] {
@@ -38,21 +39,21 @@ const Workout = () => {
         "workout": Workout-> {
           title,
           categories,
-          description,
           duration,
           calories,
           "exercises": exercises[]{
-            _type,
+            "type": _type,
             duration,
             reps,
-            exercise-> { title }
+            "title": exercise->.title
           }
         }
       }[0]
     }[0]
    }[0]`;
 
-  const { programSlug, day } = useParams();
+  const { programSlug, day } =
+    useParams<{ programSlug: string; day: string }>();
   const user = useContext(UserContext);
 
   const params = {
@@ -62,20 +63,20 @@ const Workout = () => {
     today: new Date().toISOString().split('T')[0],
   };
 
-  const { loading, data } = useQuery(query, params);
+  const { loading, data } = useQuery<WorkoutType>(query, params);
 
   const workout = data?.program?.currentWorkout?.workout;
   const programURL = `/program/${programSlug}`;
   console.log(data);
 
   const [workoutStarted, setWorkoutStarted] = useState(false);
-  const [completedExercises, setCompletedExercises] = useState([]);
+  const [completedExercises, setCompletedExercises] = useState<boolean[]>([]);
   const [allDone, setAllDone] = useState(false);
 
-  const setCurrentExerciseCompletion = (completed) => {
+  const setCurrentExerciseCompletion = (completed: boolean) => {
     // If we complete an exercise, move on to the next.
     const moveOn = () => {
-      if (completed) {
+      if (completed && workout) {
         setCurrentExercise((currEx) =>
           Math.min(currEx + 1, workout.exercises.length - 1)
         );
@@ -84,6 +85,8 @@ const Workout = () => {
 
     // Either persist new completed exercise or the completion of the workout.
     const persistCompletion = () => {
+      if (!data) return;
+
       if (newCompleted.every((b) => b)) {
         if (data.program.currentWorkout.isLastWorkout) {
           completeActiveProgram(user.id, data.program._id);
@@ -111,7 +114,7 @@ const Workout = () => {
 
   // Note: As of now, the initial value will always be 0 because the
   // completedExercises array is initialized with only false values.
-  const [currentExercise, setCurrentExercise] = useState(
+  const [currentExercise, setCurrentExercise] = useState<number>(
     getFirstIncompleteExercise()
   );
 
@@ -123,7 +126,7 @@ const Workout = () => {
   }, [completedExercises]);
 
   useEffect(() => {
-    if (data) {
+    if (data && workout) {
       const complEx = data.program.completedExercises;
       setCompletedExercises(
         complEx && complEx.length > 0
@@ -149,7 +152,7 @@ const Workout = () => {
         <LoadingScreen />
       </Fragment>
     );
-  } else if (data) {
+  } else if (data && workout) {
     return (
       <Fragment>
         {workoutStarted && !allDone ? (
@@ -163,7 +166,7 @@ const Workout = () => {
               setWorkoutStarted(false);
               setCurrentExercise(getFirstIncompleteExercise());
             }}
-            progress={(delta) => {
+            progress={(delta: number) => {
               const i = currentExercise + delta;
               if (i >= 0 && i < workout.exercises.length) {
                 setCurrentExercise(i);
@@ -174,7 +177,7 @@ const Workout = () => {
         ) : (
           <WorkoutOverview
             workout={workout}
-            day={day}
+            day={parseInt(day)}
             isStartable={data.program.currentWorkout.status === 'current'}
             completedExercises={completedExercises}
             startWorkout={() => {

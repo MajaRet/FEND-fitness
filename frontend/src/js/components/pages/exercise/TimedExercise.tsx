@@ -1,11 +1,11 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import { Fragment, useState, useEffect } from 'react';
 
 import CountdownCircle from '../../elements/countdown/CountdownCircle';
 
-import tickSound from './../../../../audio/tick.wav';
-import doneSound from './../../../../audio/bell.wav';
-import countdownSound from './../../../../audio/countdown.wav';
-import countdownEndSound from './../../../../audio/countdown_end.wav';
+import tickSound from '../../../../audio/tick.wav';
+import doneSound from '../../../../audio/bell.wav';
+import countdownSound from '../../../../audio/countdown.wav';
+import countdownEndSound from '../../../../audio/countdown_end.wav';
 
 const tickAudio = new Audio(tickSound);
 const nearlyDoneAudio = new Audio(countdownEndSound);
@@ -13,7 +13,10 @@ const doneAudio = new Audio(doneSound);
 const countdownAudio = new Audio(countdownSound);
 const countdownEndAudio = new Audio(countdownEndSound);
 
-function tick(advance, sound) {
+function tick(
+  advance: (setSecondsLeft: (secondsLeft: number) => number) => void,
+  sound: HTMLAudioElement
+) {
   const timer = setInterval(() => {
     sound.play();
     advance((secondsLeft) => secondsLeft - 1);
@@ -22,6 +25,13 @@ function tick(advance, sound) {
   return () => {
     clearInterval(timer);
   };
+}
+
+interface TimedExerciseProps {
+  duration: number;
+  title: string;
+  completeExercise: () => void;
+  countdown?: number;
 }
 
 /**
@@ -39,10 +49,10 @@ function tick(advance, sound) {
  */
 const TimedExercise = ({
   duration,
-  exercise,
+  title,
   completeExercise,
   countdown = 0,
-}) => {
+}: TimedExerciseProps) => {
   const [countdownDone, setCountdownDone] = useState(countdown <= 0);
   const [countdownSeconds, setCountdownSeconds] = useState(countdown);
   const [secondsLeft, setSecondsLeft] = useState(duration || 0);
@@ -100,7 +110,7 @@ const TimedExercise = ({
         }
         className="task"
       />
-      <h1 className="title">{exercise.title}</h1>
+      <h1 className="title">{title}</h1>
     </Fragment>
   );
 };
