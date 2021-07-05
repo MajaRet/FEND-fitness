@@ -93,7 +93,6 @@ const StartedWorkout = (props: StartedWorkoutProps) => {
     stopWorkout,
     exerciseIndex,
   } = props;
-  console.log(exercise);
   return (
     <StyledStartedWorkout {...props}>
       <WorkoutHeader

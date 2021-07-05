@@ -1,13 +1,19 @@
 import { render, screen } from '@testing-library/react';
+import { Difficulty } from '../../../../types/ProgramTypes';
 
 import ProgramHeader from '../ProgramHeader';
 
 const program = {
-  difficulty: 'beginner',
+  _id: 'program_id',
+  difficulty: 'beginner' as Difficulty,
   duration: 6,
-  id: 3,
   title: '50 Übungen mit 50kg Haar',
   focus: 'Kraft',
+  isActive: false,
+  isCompleted: false,
+  currentWorkout: null,
+  description: 'Beschreibung hier',
+  workouts: [],
 };
 
 it('should render correctly', () => {

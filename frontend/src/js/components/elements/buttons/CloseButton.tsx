@@ -5,7 +5,7 @@ import { ReactComponent as CloseIcon } from './../../../../img/svg/close.svg';
  * A button shaped like a closing x. Positioned in the upper right corner
  * of the page by default.
  */
-const CloseButton = (props: unknown) => (
+const CloseButton = (props: any) => (
   <CornerButton {...props}>
     <CloseIcon />
   </CornerButton>

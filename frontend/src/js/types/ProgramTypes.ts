@@ -17,7 +17,7 @@ export interface Program {
   _id: string;
   isActive: boolean;
   isCompleted: boolean;
-  currentWorkout: CurrentWorkout;
+  currentWorkout: null | CurrentWorkout;
   title: string;
   duration: number;
   difficulty: Difficulty;

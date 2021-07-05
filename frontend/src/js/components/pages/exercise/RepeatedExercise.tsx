@@ -15,7 +15,6 @@ const RepeatedExercise = ({
   title,
   completeExercise,
 }: RepeatedExerciseProps) => {
-  console.log(reps, title);
   return (
     <Fragment>
       <h1 className="task repeated">{reps} x</h1>

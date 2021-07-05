@@ -12,7 +12,6 @@ const WorkoutDetailsLabel = ({
   workout,
   className,
 }: WorkoutDetailsLabelProps) => {
-  console.log(workout);
   const workoutCategories = workout.categories
     .map((cat) => display(cat))
     .join('/');
