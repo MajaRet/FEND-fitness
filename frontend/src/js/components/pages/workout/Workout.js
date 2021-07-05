@@ -67,7 +67,6 @@ const Workout = () => {
 
   const workout = data?.program?.currentWorkout?.workout;
   const programURL = `/program/${programSlug}`;
-  console.log(data);
 
   const [workoutStarted, setWorkoutStarted] = useState(false);
   const [completedExercises, setCompletedExercises] = useState([]);

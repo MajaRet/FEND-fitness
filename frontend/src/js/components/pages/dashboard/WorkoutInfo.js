@@ -8,7 +8,6 @@ import Label from './../../elements/labels/Label';
 import { ReactComponent as Checkmark } from '../../../../img/svg/checkmark.svg';
 
 const WorkoutInfo = ({ className, program }) => {
-  console.log(program);
   const workout = program.workout.Workout;
   return (
     <Link

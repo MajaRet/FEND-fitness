@@ -5,9 +5,8 @@ import InfoBar from './InfoBar';
 import { ReactComponent as Checkmark } from '../../../../img/svg/checkmark.svg';
 
 const ProgramHeader = ({ className, program }) => {
-  console.log(program);
   return (
-    <div className={className}>
+    <header className={className}>
       <h1 className="title">
         {program.title}
         {program.isCompleted ? (
@@ -19,7 +18,7 @@ const ProgramHeader = ({ className, program }) => {
         duration={program.duration}
         difficulty={program.difficulty}
       />
-    </div>
+    </header>
   );
 };
 

@@ -46,7 +46,6 @@ const Dashboard = ({ className }) => {
   );
   const { loading, data } = useQuery(getDailyProgram, params);
 
-  console.log(data);
   const currHours = new Date().getHours();
   const timeOfDay =
     currHours < 11 ? 'Morgen' : currHours < 17 ? 'Tag' : 'Abend';

@@ -7,7 +7,6 @@ import { ReactComponent as HeartIcon } from './../../../../img/svg/heart.svg';
 const WorkoutItemInfo = ({ className, workout }) => {
   // NOTE: The heart icon is not currently a button and doesn't do anything
   // when clicked.
-
   return (
     <div className={className}>
       <p>Tag {workout.day}</p>
