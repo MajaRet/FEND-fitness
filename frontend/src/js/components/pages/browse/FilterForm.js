@@ -33,6 +33,10 @@ function handleFilterSubmit(
 }
 
 const FilterForm = ({ className, setFilter }) => {
+  // TODO Also add a 'Favorite' filter. But to do that,
+  // a program must have a "favorite" property.
+  // Guess I can simulate that and also persisting it at
+  // least until a full reload.
   const [filtersVisible, setFiltersVisible] = useState(false);
   const [filterTerm, setFilterTerm] = useState('');
   const [difficultyFilter, setDifficultyFilter] = useState('none');
