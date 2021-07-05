@@ -108,7 +108,10 @@ const Browse = ({ className }) => {
       // Since all programs have been loaded, the observer is removed.
       observer.unobserve(lastElem);
     }
-    return () => observer?.unobserve(lastElem);
+    return () => {
+      console.log('Unmount!');
+      observer?.unobserve(lastElem);
+    };
   }, [loadPrograms, allLoaded, filter, programList, user]);
 
   const programCards = programList.map((program, i) => {

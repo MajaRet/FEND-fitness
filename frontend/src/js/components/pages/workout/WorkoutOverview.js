@@ -16,6 +16,7 @@ const WorkoutOverview = ({
   startWorkout,
   programURL,
   allDone,
+  isStartable,
 }) => {
   return (
     <div className={className}>
@@ -28,11 +29,11 @@ const WorkoutOverview = ({
         <h2 className="text-done">
           Herzlichen Glückwunsch, das Workout ist abgeschlossen!
         </h2>
-      ) : (
+      ) : isStartable ? (
         <Button onClick={startWorkout} className="start-button">
           los
         </Button>
-      )}
+      ) : null}
     </div>
   );
 };

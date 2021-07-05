@@ -23,8 +23,17 @@ const Workout = () => {
         true => [],
         ),
       "currentWorkout": workouts[day == $day] {
-        "done": ^.^.activeProgram.ActiveProgram._ref == ^._id
-          &&  ^.^.activeProgram.day > day,
+        "status": select(
+          ^.^.activeProgram.ActiveProgram._ref == ^._id
+          &&  ^.^.activeProgram.day > day => "done",
+          ^.^.activeProgram.ActiveProgram._ref == ^._id
+          && (
+            day == 1
+            || ^.^.activeProgram.dateOfLastWorkoutCompletion < $today
+            )
+          &&  ^.^.activeProgram.day == day => "current",
+          true => "forbidden"
+          ),
         "isLastWorkout": count(^.workouts) == $day,
         "workout": Workout-> {
           title,
@@ -46,12 +55,18 @@ const Workout = () => {
   const { programSlug, day } = useParams();
   const user = useContext(UserContext);
 
-  const params = { name: user.name, programSlug, day: parseInt(day) };
+  const params = {
+    name: user.name,
+    programSlug,
+    day: parseInt(day),
+    today: new Date().toISOString().split('T')[0],
+  };
 
   const { loading, data } = useQuery(query, params);
 
   const workout = data?.program?.currentWorkout?.workout;
   const programURL = `/program/${programSlug}`;
+  console.log(data);
 
   const [workoutStarted, setWorkoutStarted] = useState(false);
   const [completedExercises, setCompletedExercises] = useState([]);
@@ -114,7 +129,7 @@ const Workout = () => {
         complEx && complEx.length > 0
           ? complEx
           : Array(workout.exercises.length).fill(
-              data.program.currentWorkout.done
+              data.program.currentWorkout.status === 'done'
             )
       );
       // Skip the already completed exercises.
@@ -160,6 +175,7 @@ const Workout = () => {
           <WorkoutOverview
             workout={workout}
             day={day}
+            isStartable={data.program.currentWorkout.status === 'current'}
             completedExercises={completedExercises}
             startWorkout={() => {
               setWorkoutStarted(true);
