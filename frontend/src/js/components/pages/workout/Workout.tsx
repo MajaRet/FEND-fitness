@@ -32,7 +32,8 @@ const Workout = () => {
             day == 1
             || ^.^.activeProgram.dateOfLastWorkoutCompletion < $today
             )
-          &&  ^.^.activeProgram.day == day => "current",
+          &&  ^.^.activeProgram.day == day 
+          || day == 1 => "current",
           true => "forbidden"
           ),
         "isLastWorkout": count(^.workouts) == $day,
@@ -67,7 +68,6 @@ const Workout = () => {
 
   const workout = data?.program?.currentWorkout?.workout;
   const programURL = `/program/${programSlug}`;
-  console.log(data);
 
   const [workoutStarted, setWorkoutStarted] = useState(false);
   const [completedExercises, setCompletedExercises] = useState<boolean[]>([]);
