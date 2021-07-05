@@ -10,7 +10,7 @@ const WorkoutItemInfo = ({ className, workout }) => {
   return (
     <div className={className}>
       <p>Tag {workout.day}</p>
-      <WorkoutDetailsLabel workout={workout.Workout} />
+      <WorkoutDetailsLabel workout={workout.workout} />
       <HeartIcon className="favorite" />
     </div>
   );
@@ -25,5 +25,8 @@ export default styled(WorkoutItemInfo)`
 
   .favorite {
     margin-top: 30px;
+    path {
+      stroke: ${(props) => `rgb(${props.theme.fontColorDefault})`};
+    }
   }
 `;

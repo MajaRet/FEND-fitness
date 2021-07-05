@@ -6,6 +6,8 @@ const theme = {
   backgroundPrimary: 'var(--beige)',
   backgroundSecondary: 'var(--pistachio)',
   fontColorDefault: 'var(--dark-blue)',
+  buttonColor: 'var(--dark-blue)',
+  buttonTextColor: '255, 255, 255',
 };
 
 export default theme;

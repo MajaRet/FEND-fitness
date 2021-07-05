@@ -1,32 +1,19 @@
-import React, { Fragment, useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 
-import Overlay from '../../util/Overlay';
 import CardHeader from './CardHeader';
-import Program from '../program/Program';
 
 const ProgramCard = ({ className, program, setFavorite }) => {
-  const [detailsOpen, setDetailsOpen] = useState(false);
-
   return (
-    <Fragment>
-      {detailsOpen ? (
-        <Overlay>
-          <Program
-            programId={program._id}
-            closeOverlay={() => setDetailsOpen(false)}
-          />
-        </Overlay>
-      ) : null}
-      <div className={className}>
-        <CardHeader
-          isNew={program.isNew}
-          isFavorite={program.favorite}
-          setFavorite={setFavorite}
-        />
-        <h2>{program.title}</h2>
-      </div>
-    </Fragment>
+    <article className={className}>
+      <CardHeader
+        isNew={program.isNew}
+        isFavorite={program.isFavorite}
+        isCompleted={program.isCompleted}
+        setFavorite={setFavorite}
+      />
+      <h2>{program.title}</h2>
+    </article>
   );
 };
 
@@ -41,11 +28,11 @@ export default styled(ProgramCard)`
   width: 100%;
   padding: 0 50px;
   border-radius: 5px;
-  // TODO Also add the 'started' color to the theme.
+  // TODO Also add the 'active' color to the theme.
   background-color: ${(props) =>
-    props.program.status === 'started'
+    props.program.isActive
       ? 'rgb(var(--blue2))'
-      : props.program.status === 'completed'
+      : props.program.isCompleted
       ? `rgb(${props.theme.backgroundSecondary})`
       : `rgb(${props.theme.backgroundPrimary})`};
 

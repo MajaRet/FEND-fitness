@@ -9,25 +9,15 @@ function handleFilterSubmit(
   filterTerm,
   minDurationFilter,
   maxDurationFilter,
-  difficultyFilter
+  difficultyFilter,
+  favoriteFilter
 ) {
   const filter = {};
-  if (filterTerm) {
-    filter.title = { matches: `*${filterTerm}*` };
-  }
-  if (minDurationFilter || maxDurationFilter) {
-    filter.duration = {};
-    if (minDurationFilter) {
-      filter.duration.gte = parseInt(minDurationFilter, 10) || 0;
-    }
-    if (maxDurationFilter) {
-      filter.duration.lte =
-        parseInt(maxDurationFilter, 10) || Number.MAX_SAFE_INTEGER;
-    }
-  }
-  if (difficultyFilter !== 'none') {
-    filter.difficulty = { eq: difficultyFilter };
-  }
+  filter.keyword = filterTerm ? `*${filterTerm}*` : '';
+  filter.maxDuration = maxDurationFilter ? parseInt(maxDurationFilter, 10) : -1;
+  filter.minDuration = minDurationFilter ? parseInt(minDurationFilter, 10) : -1;
+  filter.difficulty = difficultyFilter || '';
+  filter.favorite = favoriteFilter || false;
 
   setFilter(filter);
 }
@@ -42,6 +32,7 @@ const FilterForm = ({ className, setFilter }) => {
   const [difficultyFilter, setDifficultyFilter] = useState('none');
   const [maxDurationFilter, setMaxDurationFilter] = useState('');
   const [minDurationFilter, setMinDurationFilter] = useState('');
+  const [favoriteFilter, setFavoriteFilter] = useState(false);
 
   return (
     <div className={className}>
@@ -57,7 +48,8 @@ const FilterForm = ({ className, setFilter }) => {
               filterTerm,
               minDurationFilter,
               maxDurationFilter,
-              difficultyFilter
+              difficultyFilter,
+              favoriteFilter
             );
           }}
         >
@@ -98,11 +90,23 @@ const FilterForm = ({ className, setFilter }) => {
               id="difficultySelection"
               name="difficultySelection"
             >
-              <option value="none">Alle</option>
+              <option value="all">Alle</option>
               <option value="beginner">{display('beginner')}</option>
               <option value="intermediate">{display('intermediate')}</option>
               <option value="hard">{display('hard')}</option>
             </select>
+            <div className="checkbox favorite">
+              <input
+                id="favoriteCheckbox"
+                name="favoriteCheckbox"
+                type="checkbox"
+                checked={favoriteFilter}
+                onChange={(e) => {
+                  setFavoriteFilter(e.target.checked);
+                }}
+              />
+              <label htmlFor="favoriteCheckbox">Favorit</label>
+            </div>
             <input type="submit" value="Filtern" />
           </div>
         </form>
@@ -128,9 +132,10 @@ export default styled(FilterForm)`
       background-color: ${(props) => `rgb(${props.theme.backgroundSecondary})`};
     }
 
-    .checkboxes {
+    .checkbox {
       display: flex;
-      column-gap: 10px;
+      column-gap: 5px;
+      align-items: center;
     }
 
     .checkbox label {

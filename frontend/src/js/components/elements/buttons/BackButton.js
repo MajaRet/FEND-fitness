@@ -1,22 +1,18 @@
 import React from 'react';
-import styled from 'styled-components';
 
+import CornerButton from './CornerButton';
 import { ReactComponent as BackIcon } from './../../../../img/svg/back.svg';
 
-const BackButton = ({ className, onClick }) => {
+/**
+ * A button shaped like a 'back' arrow. Positioned in the upper right corner
+ * of the page by default.
+ */
+const BackButton = (props) => {
   return (
-    <button className={className} onClick={onClick}>
+    <CornerButton {...props}>
       <BackIcon />
-    </button>
+    </CornerButton>
   );
 };
 
-export default styled(BackButton)`
-  position: absolute;
-  top: var(--standard-padding-vertical);
-  right: var(--standard-padding-horizontal);
-
-  z-index: 2;
-
-  padding: 0 !important;
-`;
+export default BackButton;

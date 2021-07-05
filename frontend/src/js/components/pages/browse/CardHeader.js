@@ -1,8 +1,15 @@
 import React from 'react';
 import styled from 'styled-components';
 import { ReactComponent as HeartIcon } from './../../../../img/svg/heart.svg';
+import { ReactComponent as Checkmark } from './../../../../img/svg/checkmark.svg';
 
-const CardHeader = ({ className, isNew, isFavorite, setFavorite }) => {
+const CardHeader = ({
+  className,
+  isNew,
+  isCompleted,
+  isFavorite,
+  setFavorite,
+}) => {
   return (
     <div className={className}>
       <button
@@ -10,10 +17,17 @@ const CardHeader = ({ className, isNew, isFavorite, setFavorite }) => {
           e.preventDefault();
           setFavorite(!isFavorite);
         }}
+        aria-label={`Programm als Favorit markieren, aktuell ${
+          isFavorite ? 'aktiv' : 'nicht aktiv'
+        }`}
       >
-        <HeartIcon />
+        <HeartIcon className="heart" />
       </button>
-      {isNew ? <p>Neu</p> : null}
+      {isCompleted ? (
+        <Checkmark className="checkmark" aria-label="abgeschlossen" />
+      ) : isNew ? (
+        <p>Neu</p>
+      ) : null}
     </div>
   );
 };
@@ -24,8 +38,14 @@ export default styled(CardHeader)`
 
   width: 90%;
 
-  svg path {
+  .heart path {
+    stroke: ${(props) => `rgb(${props.theme.fontColorDefault})`};
     fill: ${(props) =>
       props.isFavorite ? `rgb(${props.theme.fontColorDefault})` : null};
+  }
+
+  .checkmark path {
+    fill: none;
+    stroke: ${(props) => `rgb(${props.theme.fontColorDefault})`};
   }
 `;

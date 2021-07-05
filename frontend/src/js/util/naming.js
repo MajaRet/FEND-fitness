@@ -1,5 +1,7 @@
 // TODO Define in backend data structure instead?
-// Creating display names in German from the English value names.
+/**
+ * Create displayed names in German from the English value names.
+ */
 const displayGermanName = {
   beginner: 'Anfänger',
   intermediate: 'fortgeschritten',

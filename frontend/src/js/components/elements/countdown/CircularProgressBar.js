@@ -4,7 +4,6 @@ import styled, { keyframes } from 'styled-components';
 const animation = (props) => keyframes`
     0% {
       stroke-dashoffset: ${props.prevOffset};
-      ;
     }
     100% {
       stroke-dashoffset:  ${props.progress};};

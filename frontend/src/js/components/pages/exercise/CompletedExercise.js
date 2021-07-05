@@ -10,8 +10,8 @@ const CompletedExercise = ({ exercise, repeatExercise }) => {
       <div className="title">
         <h1>{exercise.exercise.title}</h1>
         <h2 className="subtitle">
-          {exercise.__typename === 'ExerciseWithReps'
-            ? `${exercise.reps}x`
+          {exercise._type === 'exerciseWithReps'
+            ? `${exercise.reps} x`
             : `${exercise.duration} Sekunden`}
         </h2>
       </div>

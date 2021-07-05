@@ -1,22 +1,17 @@
 import React, { Fragment } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import styled, { ThemeProvider } from 'styled-components';
-import { ApolloClient, InMemoryCache } from '@apollo/client';
-import { ApolloProvider } from '@apollo/client/react';
 
 import GlobalStyle from '../style/globalStyles';
 import theme from '../style/Theme';
+import { UserContext } from '../context';
 
 import Dashboard from './pages/dashboard/Dashboard';
 import Navigation from './navigation/Navigation';
 import Browse from './pages/browse/Browse';
 import Program from './pages/program/Program';
+import Workout from './pages/workout/Workout';
 import Overlay from './util/Overlay';
-
-const client = new ApolloClient({
-  uri: 'https://eae3hj1s.api.sanity.io/v1/graphql/production/default',
-  cache: new InMemoryCache(),
-});
 
 const StyledApp = styled.div`
   padding: var(--standard-padding-vertical) var(--standard-padding-horizontal);
@@ -28,17 +23,27 @@ const StyledApp = styled.div`
 const App = () => {
   return (
     <BrowserRouter>
-      <ApolloProvider client={client}>
-        <ThemeProvider theme={theme}>
+      <ThemeProvider theme={theme}>
+        <UserContext.Provider
+          value={{
+            name: 'Schneewittchen',
+            id: 'eec09fe5-2cc7-493d-aeca-84cf08632892',
+          }}
+        >
           <Fragment>
             <GlobalStyle />
             <StyledApp>
               <Switch>
                 <Route path="/" exact>
-                  <Dashboard user={dummyUser} />
+                  <Dashboard />
                 </Route>
                 <Route path="/browse" exact>
                   <Browse />
+                </Route>
+                <Route path="/program/:programSlug/:day">
+                  <Overlay>
+                    <Workout />
+                  </Overlay>
                 </Route>
                 <Route path="/program/:id">
                   <Browse />
@@ -50,12 +55,10 @@ const App = () => {
               <Navigation />
             </StyledApp>
           </Fragment>
-        </ThemeProvider>
-      </ApolloProvider>
+        </UserContext.Provider>
+      </ThemeProvider>
     </BrowserRouter>
   );
 };
-
-const dummyUser = { name: 'Schneewittchen' };
 
 export default App;

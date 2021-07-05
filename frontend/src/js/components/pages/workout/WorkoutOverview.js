@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 import WorkoutDetails from './WorkoutDetails';
@@ -13,12 +14,13 @@ const WorkoutOverview = ({
   day,
   completedExercises,
   startWorkout,
-  closeWorkout,
+  programURL,
   allDone,
+  isStartable,
 }) => {
   return (
     <div className={className}>
-      <BackButton onClick={closeWorkout} />
+      <BackButton as={Link} to={programURL} />
       <WorkoutHeader completedExercises={completedExercises}>
         <Label>{workout.title}</Label>
       </WorkoutHeader>
@@ -27,11 +29,11 @@ const WorkoutOverview = ({
         <h2 className="text-done">
           Herzlichen Glückwunsch, das Workout ist abgeschlossen!
         </h2>
-      ) : (
+      ) : isStartable ? (
         <Button onClick={startWorkout} className="start-button">
           los
         </Button>
-      )}
+      ) : null}
     </div>
   );
 };

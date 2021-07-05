@@ -1,16 +1,86 @@
-import React from 'react';
+import React, { useContext, useMemo } from 'react';
 import styled from 'styled-components';
+
+import { UserContext } from '../../../context';
+import { useQuery } from '../../../api/sanity';
 
 import WorkoutInfo from './WorkoutInfo';
 import { ReactComponent as WorkoutImage } from './../../../../img/svg/Programme large.svg';
 import LabelLink from './../../elements/labels/LabelLink';
+import LoadingSpinner from './../../elements/loading/LoadingSpinner';
 
 const StyledWorkoutImage = styled(WorkoutImage)`
   margin: 10px 0;
   width: 100%;
 `;
 
-const StyledDashboard = styled.div`
+const getDailyProgram = `*[_type == "user" && name == $userName] {
+  "title": activeProgram.ActiveProgram->.title,
+  "slug": activeProgram.ActiveProgram->.slug.current,
+  "workout": activeProgram.ActiveProgram->.workouts[
+    ^.activeProgram.day == 1 && day == 1
+    || ^.activeProgram.dateOfLastWorkoutCompletion >= $today 
+      && day == ^.activeProgram.day - 1
+    || ^.activeProgram.dateOfLastWorkoutCompletion < $today 
+      && day == ^.activeProgram.day 
+  ] { 
+    "done": day < ^.activeProgram.day,
+    day, 
+    Workout-> {
+      title,
+      duration,
+      calories,
+      categories
+    }
+  }[0]
+}[0]`;
+
+const Dashboard = ({ className }) => {
+  const user = useContext(UserContext);
+  const params = useMemo(
+    () => ({
+      userName: user.name,
+      today: new Date().toISOString().split('T')[0],
+    }),
+    [user]
+  );
+  const { loading, data } = useQuery(getDailyProgram, params);
+
+  const currHours = new Date().getHours();
+  const timeOfDay =
+    currHours < 11 ? 'Morgen' : currHours < 17 ? 'Tag' : 'Abend';
+  return (
+    <div className={className}>
+      <h1>
+        Guten
+        <br />
+        {timeOfDay},
+        <br />
+        {user.name}
+      </h1>
+      <main>
+        <div className="subheader">
+          <h2>Dein Workout heute</h2>
+          <LabelLink to="/">Trainingsplan</LabelLink>
+        </div>
+        <StyledWorkoutImage />
+        {loading ? (
+          <LoadingSpinner />
+        ) : data ? (
+          data.title ? (
+            <WorkoutInfo program={data} />
+          ) : (
+            'Kein Programm gestartet'
+          )
+        ) : (
+          'Daten konnten nicht geladen werden.'
+        )}
+      </main>
+    </div>
+  );
+};
+
+export default styled(Dashboard)`
   padding-top: 45px;
   padding-bottom: var(--nav-height);
 
@@ -24,30 +94,3 @@ const StyledDashboard = styled.div`
     align-items: flex-end;
   }
 `;
-
-const Dashboard = (props) => {
-  const currHours = new Date().getHours();
-  const timeOfDay =
-    currHours < 11 ? 'Morgen' : currHours < 17 ? 'Tag' : 'Abend';
-  return (
-    <StyledDashboard>
-      <h1>
-        Guten
-        <br />
-        {timeOfDay},
-        <br />
-        {props.user.name}
-      </h1>
-      <main>
-        <div className="subheader">
-          <h2>Dein Workout heute</h2>
-          <LabelLink to="/">Trainingsplan</LabelLink>
-        </div>
-        <StyledWorkoutImage />
-        <WorkoutInfo />
-      </main>
-    </StyledDashboard>
-  );
-};
-
-export default Dashboard;
