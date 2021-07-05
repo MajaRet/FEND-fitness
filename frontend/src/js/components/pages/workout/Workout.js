@@ -31,7 +31,8 @@ const Workout = () => {
             day == 1
             || ^.^.activeProgram.dateOfLastWorkoutCompletion < $today
             )
-          &&  ^.^.activeProgram.day == day => "current",
+          &&  ^.^.activeProgram.day == day 
+          || day == 1 => "current",
           true => "forbidden"
           ),
         "isLastWorkout": count(^.workouts) == $day,

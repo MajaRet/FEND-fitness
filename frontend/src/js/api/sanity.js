@@ -137,8 +137,11 @@ function addRefToUserSet(userId, fieldName, newRef) {
  *                                remove.
  */
 function removeRefFromUserSet(userId, fieldName, refToDelete) {
-  client.patch(userId).unset([`${fieldName}[_ref == "${refToDelete}"]`]);
-  this.commit().catch((error) => console.log(error));
+  client
+    .patch(userId)
+    .unset([`${fieldName}[_ref == "${refToDelete}"]`])
+    .commit()
+    .catch((error) => console.log(error));
 }
 
 /**
