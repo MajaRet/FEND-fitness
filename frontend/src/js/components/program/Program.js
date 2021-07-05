@@ -6,6 +6,7 @@ import WorkoutList from './WorkoutList';
 import ProgramHeader from './ProgramHeader';
 import ProgramChart from './ProgramChart';
 import ProgramDescription from './ProgramDescription';
+import Button from './../buttons/Button';
 import CloseButton from './../buttons/CloseButton';
 
 const Program = ({ closeOverlay, className, programId }) => {
@@ -17,7 +18,7 @@ const Program = ({ closeOverlay, className, programId }) => {
         difficulty
         focus
         workouts {
-          week
+          day
           Workout { 
             title
             categories
@@ -75,7 +76,9 @@ query GetPrograms($id: ID!) {
 };
 
 export default styled(Program)`
-  > * {
+  background-color: ${(props) => props.theme.backgroundPrimary};
+
+  > :not(${Button}) {
     padding: var(--standard-padding-vertical) var(--standard-padding-horizontal);
   }
 

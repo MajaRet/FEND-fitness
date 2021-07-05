@@ -11,8 +11,6 @@ import Dashboard from './dashboard/Dashboard';
 import Navigation from './navigation/Navigation';
 import Browse from './browse/Browse';
 
-import TimedExercise from './exercise/TimedExercise'; // TODO remove
-
 const client = new ApolloClient({
   uri: 'https://eae3hj1s.api.sanity.io/v1/graphql/production/default',
   cache: new InMemoryCache(),
@@ -35,7 +33,6 @@ const App = () => {
             <StyledApp>
               <Switch>
                 <Route path="/" exact>
-                  <TimedExercise />
                   <Dashboard user={dummyUser} />
                 </Route>
                 <Route path="/browse" exact>

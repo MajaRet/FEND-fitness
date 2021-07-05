@@ -18,7 +18,7 @@ const WorkoutList = ({ className, workouts }) => {
   };
 
   const renderedExercises = displayedWorkouts.map((workout) => {
-    return <WorkoutListItem key={workout.week} workout={workout} />;
+    return <WorkoutListItem key={workout.day} workout={workout} />;
   });
 
   return (

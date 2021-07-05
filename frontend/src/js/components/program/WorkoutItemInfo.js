@@ -9,7 +9,6 @@ import display from '../../naming';
 const WorkoutItemInfo = ({ className, workout }) => {
   // NOTE: The heart icon is not currently a button and doesn't do anything
   // when clicked.
-  console.log(workout);
   const workoutCategories = workout.Workout.categories
     .map((cat) => display(cat))
     .join('/');
