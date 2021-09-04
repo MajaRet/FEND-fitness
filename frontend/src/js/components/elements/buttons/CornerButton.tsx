@@ -1,3 +1,6 @@
+/**
+ * A button that sits in the upper right corner of the container.
+ */
 import styled, { css } from 'styled-components';
 
 import { ColoredTextButton, ColoredTextLink } from './ColoredTextButton';
@@ -10,9 +13,7 @@ const styles = css`
 
   padding: 0 !important;
 `;
-/**
- * A button that sits in the upper right corner of the page.
- */
+
 export const CornerButton = styled(ColoredTextButton)`
   ${styles}
 `;

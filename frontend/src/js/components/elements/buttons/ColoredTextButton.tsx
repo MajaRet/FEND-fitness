@@ -5,15 +5,17 @@ const color = (props: any): string =>
   props.color
     ? typeof props.color === 'string'
       ? props.color
-      : `rgb(${props.rgb})`
+      : `rgb(${props.color})`
     : `rgb(${props.theme.fontColorDefault})`;
 
 const styles = css<{ size?: number }>`
   padding: 0;
   color: ${color};
-  stroke: ${color};
-  fill: ${color};
   font-size: ${(props) => (props.size ? `${props.size}px` : null)};
+
+  svg * {
+    stroke: ${color};
+  }
 
   &[disabled] {
     opacity: 0.5;

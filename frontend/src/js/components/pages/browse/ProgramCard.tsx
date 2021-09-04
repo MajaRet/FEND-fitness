@@ -23,7 +23,7 @@ const StyledProgramCard = styled.article<ProgramCardProps>`
   // TODO Also add the 'active' color to the theme.
   background-color: ${(props) =>
     props.program.isActive
-      ? 'rgb(var(--blue2))'
+      ? `rgb(${props.theme.highlightColor1})`
       : props.program.isCompleted
       ? `rgb(${props.theme.backgroundSecondary})`
       : `rgb(${props.theme.backgroundPrimary})`};

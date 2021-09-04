@@ -20,7 +20,12 @@ const StyledProgressBar = styled.div<ProgressBarProps>`
     }
 
     &.completed {
-      fill: ${(props) => `rgb(${props.theme.fontColorDefault})`};
+      circle {
+        fill: ${(props) => `rgb(${props.theme.fontColorDefault})`};
+      }
+      path {
+        stroke: ${(props) => `rgb(${props.theme.buttonTextColor})`};
+      }
     }
   }
 

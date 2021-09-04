@@ -11,10 +11,4 @@ const BackButton = (props: any) => (
   </CornerButton>
 );
 
-/*(props: any) => (
-  <CornerButton {...props}>
-    <BackIcon />
-  </CornerButton>
-);
-*/
 export default BackButton;
