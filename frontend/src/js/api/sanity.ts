@@ -33,8 +33,6 @@ async function executeFetch<FetchResult>(
   setData: (data: FetchResult | null) => void
 ) {
   try {
-    // TODO Remove log, just a check for overfetching
-    console.log('%cATTENTION: Fetching', 'color: blue');
     const data = await client.fetch(query, params);
     if (data) {
       setData(data);
@@ -84,8 +82,6 @@ export function useQuery<FetchResult>(
     // a deep equality check with the previous parameter object.
     const newQuery = { query, ...params };
     if (!queryRef.current || !equal(queryRef.current, newQuery)) {
-      // TODO Remove log
-      console.log('%cATTENTION: useQuery', 'color: orange');
       queryRef.current = newQuery;
       executeFetch(query, params || {}, setLoading, setError, setData);
     }
@@ -113,7 +109,6 @@ export function useLazyQuery<FetchResult>(
   const executeQuery = useCallback(
     (params: object | undefined) => {
       setLoading(true);
-      console.log('%cATTENTION: useLazyQuery executed', 'color: purple');
       executeFetch(query, params || {}, setLoading, setError, setData);
     },
     [query]
