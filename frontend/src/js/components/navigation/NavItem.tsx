@@ -15,6 +15,10 @@ const StyledNavItem = styled(NavLink)`
   justify-content: space-between;
   align-items: center;
   row-gap: 2px;
+
+  svg * {
+    stroke: ${(props) => `rgb(${props.theme.fontColorDefault})`};
+  }
 `;
 
 const NavItem = (props: NavItemProps) => {

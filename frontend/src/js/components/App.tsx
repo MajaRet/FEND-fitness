@@ -1,10 +1,10 @@
-import { Fragment } from 'react';
+import { Fragment, useState } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import styled, { ThemeProvider } from 'styled-components';
 
 import GlobalStyle from '../style/globalStyles';
-import theme from '../style/Theme';
-import { UserContext } from '../context';
+import { lightTheme, darkTheme } from '../style/Theme';
+import { UserContext, ThemeToggleContext } from '../context';
 
 import Dashboard from './pages/dashboard/Dashboard';
 import Navigation from './navigation/Navigation';
@@ -21,41 +21,58 @@ const StyledApp = styled.div`
 `;
 
 const App = () => {
+  const [theme, setTheme] = useState(lightTheme);
+
+  const toggleDarkMode = () => {
+    if (theme === lightTheme) {
+      setTheme(darkTheme);
+    } else {
+      setTheme(lightTheme);
+    }
+  };
+
   return (
     <BrowserRouter>
       <ThemeProvider theme={theme}>
-        <UserContext.Provider
+        <ThemeToggleContext.Provider
           value={{
-            name: 'Schneewittchen',
-            id: 'eec09fe5-2cc7-493d-aeca-84cf08632892',
+            toggleTheme: toggleDarkMode,
+            theme: theme === lightTheme ? 'light' : 'dark',
           }}
         >
-          <Fragment>
-            <GlobalStyle />
-            <StyledApp>
-              <Switch>
-                <Route path="/" exact>
-                  <Dashboard />
-                </Route>
-                <Route path="/browse" exact>
-                  <Browse />
-                </Route>
-                <Route path="/program/:programSlug/:day">
-                  <Overlay>
-                    <Workout />
-                  </Overlay>
-                </Route>
-                <Route path="/program/:id">
-                  <Browse />
-                  <Overlay>
-                    <Program />
-                  </Overlay>
-                </Route>
-              </Switch>
-              <Navigation />
-            </StyledApp>
-          </Fragment>
-        </UserContext.Provider>
+          <UserContext.Provider
+            value={{
+              name: 'Schneewittchen',
+              id: 'eec09fe5-2cc7-493d-aeca-84cf08632892',
+            }}
+          >
+            <Fragment>
+              <GlobalStyle />
+              <StyledApp>
+                <Switch>
+                  <Route path="/" exact>
+                    <Dashboard />
+                  </Route>
+                  <Route path="/browse" exact>
+                    <Browse />
+                  </Route>
+                  <Route path="/program/:programSlug/:day">
+                    <Overlay>
+                      <Workout />
+                    </Overlay>
+                  </Route>
+                  <Route path="/program/:id">
+                    <Browse />
+                    <Overlay>
+                      <Program />
+                    </Overlay>
+                  </Route>
+                </Switch>
+                <Navigation />
+              </StyledApp>
+            </Fragment>
+          </UserContext.Provider>
+        </ThemeToggleContext.Provider>
       </ThemeProvider>
     </BrowserRouter>
   );

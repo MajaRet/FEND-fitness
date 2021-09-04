@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
 import NavItem from './NavItem';
+import DarkModeToggle from './DarkModeToggle';
 
 import { ReactComponent as HomeIcon } from './../../../img/svg/home.svg';
 import { ReactComponent as BrowseIcon } from './../../../img/svg/dumbbell.svg';
@@ -26,6 +27,7 @@ const Navigation = () => {
       <NavItem linkText="Home" icon={HomeIcon} to="/" />{' '}
       <NavItem linkText="Browse" icon={BrowseIcon} to="/browse" />{' '}
       <NavItem linkText="Profil" icon={ProfileIcon} to="profile" />
+      <DarkModeToggle />
     </StyledNavigation>
   );
 };

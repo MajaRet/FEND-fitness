@@ -98,8 +98,10 @@ const FilterForm = ({ setFilter }: FilterFormProps) => {
           }}
         >
           <div className="inputs">
+            <label htmlFor="filterTerm">Stichwort</label>
             <input
               type="text"
+              id="filterTerm"
               value={filterTerm}
               onChange={(e) => {
                 setFilterTerm(e.target.value);
