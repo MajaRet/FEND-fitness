@@ -1,3 +1,5 @@
+import React from 'react';
+
 import { ReducedWorkout as Workout } from '../../../types/WorkoutTypes';
 
 import Label from '../../elements/labels/Label';

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 
 import { Filter, DifficultyFilter } from '../../../types/BrowseTypes';
@@ -14,7 +14,7 @@ function handleFilterSubmit(
   difficultyFilter: DifficultyFilter,
   favoriteFilter: boolean
 ) {
-  const keyword = filterTerm ? `*${filterTerm}*` : '';
+  const keyword = filterTerm ? `${filterTerm}` : '';
   const maxDuration = maxDurationFilter ? parseInt(maxDurationFilter, 10) : -1;
   const minDuration = minDurationFilter ? parseInt(minDurationFilter, 10) : -1;
   const difficulty = difficultyFilter || '';

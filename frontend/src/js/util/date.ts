@@ -1,3 +1,4 @@
+/*
 import { Program } from '../types/ProgramTypes';
 
 // Check if the most recently completed workout was completed today.
@@ -5,9 +6,11 @@ import { Program } from '../types/ProgramTypes';
 // the next day.
 // NOTE: This is checked on client side because of apparent bugs in GROQ
 // Datetime matching.
-export const getCurrentDay = (program: Program | undefined): number => {
+export const getCurrentDay = (program: Program | undefined | null): number => {
   if (!program || !program.currentWorkout) {
     return 1;
   }
   return program.currentWorkout.day;
 };
+*/
+export {};

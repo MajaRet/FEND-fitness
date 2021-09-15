@@ -1,6 +1,7 @@
+import React from 'react';
 import styled from 'styled-components';
 
-import { Exercise } from '../../../types/ExerciseTypes';
+import { QuantifiedExercise } from '../../../types/ExerciseTypes';
 
 import WorkoutHeader from './WorkoutHeader';
 import RepeatedExercise from '../exercise/RepeatedExercise';
@@ -22,7 +23,7 @@ const StyledStartedWorkout = styled('div')<StartedWorkoutProps>`
   height: 100%;
   padding: var(--standard-padding-vertical) var(--standard-padding-horizontal);
   background-color: ${(props) =>
-    isPause(props.exercise.title)
+    isPause(props.exercise.exercise.title)
       ? `rgb(${props.theme.backgroundPrimary})`
       : `rgb(${props.theme.backgroundSecondary})`};
 
@@ -72,7 +73,7 @@ const StyledStartedWorkout = styled('div')<StartedWorkoutProps>`
 `;
 
 interface StartedWorkoutProps {
-  exercise: Exercise;
+  exercise: QuantifiedExercise;
   isFirst: boolean;
   isLast: boolean;
   setExerciseCompletion: (isCompleted: boolean) => void;
@@ -127,17 +128,17 @@ const StartedWorkout = (props: StartedWorkoutProps) => {
           exercise={exercise}
           repeatExercise={() => setExerciseCompletion(false)}
         />
-      ) : exercise.type === 'exerciseWithReps' && exercise.reps ? (
+      ) : exercise.type === 'exerciseWithReps' ? (
         <RepeatedExercise
-          reps={exercise.reps}
-          title={exercise.title}
+          reps={exercise.quantity}
+          title={exercise.exercise.title}
           completeExercise={() => setExerciseCompletion(true)}
         />
-      ) : exercise.type === 'exerciseWithDuration' && exercise.duration ? (
+      ) : exercise.type === 'exerciseWithDuration' ? (
         <TimedExercise
-          duration={exercise.duration}
-          title={exercise.title}
-          countdown={isPause(exercise.title) ? 0 : 3}
+          duration={exercise.quantity}
+          title={exercise.exercise.title}
+          countdown={isPause(exercise.exercise.title) ? 0 : 3}
           completeExercise={() => setExerciseCompletion(true)}
           // Key used to force new rendering of an exercise following
           // another timed exercise.

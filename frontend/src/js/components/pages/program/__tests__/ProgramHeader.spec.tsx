@@ -1,9 +1,10 @@
+import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { Difficulty } from '../../../../types/ProgramTypes';
+import { Difficulty, Program } from '../../../../types/ProgramTypes';
 
 import ProgramHeader from '../ProgramHeader';
 
-const program = {
+const program: Program = {
   _id: 'program_id',
   difficulty: 'beginner' as Difficulty,
   duration: 6,

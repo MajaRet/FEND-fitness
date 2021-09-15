@@ -1,12 +1,12 @@
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { ReactComponent as HeartIcon } from './../../../../img/svg/heart.svg';
 import { ReactComponent as Checkmark } from './../../../../img/svg/checkmark.svg';
+import { BrowsedProgram } from '../../../types/BrowseTypes';
+import { useLazyPost } from '../../../api/request';
 
 interface CardHeaderProps {
-  isNew: boolean;
-  isCompleted: boolean;
-  isFavorite: boolean;
-  setFavorite: (isFavorite: boolean) => void;
+  program: BrowsedProgram;
 }
 
 const StyledCardHeader = styled.div<CardHeaderProps>`
@@ -15,10 +15,14 @@ const StyledCardHeader = styled.div<CardHeaderProps>`
 
   width: 90%;
 
-  .heart path {
-    stroke: ${(props) => `rgb(${props.theme.fontColorDefault})`};
-    fill: ${(props) =>
-      props.isFavorite ? `rgb(${props.theme.fontColorDefault})` : null};
+  .heart {
+    path {
+      stroke: ${(props) => `rgb(${props.theme.fontColorDefault})`};
+    }
+
+    &.filled path {
+      fill: ${(props) => `rgb(${props.theme.fontColorDefault})`};
+    }
   }
 
   .checkmark path {
@@ -28,23 +32,27 @@ const StyledCardHeader = styled.div<CardHeaderProps>`
 `;
 
 const CardHeader = (props: CardHeaderProps) => {
-  const { isNew, isCompleted, isFavorite, setFavorite } = props;
+  const { isNewProgram, isCompleted, slug } = props.program;
+  const [isFavorite, setFavorite] = useState(props.program.isFavorite);
+  const [persistFavorite] = useLazyPost(`/api/programs/${slug}`);
+
   return (
     <StyledCardHeader className="header" {...props}>
       <button
         onClick={(e) => {
           e.preventDefault();
+          persistFavorite({ action: 'favorite', isFavorite: !isFavorite });
           setFavorite(!isFavorite);
         }}
         aria-label={`Programm als Favorit markieren, aktuell ${
           isFavorite ? 'aktiv' : 'nicht aktiv'
         }`}
       >
-        <HeartIcon className="heart" />
+        <HeartIcon className={`heart${isFavorite ? ' filled' : ''}`} />
       </button>
       {isCompleted ? (
         <Checkmark className="checkmark" aria-label="abgeschlossen" />
-      ) : isNew ? (
+      ) : isNewProgram ? (
         <p>Neu</p>
       ) : null}
     </StyledCardHeader>

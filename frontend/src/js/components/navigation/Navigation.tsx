@@ -1,3 +1,4 @@
+import React from 'react';
 import styled from 'styled-components';
 
 import NavItem from './NavItem';
@@ -5,7 +6,6 @@ import DarkModeToggle from './DarkModeToggle';
 
 import { ReactComponent as HomeIcon } from './../../../img/svg/home.svg';
 import { ReactComponent as BrowseIcon } from './../../../img/svg/dumbbell.svg';
-import { ReactComponent as ProfileIcon } from './../../../img/svg/profile.svg';
 
 const StyledNavigation = styled.nav`
   position: fixed;
@@ -24,9 +24,8 @@ const StyledNavigation = styled.nav`
 const Navigation = () => {
   return (
     <StyledNavigation>
-      <NavItem linkText="Home" icon={HomeIcon} to="/" />{' '}
-      <NavItem linkText="Browse" icon={BrowseIcon} to="/browse" />{' '}
-      <NavItem linkText="Profil" icon={ProfileIcon} to="profile" />
+      <NavItem linkText="Home" icon={HomeIcon} to="/" />
+      <NavItem linkText="Programme" icon={BrowseIcon} to="/programs" />
       <DarkModeToggle />
     </StyledNavigation>
   );

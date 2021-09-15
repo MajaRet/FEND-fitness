@@ -1,3 +1,4 @@
+import React from 'react';
 import styled from 'styled-components';
 
 import { BrowsedProgram } from '../../../types/BrowseTypes';
@@ -6,7 +7,6 @@ import CardHeader from './CardHeader';
 
 interface ProgramCardProps {
   program: BrowsedProgram;
-  setFavorite: (isFavorite: boolean) => void;
 }
 
 const StyledProgramCard = styled.article<ProgramCardProps>`
@@ -35,16 +35,11 @@ const StyledProgramCard = styled.article<ProgramCardProps>`
 `;
 
 const ProgramCard = (props: ProgramCardProps) => {
-  const { program, setFavorite } = props;
+  const { program } = props;
 
   return (
     <StyledProgramCard {...props}>
-      <CardHeader
-        isNew={program.isNew}
-        isFavorite={program.isFavorite}
-        isCompleted={program.isCompleted}
-        setFavorite={setFavorite}
-      />
+      <CardHeader program={program} />
       <h2>{program.title}</h2>
     </StyledProgramCard>
   );
