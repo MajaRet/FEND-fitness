@@ -1,6 +1,6 @@
 [[redirects]]
-  from = "/"
-  to = "https://mighty-reef-82661.herokuapp.com/"
+  from = "/*"
+  to = "https://mighty-reef-82661.herokuapp.com/:splat"
   status = 200
   force = true
   headers = {X-From = "Netlify"}
