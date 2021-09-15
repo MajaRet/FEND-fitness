@@ -70,5 +70,5 @@
   "resolutions": {
     "styled-components": "^5"
   },
-  "proxy": "http://localhost:5000"
+  "proxy": "https://mighty-reef-82661.herokuapp.com/"
 }
