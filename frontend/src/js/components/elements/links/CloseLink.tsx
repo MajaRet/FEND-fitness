@@ -1,3 +1,4 @@
+import React from 'react';
 import { CornerLink } from '../buttons/CornerButton';
 import { ReactComponent as CloseIcon } from './../../../../img/svg/close.svg';
 

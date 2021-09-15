@@ -1,3 +1,4 @@
+import React from 'react';
 import styled from 'styled-components';
 import {
   PieChart,
@@ -11,7 +12,7 @@ import {
 import Label from '../labels/Label';
 
 import { generateColors, RGB } from '../../../util/color';
-import { histogram } from '../../../util/histogram';
+import { createHistogram } from '../../../util/histogram';
 
 /**
  * A colored circle.
@@ -77,7 +78,7 @@ const FrequencyPieChart = ({
   startColor = { r: 0, g: 0, b: 0 },
   endColor = { r: 255, g: 255, b: 255 },
 }: FrequencyPieChartProps) => {
-  const elemCounts = Object.values(histogram(elems));
+  const elemCounts = Object.values(createHistogram(elems));
   const colors = generateColors(elemCounts.length, startColor, endColor);
 
   return (

@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { WorkoutWithExercises as Workout } from '../../../types/WorkoutTypes';
+import { Workout } from '../../../types/WorkoutTypes';
 
 import WorkoutDetails from './WorkoutDetails';
 import WorkoutHeader from './WorkoutHeader';
@@ -42,7 +42,6 @@ interface WorkoutOverviewProps {
   startWorkout: () => void;
   programURL: string;
   allDone: boolean;
-  isStartable: boolean;
 }
 
 const WorkoutOverview = ({
@@ -52,7 +51,6 @@ const WorkoutOverview = ({
   startWorkout,
   programURL,
   allDone,
-  isStartable,
 }: WorkoutOverviewProps) => {
   return (
     <StyledWorkoutOverview>
@@ -65,11 +63,11 @@ const WorkoutOverview = ({
         <h2 className="text-done">
           Herzlichen Glückwunsch, das Workout ist abgeschlossen!
         </h2>
-      ) : isStartable ? (
+      ) : (
         <Button onClick={startWorkout} className="start-button">
           los
         </Button>
-      ) : null}
+      )}
     </StyledWorkoutOverview>
   );
 };

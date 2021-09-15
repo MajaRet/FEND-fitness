@@ -1,14 +1,8 @@
-import React, { Fragment, useEffect, useState, useContext } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-import {
-  updateCompletedExercises,
-  completeCurrentWorkout,
-  completeActiveProgram,
-  useQuery,
-} from '../../../api/sanity';
-import { UserContext } from '../../../context';
-import { Workout as WorkoutType } from '../../../types/WorkoutTypes';
+import { useGet, useLazyPost } from '../../../api/request';
+import { WorkoutWithCompletionStatus } from '../../../types/WorkoutTypes';
 
 import StartedWorkout from './StartedWorkout';
 import WorkoutOverview from './WorkoutOverview';
@@ -16,58 +10,54 @@ import LoadingScreen from '../../elements/loading/LoadingScreen';
 import BackButton from '../../elements/buttons/BackButton';
 
 const Workout = () => {
-  const query = `*[_type == "user" && name == $name] {
-    "program": *[_type == "program" && slug.current == $programSlug] {
-      _id,
-      "completedExercises": select(
-        ^.activeProgram.ActiveProgram._ref == _id => ^.activeProgram.completedExercises,
-        true => [],
-        ),
-      "currentWorkout": workouts[day == $day] {
-        "status": select(
-          ^.^.activeProgram.ActiveProgram._ref == ^._id
-          &&  ^.^.activeProgram.day > day => "done",
-          ^.^.activeProgram.ActiveProgram._ref == ^._id
-          && (
-            day == 1
-            || ^.^.activeProgram.dateOfLastWorkoutCompletion < $today
-            )
-          &&  ^.^.activeProgram.day == day 
-          || day == 1 => "current",
-          true => "forbidden"
-          ),
-        "isLastWorkout": count(^.workouts) == $day,
-        "workout": Workout-> {
-          title,
-          categories,
-          duration,
-          calories,
-          "exercises": exercises[]{
-            "type": _type,
-            duration,
-            reps,
-            "title": exercise->.title
-          }
-        }
-      }[0]
-    }[0]
-   }[0]`;
+  // const query = `*[_type == "user" && name == $name] {
+  //   "program": *[_type == "program" && slug.current == $programSlug] {
+  //     _id,
+  //     "completedExercises": select(
+  //       ^.activeProgram.ActiveProgram._ref == _id => ^.activeProgram.completedExercises,
+  //       true => [],
+  //       ),
+  //     "currentWorkout": workouts[day == $day] {
+  //       "status": select(
+  //         ^.^.activeProgram.ActiveProgram._ref == ^._id
+  //         &&  ^.^.activeProgram.day > day => "done",
+  //         ^.^.activeProgram.ActiveProgram._ref == ^._id
+  //         && (
+  //           day == 1
+  //           || ^.^.activeProgram.dateOfLastWorkoutCompletion < $today
+  //           )
+  //         &&  ^.^.activeProgram.day == day
+  //         || day == 1 => "current",
+  //         true => "forbidden"
+  //         ),
+  //       "isLastWorkout": count(^.workouts) == $day,
+  //       "workout": Workout-> {
+  //         title,
+  //         categories,
+  //         duration,
+  //         calories,
+  //         "exercises": exercises[]{
+  //           "type": _type,
+  //           duration,
+  //           reps,
+  //           "title": exercise->.title
+  //         }
+  //       }
+  //     }[0]
+  //   }[0]
+  //  }[0]`;
 
   const { programSlug, day } =
     useParams<{ programSlug: string; day: string }>();
-  const user = useContext(UserContext);
 
-  const params = {
-    name: user.name,
-    programSlug,
-    day: parseInt(day),
-    today: new Date().toISOString().split('T')[0],
-  };
+  const { loading, data } = useGet<WorkoutWithCompletionStatus>(
+    `/api/programs/${programSlug}/${day}`
+  );
 
-  const { loading, data } = useQuery<WorkoutType>(query, params);
+  const [updateProgramStatus] = useLazyPost(`/api/programs/current`);
 
-  const workout = data?.program?.currentWorkout?.workout;
-  const programURL = `/program/${programSlug}`;
+  const workout = data;
+  const programURL = `/programs/${programSlug}`;
 
   const [workoutStarted, setWorkoutStarted] = useState(false);
   const [completedExercises, setCompletedExercises] = useState<boolean[]>([]);
@@ -85,16 +75,22 @@ const Workout = () => {
 
     // Either persist new completed exercise or the completion of the workout.
     const persistCompletion = () => {
-      if (!data) return;
-
+      if (!workout) return;
       if (newCompleted.every((b) => b)) {
-        if (data.program.currentWorkout.isLastWorkout) {
-          completeActiveProgram(user.id, data.program._id);
+        // The whole program was completed
+        if (workout.isLastWorkout) {
+          updateProgramStatus({ action: 'completeProgram' });
+          // The workout was completed
         } else {
-          completeCurrentWorkout(user.id);
+          updateProgramStatus({ action: 'completeWorkout' });
         }
-      } else {
-        updateCompletedExercises(user.id, newCompleted);
+      }
+      // An exercise in the workout was completed or reverted
+      else {
+        updateProgramStatus({
+          action: 'updateCompletedExercises',
+          completedExercises: newCompleted,
+        });
       }
     };
 
@@ -126,20 +122,13 @@ const Workout = () => {
   }, [completedExercises]);
 
   useEffect(() => {
-    if (data && workout) {
-      const complEx = data.program.completedExercises;
-      setCompletedExercises(
-        complEx && complEx.length > 0
-          ? complEx
-          : Array(workout.exercises.length).fill(
-              data.program.currentWorkout.status === 'done'
-            )
-      );
-      // Skip the already completed exercises.
+    if (workout) {
+      setCompletedExercises(workout.completedExercises);
+      // Skip to the first incomplete exercise.
       setCurrentExercise(
         Math.max(
           0,
-          complEx.findIndex((b) => !b)
+          workout.completedExercises.findIndex((b) => !b)
         )
       );
     }
@@ -152,7 +141,7 @@ const Workout = () => {
         <LoadingScreen />
       </Fragment>
     );
-  } else if (data && workout) {
+  } else if (workout) {
     return (
       <Fragment>
         {workoutStarted && !allDone ? (
@@ -177,8 +166,7 @@ const Workout = () => {
         ) : (
           <WorkoutOverview
             workout={workout}
-            day={parseInt(day)}
-            isStartable={data.program.currentWorkout.status === 'current'}
+            day={parseInt(day, 10)}
             completedExercises={completedExercises}
             startWorkout={() => {
               setWorkoutStarted(true);

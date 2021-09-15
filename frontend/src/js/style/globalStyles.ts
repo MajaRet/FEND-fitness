@@ -60,14 +60,14 @@ const GlobalStyle = createGlobalStyle`
 
   body {
     box-sizing: border-box;
-    
+
   }
 
   * {
     margin: 0;
     padding: 0;
     box-sizing: inherit;
-    
+
     font-family:  var(--font-family);
     font-size: var(--body-text-size);
     line-height: var(--body-text-height);

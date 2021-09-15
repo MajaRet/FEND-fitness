@@ -12,7 +12,7 @@ export interface NameValuePair {
  * @returns            An object with the list elements as properties and the
  *                     list element/number of occurrences pair as properties.
  */
-export function histogram(elements: string[]): NameValuePair[] {
+export function createHistogram(elements: string[]): NameValuePair[] {
   const histogram = new Map<string, NameValuePair>();
   let existingNameValuePair;
   let updatedNameValuePair;
@@ -35,7 +35,7 @@ export function histogram(elements: string[]): NameValuePair[] {
  */
 export function majorityValue(elements: string[]): string | null {
   if (elements.length === 0) return null;
-  const histo = histogram(elements);
+  const histo = createHistogram(elements);
   return histo.reduce((acc, e) => (acc.value < e.value ? e : acc), histo[0])
     .name;
 }

@@ -1,4 +1,4 @@
-import { Fragment } from 'react';
+import React, { Fragment } from 'react';
 import Button from '../../elements/buttons/Button';
 
 interface RepeatedExerciseProps {
