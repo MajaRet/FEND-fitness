@@ -1,12 +1,4 @@
-import { ReducedWorkout as Workout } from './WorkoutTypes';
-
 export type Difficulty = 'beginner' | 'intermediate' | 'hard';
-
-export interface CurrentWorkout {
-  completedToday: boolean;
-  lastCompletedDate: string;
-  day: number;
-}
 
 export interface WorkoutWithDay {
   day: number;
@@ -15,9 +7,12 @@ export interface WorkoutWithDay {
 
 export interface Program {
   _id: string;
+  slug: string;
   isActive: boolean;
   isCompleted: boolean;
-  currentWorkout: null | CurrentWorkout;
+  isNewProgram: boolean;
+  isFavorite: boolean;
+  currentDay?: number;
   title: string;
   duration: number;
   difficulty: Difficulty;
@@ -26,14 +21,9 @@ export interface Program {
   workouts: WorkoutWithDay[];
 }
 
-export interface DailyProgram {
-  title: string;
-  slug: string;
-  workout: WorkoutWithDay & {
-    done: boolean;
-  };
-}
-
-export interface ProgramWrapper {
+export interface ActiveProgram {
+  currentWorkout: Workout;
+  completedExercises: boolean[];
   program: Program;
+  currentDay: number;
 }

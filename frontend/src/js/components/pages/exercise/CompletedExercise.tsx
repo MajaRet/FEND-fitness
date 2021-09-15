@@ -1,10 +1,10 @@
-import { Fragment } from 'react';
+import React, { Fragment } from 'react';
 import Button from '../../elements/buttons/Button';
 
-import { Exercise } from '../../../types/ExerciseTypes';
+import { QuantifiedExercise } from '../../../types/ExerciseTypes';
 
 interface CompletedExerciseProps {
-  exercise: Exercise;
+  exercise: QuantifiedExercise;
   repeatExercise: () => void;
 }
 
@@ -18,11 +18,11 @@ const CompletedExercise = ({
         Herzlichen Glückwunsch, die Übung ist abgeschlossen!
       </h1>
       <div className="title">
-        <h1>{exercise.title}</h1>
+        <h1>{exercise.exercise.title}</h1>
         <h2 className="subtitle">
           {exercise.type === 'exerciseWithReps'
-            ? `${exercise.reps} x`
-            : `${exercise.duration} Sekunden`}
+            ? `${exercise.quantity} x`
+            : `${exercise.quantity} Sekunden`}
         </h2>
       </div>
       <Button className="done" onClick={repeatExercise}>

@@ -1,10 +1,8 @@
-import React, { Fragment, useContext } from 'react';
+import React, { Fragment } from 'react';
 import styled from 'styled-components';
 import { useParams, Link } from 'react-router-dom';
 
-import { useQuery, setActiveProgram } from '../../../api/sanity';
-import { UserContext } from '../../../context';
-import { getCurrentDay } from '../../../util/date';
+import { useGet, useLazyPost } from '../../../api/request';
 
 import WorkoutList from './WorkoutList';
 import ProgramHeader from './ProgramHeader';
@@ -13,64 +11,51 @@ import ProgramDescription from './ProgramDescription';
 import CloseLink from '../../elements/links/CloseLink';
 import Button from '../../elements/buttons/Button';
 import LoadingScreen from '../../elements/loading/LoadingScreen';
-import { ProgramWrapper as ProgramType } from '../../../types/ProgramTypes';
-
-/**
- * Write information about the start of a new program to the backend.
- */
-const persistNewActiveProgram = (userId: string, programId: string) => {
-  setActiveProgram(userId, programId);
-};
+import { Program as ProgramType } from '../../../types/ProgramTypes';
 
 const Program = () => {
-  const { id } = useParams<{ id: string }>();
-  const user = useContext(UserContext);
+  const { programSlug } = useParams<{ programSlug: string }>();
+  const [makePostRequest] = useLazyPost(`/api/programs/${programSlug}`);
 
-  const query = `*[_type == "user" && name == $userName] {
-   "program": *[_type == "program" && slug.current == $slug]{
-      _id,
-      "isActive": ^.activeProgram.ActiveProgram._ref == _id,
-      "isCompleted": count(*[^._id in (^.^.completedPrograms[]._ref)]) > 0,
-      "currentWorkout": *[_type == "user" && name == $userName && activeProgram.ActiveProgram._ref == ^._id] {
-        "completedToday": activeProgram.dateOfLastWorkoutCompletion >= $today,
-        "lastCompletedDate": activeProgram.dateOfLastWorkoutCompletion,
-        "day": select(
-          activeProgram.day == 1 => 1,
-          activeProgram.dateOfLastWorkoutCompletion >= $today => activeProgram.day - 1,
-          activeProgram.dateOfLastWorkoutCompletion < $today => activeProgram.day,
-        )
-      }[0],
-    title,
-    duration,
-    difficulty,
-    focus,
-    description,
-    "workouts": workouts[]{ 
-      day,
-      "workout": Workout-> {
-        title,
-        categories,
-        calories,
-        duration
-      }
-    }
-  }[0]
-}[0]`;
+  //   const query = `*[_type == "user" && name == $userName] {
+  //    "program": *[_type == "program" && slug.current == $slug]{
+  //       _id,
+  //       "isActive": ^.activeProgram.ActiveProgram._ref == _id,
+  //       "isCompleted": count(*[^._id in (^.^.completedPrograms[]._ref)]) > 0,
+  //       "currentWorkout": *[_type == "user" && name == $userName && activeProgram.ActiveProgram._ref == ^._id] {
+  //         "completedToday": activeProgram.dateOfLastWorkoutCompletion >= $today,
+  //         "lastCompletedDate": activeProgram.dateOfLastWorkoutCompletion,
+  //         "day": select(
+  //           activeProgram.day == 1 => 1,
+  //           activeProgram.dateOfLastWorkoutCompletion >= $today => activeProgram.day - 1,
+  //           activeProgram.dateOfLastWorkoutCompletion < $today => activeProgram.day,
+  //         )
+  //       }[0],
+  //     title,
+  //     duration,
+  //     difficulty,
+  //     focus,
+  //     description,
+  //     "workouts": workouts[]{
+  //       day,
+  //       "workout": Workout-> {
+  //         title,
+  //         categories,
+  //         calories,
+  //         duration
+  //       }
+  //     }
+  //   }[0]
+  // }[0]`;
 
-  const params = {
-    slug: id,
-    userName: user.name,
-    today: new Date().toISOString().split('T')[0],
-  };
+  const { data, loading } = useGet<ProgramType>(`/api/programs/${programSlug}`);
 
-  const { data, loading } = useQuery<ProgramType>(query, params);
-
-  const program = data?.program;
-  const currentDay = getCurrentDay(program);
+  const program = data;
+  const currentDay = program?.currentDay || 1;
 
   return (
     <StyledProgram>
-      <CloseLink to="/browse" />
+      <CloseLink to="/programs" />
       {loading ? (
         <LoadingScreen color="red" />
       ) : program ? (
@@ -87,10 +72,10 @@ const Program = () => {
             as={Link}
             onClick={() => {
               if (!program.isActive) {
-                persistNewActiveProgram(user.id, program._id);
+                makePostRequest({ action: 'start' });
               }
             }}
-            to={`${id}/${currentDay}`}
+            to={`${programSlug}/${currentDay}`}
             className="start-button"
           >
             jetzt starten

@@ -1,6 +1,7 @@
+import React from 'react';
 import styled from 'styled-components';
 
-import { WorkoutWithExercises as Workout } from '../../../types/WorkoutTypes';
+import { Workout } from '../../../types/WorkoutTypes';
 
 import WorkoutDetailsLabel from './WorkoutDetailsLabel';
 
