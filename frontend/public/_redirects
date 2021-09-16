@@ -1,6 +1,0 @@
-[[redirects]]
-  from = "/api/*"
-  to = "https://mighty-reef-82661.herokuapp.com/api/:splat 200"
-  status = 200
-  force = true
-  headers = {X-From = "Netlify"}

@@ -2,6 +2,8 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import equal from 'deep-equal';
 import axios, { Method, AxiosResponse } from 'axios';
 
+const apiURL = 'https://mighty-reef-82661.herokuapp.com';
+
 const urlWithParamsToURL = (baseURL: string, params: object): string => {
   return `${baseURL}?${Object.entries(params)
     .map(([key, value]) => `${key}=${value}`)
@@ -32,7 +34,7 @@ async function executeFetch<FetchResult>(
   try {
     const fetchResult = (await axios({
       method,
-      url,
+      url: apiURL + url,
       data,
     })) as AxiosResponse<FetchResult>;
     if (fetchResult && fetchResult.status === 200) {
