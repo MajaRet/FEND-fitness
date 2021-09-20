@@ -4,6 +4,7 @@ This repository contains the frontend for a fictional fitness web app written in
 
 The app provides the possibility to view, start and complete different programs, workouts and exercises. 
 Currently, no user management or authentication is implemented. State changes like completing a program/workout or setting favorites are done globally on the programs/workouts themselves.
+The app is optimized for viewing on mobile devices. Desktop views and extended features for larger screens will be added in the future.
 
 The app is hosted on Netlify [here](https://jolly-lewin-397b5d.netlify.app).
 
