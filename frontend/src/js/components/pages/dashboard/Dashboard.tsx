@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import { Helmet } from 'react-helmet';
 import styled from 'styled-components';
 
 import { useGet } from '../../../api/request';
@@ -49,6 +50,10 @@ const Dashboard = () => {
     currHours < 11 ? 'Morgen' : currHours < 17 ? 'Tag' : 'Abend';
   return (
     <StyledDashboard>
+      <Helmet>
+        <title>Dashboard | Fitness Web App</title>
+        <meta name="description" content="Dashboard der Fitness-App" />
+      </Helmet>
       <h1>
         Guten
         <br />

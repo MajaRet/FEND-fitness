@@ -12,6 +12,7 @@ import CloseLink from '../../elements/links/CloseLink';
 import Button from '../../elements/buttons/Button';
 import LoadingScreen from '../../elements/loading/LoadingScreen';
 import { Program as ProgramType } from '../../../types/ProgramTypes';
+import { Helmet } from 'react-helmet';
 
 const Program = () => {
   const { programSlug } = useParams<{ programSlug: string }>();
@@ -55,6 +56,10 @@ const Program = () => {
 
   return (
     <StyledProgram>
+      <Helmet>
+        <title>Programmdetails | Fitness Web App</title>
+        <meta name="description" content="Details eines Fitness-Programms" />
+      </Helmet>
       <CloseLink to="/programs" />
       {loading ? (
         <LoadingScreen color="red" />
