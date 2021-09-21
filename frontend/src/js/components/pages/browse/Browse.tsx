@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { Helmet } from 'react-helmet';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 
@@ -97,6 +98,10 @@ const Browse = () => {
 
   return (
     <StyledBrowse>
+      <Helmet>
+        <title>Programme | Fitness Web App</title>
+        <meta name="description" content="Programmliste der Fitness-App" />
+      </Helmet>
       <h2>Browse</h2>
       <FilterForm setFilter={setFilter} />
       {programCards}
