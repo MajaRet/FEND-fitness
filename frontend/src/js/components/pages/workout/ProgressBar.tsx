@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import device from '../../../style/device';
 
 import { ReactComponent as Circle } from './../../../../img/svg/circle.svg';
 import { ReactComponent as CircleWithCheckmark } from './../../../../img/svg/circleChecked.svg';
@@ -11,6 +12,26 @@ const StyledProgressBar = styled.div<ProgressBarProps>`
   column-gap: 5px;
 
   width: 100%;
+
+  @media ${device.phoneLarge} {
+    width: 85%;
+  }
+
+  @media ${device.tabletPortrait} {
+    width: 75%;
+  }
+
+  @media ${device.tabletLandscape} {
+    width: 40%;
+  }
+
+  @media ${device.desktop} {
+    width: 30%;
+  }
+
+  @media ${device.desktopLarge} {
+    width: 20%;
+  }
 
   .circle {
     width: 8%;

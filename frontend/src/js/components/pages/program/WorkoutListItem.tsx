@@ -3,7 +3,6 @@ import styled from 'styled-components';
 
 import { WorkoutWithDay } from '../../../types/ProgramTypes';
 
-import WorkoutItemImage from './WorkoutItemImage';
 import WorkoutItemInfo from './WorkoutItemInfo';
 
 const StyledWorkoutListItem = styled.div`
@@ -26,7 +25,6 @@ interface WorkoutListItemProps {
 const WorkoutListItem = ({ className, workout }: WorkoutListItemProps) => {
   return (
     <StyledWorkoutListItem className={className}>
-      <WorkoutItemImage />
       <WorkoutItemInfo workout={workout} />
     </StyledWorkoutListItem>
   );
