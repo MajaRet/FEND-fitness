@@ -108,7 +108,6 @@ const TimedExercise = ({
             countdownDone ? '0.3' : '0.1'
           })`
         }
-        className="task"
       />
       <h1 className="title">{title}</h1>
     </Fragment>

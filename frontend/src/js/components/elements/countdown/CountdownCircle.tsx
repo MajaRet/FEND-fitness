@@ -5,20 +5,19 @@ import CircularProgressBar from './CircularProgressBar';
 
 // TODO Replace 'any' type
 interface CountdownCircleProps {
-  className: string;
   time: number;
   timeLeft: number;
   unit: string;
-  fillColor: string | ((props: any) => string);
-  emptyColor: string | ((props: any) => string);
+  fillColor?: string | ((props: any) => string);
+  emptyColor?: string | ((props: any) => string);
 }
+
 const CountdownCircle = ({
   time,
   timeLeft,
   unit,
   fillColor,
   emptyColor,
-  className,
 }: CountdownCircleProps) => {
   const prevOffset = useRef(0);
 
@@ -28,21 +27,20 @@ const CountdownCircle = ({
 
   const res = (
     <CircularProgressBar
-      className={className}
       radius={radius}
       progress={progressOffset}
       prevOffset={prevOffset.current}
       thickness={20}
       centerText={`${timeLeft}${unit}`}
       filledColor={(props) =>
-        typeof fillColor === 'undefined'
+        !fillColor
           ? `rgb(${props.theme.fontColorDefault})`
           : typeof fillColor === 'string'
           ? fillColor
           : fillColor(props)
       }
       emptyColor={(props) =>
-        typeof emptyColor === undefined
+        !emptyColor
           ? `rgba(${props.theme.fontColorDefault},0.3)`
           : typeof emptyColor === 'string'
           ? emptyColor

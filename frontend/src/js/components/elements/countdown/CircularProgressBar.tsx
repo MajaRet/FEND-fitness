@@ -1,9 +1,9 @@
 import React from 'react';
 import styled, { keyframes } from 'styled-components';
+import device from '../../../style/device';
 
 // TODO Replace 'any'
 interface CircularProgressBarProps {
-  className: string;
   radius: number;
   progress: number;
   prevOffset: number;
@@ -24,8 +24,27 @@ const animation = (props: CircularProgressBarProps) => keyframes`
 
 const StyledCircularProgressBar = styled.div`
   position: relative;
-  width: 100%;
-  height: fit-content; //500px;
+  width: 75%;
+
+  @media ${device.phoneLarge} {
+    width: 50%;
+  }
+
+  @media ${device.tabletPortrait} {
+    width: 30%;
+  }
+
+  @media ${device.tabletLandscape} {
+    width: 25%;
+  }
+
+  @media ${device.desktop} {
+    width: 20%;
+  }
+
+  @media ${device.desktopLarge} {
+    width: 15%;
+  }
 
   .circle {
     fill: none;
@@ -92,4 +111,4 @@ const CircularProgressBar = (props: CircularProgressBarProps) => {
   );
 };
 
-export default styled(CircularProgressBar)``;
+export default CircularProgressBar;
