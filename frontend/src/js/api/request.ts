@@ -13,14 +13,10 @@ const urlWithParamsToURL = (baseURL: string, params: object): string => {
 /**
  * Helper function for the hooks that handles the actual fetching.
  *
- * @param {String} query        A GROQ query string.
- * @param {Object} params       An object with the query's parameters.
- * @param {Function} setLoading A callback function to set the loading state
- *                              inside a querying hook.
- * @param {Function} setError   A callback function to set the error state
- *                              inside a querying hook.
- * @param {Function} setData    A callback function to set the fetched data
- *                              inside a querying hook.
+ * TODO: If the component that uses the fetching hook unmounts before
+ * the request is resolved, this function will attempt to call state
+ * setting functions on the unmounted component. Should find a fix for
+ * that.
  */
 async function executeFetch<FetchResult>(
   method: Method,
@@ -62,16 +58,13 @@ interface QueryState<FetchResult> {
   data?: FetchResult | null;
 }
 
-interface Query {
-  method: Method;
-  endpoint: string;
-  urlParams?: object;
-}
-
-interface QueryWithParams extends Query {
-  params?: object;
-}
-
+/**
+ * A custom hook to get data from the API on demand.
+ *
+ * @param {string} endpoint  The API endpoint
+ * @param {object} params    Optional query parameters as an object.
+ *                           Will be encoded into the URL.
+ */
 export function useGet<FetchResult>(
   endpoint: string,
   urlParams?: object
@@ -104,8 +97,7 @@ export function useGet<FetchResult>(
 /**
  * A custom hook to get data from the API on demand.
  *
- * @param {Method} method  The HTTP method of the request.
- * @param {String} endpoint The API endpoint.
+ * @param {string} endpoint  The API endpoint
  */
 export function useLazyGet<FetchResult>(
   endpoint: string
@@ -137,6 +129,12 @@ export function useLazyGet<FetchResult>(
   return [executeQuery, { loading, error, success, data }];
 }
 
+/**
+ * A custom hook to get data from the API on demand.
+ *
+ * @param {string} endpoint  The API endpoint
+ * @param {object} data      Optional payload data for the POST request
+ */
 export function usePost(endpoint: string, data?: object): QueryState<{}> {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -160,8 +158,6 @@ export function usePost(endpoint: string, data?: object): QueryState<{}> {
 
 /**
  * A custom hook to get data from the API on demand.
- *
- * @param {Method} method  The HTTP method of the request.
  * @param {String} endpoint The API endpoint.
  */
 export function useLazyPost(
@@ -179,87 +175,4 @@ export function useLazyPost(
     [endpoint]
   );
   return [executeQuery, { loading, error, success }];
-}
-
-/**
- * A custom hook to fetch data from the API immediately.
- *
- * @param {Method} method  The HTTP method of the request.
- * @param {String} endpoint The API endpoint.
- * @param {Object} params An object with the request's payload data.
- * @returns an object that indicates the fetching status (loading, error)
- * and carries the fetched data in its data property after it arrives.
- */
-export function useRequest<FetchResult>({
-  method,
-  endpoint,
-  urlParams,
-  params,
-}: QueryWithParams): QueryState<FetchResult> {
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
-  const [success, setSuccess] = useState(false);
-  const [data, setData] = useState<FetchResult | null>(null);
-
-  const queryRef = useRef<object | null>(null);
-  const url = urlParams ? urlWithParamsToURL(endpoint, urlParams) : endpoint;
-  useEffect(() => {
-    // Because params may have a different object identity even though the
-    // parameters didn't truly change (for example because it is declared
-    // as an object literal), we make sure that the query is only re-executed
-    // when the parameters actually have different values by performing
-    // a deep equality check with the previous parameter object.
-    const newQuery = { url, ...params };
-    if (!queryRef.current || !equal(queryRef.current, newQuery)) {
-      queryRef.current = newQuery;
-      executeFetch(
-        method,
-        url,
-        params,
-        setLoading,
-        setError,
-        setSuccess,
-        setData
-      );
-    }
-  }, [method, params, endpoint, url]);
-
-  return { loading, error, success, data };
-}
-
-/**
- * A custom hook to fetch data from the API on demand.
- *
- * @param {Method} method  The HTTP method of the request.
- * @param {String} endpoint The API endpoint.
- */
-export function useLazyRequest<FetchResult>({
-  method,
-  endpoint,
-}: Query): [(params: object | undefined) => void, QueryState<FetchResult>] {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
-  const [success, setSuccess] = useState(false);
-  const [data, setData] = useState<FetchResult | null>(null);
-
-  const executeQuery = useCallback(
-    (params?: object, urlParams?: object) => {
-      const url = urlParams
-        ? urlWithParamsToURL(endpoint, urlParams)
-        : endpoint;
-
-      setLoading(true);
-      executeFetch(
-        method,
-        url,
-        params || {},
-        setLoading,
-        setError,
-        setSuccess,
-        setData
-      );
-    },
-    [method, endpoint]
-  );
-  return [executeQuery, { loading, error, success, data }];
 }
